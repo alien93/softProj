@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDebug>
+#include "urdfparser.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -29,4 +31,6 @@ void MainWindow::on_actionInsert_URDF_file_triggered()
                 "",
                 "URDF files (*.urdf)"
                 );
+    URDFparser* parser = new URDFparser();
+    parser->parseURDF(filename);
 }
