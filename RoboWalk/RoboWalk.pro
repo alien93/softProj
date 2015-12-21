@@ -39,7 +39,22 @@ SOURCES += main.cpp\
     model/color.cpp \
     model/texture.cpp \
     model/geometry.cpp \
-    model/abstractobject.cpp
+    model/abstractobject.cpp \
+    model/sensor.cpp \
+    model/camera.cpp \
+    model/image.cpp \
+    model/ray.cpp \
+    model/horizontalray.cpp \
+    model/verticalray.cpp \
+    model/transmission.cpp \
+    model/transmissiontype.cpp \
+    model/transmissionjoint.cpp \
+    model/hardwareinterface.cpp \
+    model/transimissionactuator.cpp \
+    model/mechanicalreduction.cpp \
+    model/actuator.cpp \
+    model/modelstate.cpp \
+    model/jointstate.cpp
 
 HEADERS  += mainwindow.h \
     urdfparser.h \
@@ -67,6 +82,21 @@ HEADERS  += mainwindow.h \
     model/color.h \
     model/texture.h \
     model/geometry.h \
-    model/abstractobject.h
+    model/abstractobject.h \
+    model/sensor.h \
+    model/camera.h \
+    model/image.h \
+    model/ray.h \
+    model/horizontalray.h \
+    model/verticalray.h \
+    model/transmission.h \
+    model/transmissiontype.h \
+    model/transmissionjoint.h \
+    model/hardwareinterface.h \
+    model/transimissionactuator.h \
+    model/mechanicalreduction.h \
+    model/actuator.h \
+    model/modelstate.h \
+    model/jointstate.h
 
 FORMS    += mainwindow.ui
