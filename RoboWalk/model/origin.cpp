@@ -11,7 +11,7 @@ Origin:: Origin(int xyz_x, int xyz_y, int xyz_z,
     this->xyz_x = xyz_x;
     this->xyz_y = xyz_y;
     this->xyz_z = xyz_z;
-    this->rpy_r = rpy_y;
+    this->rpy_r = rpy_r;
     this->rpy_p = rpy_p;
     this->rpy_y = rpy_y;
 }

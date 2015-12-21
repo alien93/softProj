@@ -14,14 +14,14 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QFrame>
-#include <QtGui/QGraphicsView>
-#include <QtGui/QHBoxLayout>
+#include <QtGui/QGridLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 #include <QtGui/QStatusBar>
 #include <QtGui/QWidget>
+#include "simulator/myglwidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -32,10 +32,10 @@ public:
     QAction *actionExit;
     QAction *actionAbout;
     QWidget *centralWidget;
-    QHBoxLayout *horizontalLayout;
-    QGraphicsView *graphicsView;
+    QGridLayout *gridLayout;
+    MyGLWidget *annSimulation;
+    MyGLWidget *robotSimulation;
     QFrame *line;
-    QGraphicsView *graphicsView_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuHelp;
@@ -45,7 +45,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(602, 383);
+        MainWindow->resize(652, 429);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -59,38 +59,36 @@ public:
         actionAbout->setObjectName(QString::fromUtf8("actionAbout"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        horizontalLayout = new QHBoxLayout(centralWidget);
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        graphicsView = new QGraphicsView(centralWidget);
-        graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
+        gridLayout = new QGridLayout(centralWidget);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        annSimulation = new MyGLWidget(centralWidget);
+        annSimulation->setObjectName(QString::fromUtf8("annSimulation"));
+        annSimulation->setMaximumSize(QSize(250, 200));
 
-        horizontalLayout->addWidget(graphicsView);
+        gridLayout->addWidget(annSimulation, 0, 4, 1, 1);
+
+        robotSimulation = new MyGLWidget(centralWidget);
+        robotSimulation->setObjectName(QString::fromUtf8("robotSimulation"));
+        annSimulation->raise();
+        annSimulation->raise();
+        annSimulation->raise();
+        annSimulation->raise();
+
+        gridLayout->addWidget(robotSimulation, 0, 0, 2, 1);
 
         line = new QFrame(centralWidget);
         line->setObjectName(QString::fromUtf8("line"));
         line->setFrameShape(QFrame::VLine);
         line->setFrameShadow(QFrame::Sunken);
 
-        horizontalLayout->addWidget(line);
-
-        graphicsView_2 = new QGraphicsView(centralWidget);
-        graphicsView_2->setObjectName(QString::fromUtf8("graphicsView_2"));
-        QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(graphicsView_2->sizePolicy().hasHeightForWidth());
-        graphicsView_2->setSizePolicy(sizePolicy1);
-        graphicsView_2->setMaximumSize(QSize(284, 316));
-        graphicsView_2->setLayoutDirection(Qt::RightToLeft);
-
-        horizontalLayout->addWidget(graphicsView_2, 0, Qt::AlignRight|Qt::AlignTop);
+        gridLayout->addWidget(line, 0, 3, 2, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 602, 27));
+        menuBar->setGeometry(QRect(0, 0, 652, 27));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuHelp = new QMenu(menuBar);

@@ -4,8 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl
 QT       += xml
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = RoboWalk
@@ -54,7 +55,8 @@ SOURCES += main.cpp\
     model/mechanicalreduction.cpp \
     model/actuator.cpp \
     model/modelstate.cpp \
-    model/jointstate.cpp
+    model/jointstate.cpp \
+    simulator/myglwidget.cpp
 
 HEADERS  += mainwindow.h \
     urdfparser.h \
@@ -97,6 +99,9 @@ HEADERS  += mainwindow.h \
     model/mechanicalreduction.h \
     model/actuator.h \
     model/modelstate.h \
-    model/jointstate.h
+    model/jointstate.h \
+    simulator/myglwidget.h
 
 FORMS    += mainwindow.ui
+
+LIBS     += -lglut -lGLU

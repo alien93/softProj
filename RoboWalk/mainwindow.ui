@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>602</width>
-    <height>383</height>
+    <width>652</width>
+    <height>429</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,33 +20,29 @@
    <string>RoboWalk</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QGraphicsView" name="graphicsView"/>
-    </item>
-    <item>
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="4">
+     <widget class="MyGLWidget" name="annSimulation" native="true">
+      <property name="maximumSize">
+       <size>
+        <width>250</width>
+        <height>200</height>
+       </size>
       </property>
      </widget>
     </item>
-    <item alignment="Qt::AlignRight|Qt::AlignTop">
-     <widget class="QGraphicsView" name="graphicsView_2">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>284</width>
-        <height>316</height>
-       </size>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::RightToLeft</enum>
+    <item row="0" column="0" rowspan="2">
+     <widget class="MyGLWidget" name="robotSimulation" native="true">
+      <zorder>annSimulation</zorder>
+      <zorder>annSimulation</zorder>
+      <zorder>annSimulation</zorder>
+      <zorder>annSimulation</zorder>
+     </widget>
+    </item>
+    <item row="0" column="3" rowspan="2">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
      </widget>
     </item>
@@ -57,7 +53,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>602</width>
+     <width>652</width>
      <height>27</height>
     </rect>
    </property>
@@ -95,6 +91,14 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>MyGLWidget</class>
+   <extends>QWidget</extends>
+   <header>simulator/myglwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
