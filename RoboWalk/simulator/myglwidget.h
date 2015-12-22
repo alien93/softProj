@@ -3,12 +3,16 @@
 
 #include <QGLWidget>
 #include <QTimer>
+#include "simplelegs.h"
 
 class MyGLWidget : public QGLWidget
 {
     Q_OBJECT
 private:
     QTimer timer;
+    SimpleLegs *sl;
+    float distance;
+    float rotationAngle;
     void drawGrid();
 public:
     explicit MyGLWidget(QWidget *parent=0);

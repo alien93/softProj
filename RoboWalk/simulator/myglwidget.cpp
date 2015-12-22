@@ -4,6 +4,8 @@
 MyGLWidget::MyGLWidget(QWidget *parent):
     QGLWidget(parent)
 {
+    distance = -10;
+    rotationAngle = 0;
     connect(&timer, SIGNAL(timeout()), this, SLOT(animation()));
     timer.start(16);
 }
@@ -19,7 +21,17 @@ void MyGLWidget::initializeGL()
 void MyGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef(0.0f, -5.0f, 0.0f);
     drawGrid();
+
+    glLoadIdentity();
+    glTranslatef(distance, -4.5f, -15.0f);
+    glRotatef(rotationAngle, 0, 0, 1);
+    sl->drawLegs();
+
+
 }
 void MyGLWidget::resizeGL(int w, int h)
 {
@@ -29,7 +41,6 @@ void MyGLWidget::resizeGL(int w, int h)
     gluPerspective(45, (float)w/h, 1.0, 150.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(0,0.5,3,0,0,0,0,3,0);
 
 }
 
@@ -49,5 +60,14 @@ void MyGLWidget::drawGrid()
 
 void MyGLWidget::animation()
 {
+    if(rotationAngle<360)
+        rotationAngle+=30;
+    else
+        rotationAngle = 0;
 
+    if(distance < 10)
+        distance+=0.1;
+    else
+        distance = -10;
+    update();
 }
