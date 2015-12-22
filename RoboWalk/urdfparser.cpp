@@ -54,4 +54,5 @@ int URDFparser::parseURDF(QString filename)
     {
         parseChildNodes(root, i);
     }
+    return 0;
 }
