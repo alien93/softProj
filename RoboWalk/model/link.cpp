@@ -1,11 +1,21 @@
 #include "link.h"
 
+vector<Visual> Link::getVisual() const
+{
+    return visual;
+}
+
+void Link::setVisual(const vector<Visual> &value)
+{
+    visual = value;
+}
+
 Link::Link()
 {
 
 }
 
-Link::Link(QString name, Inertial inertial, Visual visual, Collision collision)
+Link::Link(QString name, Inertial inertial, vector<Visual> visual, Collision collision)
 {
     this->name = name;
     this->inertial = inertial;
@@ -33,15 +43,6 @@ void Link::setInertial(const Inertial &value)
     inertial = value;
 }
 
-Visual Link::getVisual() const
-{
-    return visual;
-}
-
-void Link::setVisual(const Visual &value)
-{
-    visual = value;
-}
 
 Collision Link::getCollision() const
 {

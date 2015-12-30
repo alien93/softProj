@@ -5,7 +5,7 @@ Origin::Origin()
 
 }
 
-Origin:: Origin(int xyz_x, int xyz_y, int xyz_z,
+Origin:: Origin(double xyz_x, double xyz_y, double xyz_z,
                 double rpy_r, double rpy_p, double rpy_y)
 {
     this->xyz_x = xyz_x;
@@ -17,32 +17,32 @@ Origin:: Origin(int xyz_x, int xyz_y, int xyz_z,
 }
 
 
-int Origin::getXyz_x() const
+double Origin::getXyz_x() const
 {
     return xyz_x;
 }
 
-void Origin::setXyz_x(int value)
+void Origin::setXyz_x(double value)
 {
     xyz_x = value;
 }
 
-int Origin::getXyz_y() const
+double Origin::getXyz_y() const
 {
     return xyz_y;
 }
 
-void Origin::setXyz_y(int value)
+void Origin::setXyz_y(double value)
 {
     xyz_y = value;
 }
 
-int Origin::getXyz_z() const
+double Origin::getXyz_z() const
 {
     return xyz_z;
 }
 
-void Origin::setXyz_z(int value)
+void Origin::setXyz_z(double value)
 {
     xyz_z = value;
 }

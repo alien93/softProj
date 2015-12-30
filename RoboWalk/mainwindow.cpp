@@ -31,6 +31,6 @@ void MainWindow::on_actionInsert_URDF_file_triggered()
                 "",
                 "URDF files (*.urdf)"
                 );
-    URDFparser* parser = new URDFparser();
+    URDFparser* parser = URDFparser::getInstance();
     parser->parseURDF(filename);
 }

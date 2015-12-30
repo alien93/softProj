@@ -12,7 +12,7 @@
 #include "mimic.h"
 #include "safetycontroller.h"
 
-enum Types {revolute, continuous, prismatic, fixed, floating, planar};
+enum Types {revolute, continuous, prismatic, fixeed, floating, planar};   //fixeed! pay attention!
 
 class Joint
 {
