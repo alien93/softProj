@@ -142,7 +142,7 @@ void Joint::setSafetyController(const SafetyController &value)
 
 QString Joint::toString()
 {
-    QString retVal = "Name: " + name + "\n" +
+    QString retVal = "***********************************\nName: " + name + "\n" +
                      "Types: " + type + "\n" +
                      "Origin: \n" +
                      "  xyz: " + QString::number(origin.getXyz_x()) + "," + QString::number(origin.getXyz_y()) + "," + QString::number(origin.getXyz_z()) + "\n" +
@@ -171,7 +171,7 @@ QString Joint::toString()
                      "lower limit: " + QString::number(safetyController.getSoftLowerLimit()) + "\n" +
                      "upper limit: " + QString::number(safetyController.getSoftUpperLimit()) + "\n" +
                      "k position: " + QString::number(safetyController.getKPosition()) + "\n" +
-                     "k velocity: " + QString::number(safetyController.getKVelocity()) + "\n";
+                     "k velocity: " + QString::number(safetyController.getKVelocity()) + "\n***************************************\n";
 
 
     return retVal;

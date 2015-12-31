@@ -7,6 +7,9 @@
 #include "collision.h"
 #include <iostream>
 #include <vector>
+#include "model/box.h"
+#include "model/cylinder.h"
+#include "model/sphere.h"
 
 using namespace std;
 
@@ -31,6 +34,7 @@ public:
     void setCollision(const Collision &value);
     vector<Visual> getVisual() const;
     void setVisual(const vector<Visual> &value);
+    QString toString();
 };
 
 #endif // LINK_H

@@ -6,6 +6,9 @@
 #include <QtXml>
 #include <QDebug>
 #include "model/robotmodel.h"
+#include "model/box.h"
+#include "model/cylinder.h"
+#include "model/sphere.h"
 
 class URDFparser
 {
@@ -14,6 +17,8 @@ private:
     static URDFparser* instance;
     URDFparser();
     void parseChildNodes(QDomElement root, int i);
+    void addInertialElementChildren(int i, QDomElement inertialElement, Inertial* inertial);
+
 public:
     RobotModel rm;                          //model ucitanog robota
     static URDFparser* getInstance();

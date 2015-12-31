@@ -6,6 +6,67 @@ URDFparser::URDFparser()
 {
 }
 
+void URDFparser::addInertialElementChildren(int i, QDomElement inertialElement, Inertial* inertial)
+{
+    if(inertialElement.childNodes().at(i).toElement().tagName() == "origin")
+    {
+        //origin
+        QDomElement originElement = inertialElement.firstChildElement("origin");
+        QString rpy = originElement.attribute("rpy", "");
+        QString xyz = originElement.attribute("xyz", "");
+        double x, y, z, r, p, yy;
+        if(xyz!="")
+        {
+            QStringList xyz_data = xyz.split(" ");
+            x = xyz_data[0].toDouble();
+            y = xyz_data[1].toDouble();
+            z = xyz_data[2].toDouble();
+        }
+        else
+        {
+            x=0; y=0; z=0;
+        }
+        if(rpy!="")
+        {
+            QStringList rpy_data = rpy.split(" ");
+            r = rpy_data[0].toDouble();
+            p = rpy_data[1].toDouble();
+            yy = rpy_data[2].toDouble();
+        }
+        else
+        {
+            r=0; p=0; yy=0;
+        }
+        Origin* origin = new Origin(x, y, z, r, p, yy);
+        inertial->setOrigin(*origin);
+    }
+    else if (inertialElement.childNodes().at(i).toElement().tagName() == "mass")
+    {
+        QDomElement massElement = inertialElement.firstChildElement("mass");
+        QString massVal = massElement.attribute("value", "");
+        Mass* mass = new Mass(massVal.toDouble());
+        inertial->setMass(*mass);
+    }
+    else if (inertialElement.childNodes().at(i).toElement().tagName() == "inertia")
+    {
+        QDomElement inertiaElement = inertialElement.firstChildElement("inertia");
+        QString ixx = inertiaElement.attribute("ixx");
+        QString ixy = inertiaElement.attribute("ixy");
+        QString ixz = inertiaElement.attribute("ixz");
+        QString iyy = inertiaElement.attribute("iyy");
+        QString iyz = inertiaElement.attribute("iyz");
+        QString izz = inertiaElement.attribute("izz");
+        if(ixx=="") ixx="0";
+        if(ixy=="") ixy="0";
+        if(ixz=="") ixz="0";
+        if(iyy=="") iyy="0";
+        if(iyz=="") iyz="0";
+        if(izz=="") izz="0";
+        Inertia* inertia = new Inertia(ixx.toDouble(), ixy.toDouble(), ixz.toDouble(), iyy.toDouble(), iyz.toDouble(), izz.toDouble());
+        inertial->setIntertia(*inertia);
+    }
+}
+
 void URDFparser::parseChildNodes(QDomElement root, int i)
 {
     QDomNode node = root.childNodes().at(i);
@@ -15,7 +76,8 @@ void URDFparser::parseChildNodes(QDomElement root, int i)
         QDomElement nodeElement = node.toElement();
         if(nodeElement.tagName() == "joint")
         {
-            QString name = nodeElement.attribute("name", "noName link");    //naziv joint-a
+            //joint name
+            QString name = nodeElement.attribute("name", "noName link");
 
             //dobavljanje tipa joint-a
             //revolute, continuous, prismatic, fixeed, floating, planar
@@ -166,11 +228,135 @@ void URDFparser::parseChildNodes(QDomElement root, int i)
         }
         else if(nodeElement.tagName() == "link")
         {
+            //link name
             QString name = nodeElement.attribute("name", "noName link");
+
+            //inertial
             Inertial inertial;
+            QDomElement inertialElement = nodeElement.firstChildElement("inertial");
+            for(int i=0; i<inertialElement.childNodes().count(); i++)
+            {
+                addInertialElementChildren(i, inertialElement, &inertial);
+            }
+
+            //visual
             vector<Visual> visuals;
+            QDomNodeList visualNodes = nodeElement.elementsByTagName("visual");
+            for(int i=0; i<visualNodes.size(); i++)
+            {
+                QDomNode visualNode = visualNodes.item(i);
+                QDomElement visualElement = visualNode.toElement();
+                QString visualName = visualElement.attribute("name", "");
+
+                //origin
+                QDomElement originElement = visualNode.firstChildElement("origin");
+                QString rpy = originElement.attribute("rpy", "");
+                QString xyz = originElement.attribute("xyz", "");
+                double x, y, z, r, p, yy;
+                if(xyz!="")
+                {
+                    QStringList xyz_data = xyz.split(" ");
+                    x = xyz_data[0].toDouble();
+                    y = xyz_data[1].toDouble();
+                    z = xyz_data[2].toDouble();
+                }
+                else
+                {
+                    x=0; y=0; z=0;
+                }
+                if(rpy!="")
+                {
+                    QStringList rpy_data = rpy.split(" ");
+                    r = rpy_data[0].toDouble();
+                    p = rpy_data[1].toDouble();
+                    yy = rpy_data[2].toDouble();
+                }
+                else
+                {
+                    r=0; p=0; yy=0;
+                }
+                Origin* origin = new Origin(x, y, z, r, p, yy);
+
+                //geometry
+                QDomElement geometryElement = visualNode.firstChildElement("geometry");
+                Geometry* geometry;
+
+                    //box
+                    QDomElement boxElement = geometryElement.firstChildElement("box");
+                    if(boxElement.tagName() != "")
+                    {
+                        QString sizeText = boxElement.attribute("size", "");
+                        QStringList sizeVal = sizeText.split(" ");
+                        double x_box = sizeVal[0].toDouble();
+                        double y_box = sizeVal[1].toDouble();
+                        double z_box = sizeVal[2].toDouble();
+                        Box* box = new Box(x_box, y_box, z_box);
+                        box->setName("box");
+                        geometry = new Geometry(*box);
+                    }
+
+                    //cylinder
+                    QDomElement cylinderElement = geometryElement.firstChildElement("cylinder");
+                    if(cylinderElement.tagName()!= "")
+                    {
+                        QString radiusText = cylinderElement.attribute("radius", "");
+                        QString lengthText = cylinderElement.attribute("length", "");
+                        double radius = radiusText.toDouble();
+                        double length = lengthText.toDouble();
+                        Cylinder* cylinder = new Cylinder(radius, length);
+                        cylinder->setName("cylinder");
+                        geometry = new Geometry(*cylinder);
+                    }
+                    //sphere
+                    QDomElement sphereElement = geometryElement.firstChildElement("sphere");
+                    if(sphereElement.tagName()!="")
+                    {
+                        QString radiusText = sphereElement.attribute("radius", "");
+                        double radius = radiusText.toDouble();
+                        Sphere* sphere = new Sphere(radius);
+                        sphere->setName("sphere");
+                        geometry = new Geometry(*sphere);
+                    }
+
+
+                //material
+                QDomElement materialElement = visualNode.firstChildElement("material");
+                QString materialName = materialElement.attribute("name", "");
+
+                    //color
+                    QDomElement colorElement = materialElement.firstChildElement("color");
+                    QString colorText = colorElement.attribute("rgba", "");
+                    Color* color;
+                    double rColor, gColor, bColor, aColor;
+                    if(colorText!="")
+                    {
+                        QStringList rgbaList = colorText.split(" ");
+                        rColor = rgbaList[0].toDouble();
+                        gColor = rgbaList[1].toDouble();
+                        bColor = rgbaList[2].toDouble();
+                        aColor = rgbaList[3].toDouble();
+                    }
+                    else
+                    {
+                        rColor = 0; gColor = 0; bColor = 0; aColor = 0;
+                    }
+                    color = new Color(rColor, gColor, bColor, aColor);
+
+                    //texture
+                    Texture* texture = new Texture();
+
+
+                Material* material = new Material(materialName, *color, *texture);
+
+                Visual* visual = new Visual(visualName, *origin, *geometry, *material);
+                visuals.push_back(*visual);
+            }
+
+
             Collision collision;
             Link* link = new Link(name, inertial, visuals, collision);
+            QString val  = link->toString();
+            qDebug()<<val;
             rm.addLink(*link);
         }
     }
