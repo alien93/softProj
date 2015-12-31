@@ -1,12 +1,12 @@
 #include "mimic.h"
 
 
-Mimic::Mimic()
+Mimic::Mimic():joint(""), multiplier(1), offset(0)
 {
     
 }
 
-Mimic::Mimic(QString joint, double multiplier, double offset)
+Mimic::Mimic(QString joint, double multiplier, double offset):joint(""), multiplier(1), offset(0)
 {
     this->joint = joint;
     this->multiplier = multiplier;

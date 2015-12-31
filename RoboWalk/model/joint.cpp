@@ -139,3 +139,40 @@ void Joint::setSafetyController(const SafetyController &value)
 {
     safetyController = value;
 }
+
+QString Joint::toString()
+{
+    QString retVal = "Name: " + name + "\n" +
+                     "Types: " + type + "\n" +
+                     "Origin: \n" +
+                     "  xyz: " + QString::number(origin.getXyz_x()) + "," + QString::number(origin.getXyz_y()) + "," + QString::number(origin.getXyz_z()) + "\n" +
+                     "  rpyL " + QString::number(origin.getRpy_r()) + "," + QString::number(origin.getRpy_p()) + "," + QString::number(origin.getRpy_y()) + "\n" +
+                     "Parent: " + parent.getLink() + "\n" +
+                     "Child: " + child.getLink() + "\n" +
+                     "Axis: \n" +
+                     "  xyz: " + QString::number(axis.getX()) + "," + QString::number(axis.getY()) + "," + QString::number(axis.getZ()) + "\n" +
+                     "  rpyL " + QString::number(axis.getR()) + "," + QString::number(axis.getP()) + "," + QString::number(axis.getYy()) + "\n" +
+                     "Calibration: \n" +
+                     "rising: " + QString::number(calibration.getRising()) + "\n" +
+                     "falling: " + QString::number(calibration.getFalling()) + "\n" +
+                     "Dynamics: \n" +
+                     "damping: " + QString::number(dynamics.getDamping()) + "\n" +
+                     "friction: " + QString::number(dynamics.getFriction()) + "\n" +
+                     "Limit: \n" +
+                     "lower: " + QString::number(limit.getLower()) + "\n" +
+                     "upper: " + QString::number(limit.getUpper()) + "\n" +
+                     "effort: " + QString::number(limit.getEffort()) + "\n" +
+                     "velocity: " + QString::number(limit.getVelocity()) + "\n" +
+                     "Mimic: \n" +
+                     "joint: " + mimic.getJoint() + "\n" +
+                     "multiplier: " + QString::number(mimic.getMultiplier()) + "\n" +
+                     "offset: " + QString::number(mimic.getOffset()) + "\n" +
+                     "SafetyController: \n" +
+                     "lower limit: " + QString::number(safetyController.getSoftLowerLimit()) + "\n" +
+                     "upper limit: " + QString::number(safetyController.getSoftUpperLimit()) + "\n" +
+                     "k position: " + QString::number(safetyController.getKPosition()) + "\n" +
+                     "k velocity: " + QString::number(safetyController.getKVelocity()) + "\n";
+
+
+    return retVal;
+}

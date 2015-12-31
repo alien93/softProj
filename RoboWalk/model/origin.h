@@ -1,6 +1,7 @@
 #ifndef ORIGIN_H
 #define ORIGIN_H
 
+#include <QString>
 
 class Origin
 {
@@ -31,6 +32,7 @@ public:
     void setRpy_p(double value);
     double getRpy_y() const;
     void setRpy_y(double value);
+    QString toString();
 };
 
 #endif // ORIGIN_H

@@ -65,6 +65,7 @@ public:
     void setMimic(const Mimic &value);
     SafetyController getSafetyController() const;
     void setSafetyController(const SafetyController &value);
+    QString toString();
 };
 
 #endif // JOINT_H

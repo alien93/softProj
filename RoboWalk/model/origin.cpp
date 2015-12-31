@@ -1,6 +1,6 @@
 #include "origin.h"
 
-Origin::Origin()
+Origin::Origin():xyz_x(0), xyz_y(0), xyz_z(0), rpy_r(0), rpy_p(0),rpy_y(0)
 {
 
 }
@@ -76,5 +76,17 @@ void Origin::setRpy_y(double value)
 {
     rpy_y = value;
 }
+
+QString Origin::toString()
+{
+    QString retVal =
+                     "x = " + QString::number(xyz_x) + "\n" +
+                     "y = " + QString::number(xyz_y) + "\n" +
+                     "z = " + QString::number(xyz_z) + "\n" +
+                     "r = " + QString::number(rpy_r) + "\n" +
+                     "p = " + QString::number(rpy_p) + "\n" +
+                     "y = " + QString::number(rpy_y) + "\n";
+    return retVal;
+ }
 
 
