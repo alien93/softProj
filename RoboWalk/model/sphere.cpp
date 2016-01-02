@@ -7,7 +7,7 @@ double Sphere::getRadius() const
 
 void Sphere::setRadius(double value)
 {
-    radius = value;
+    sphereRadius = value;
 }
 
 Sphere::Sphere()
@@ -17,5 +17,5 @@ Sphere::Sphere()
 
 Sphere::Sphere(double radius)
 {
-    this->radius = radius;
+    this->sphereRadius = radius;
 }

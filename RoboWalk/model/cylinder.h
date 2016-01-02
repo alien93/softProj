@@ -5,11 +5,9 @@
 
 class Cylinder:public AbstractObject
 {
-private:
-    double radius;
-    double length;
 public:
     Cylinder();
+    Cylinder(const AbstractObject& ao):AbstractObject(ao){}
     Cylinder(double radius, double length);
 
     double getRadius() const;

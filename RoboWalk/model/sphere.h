@@ -5,10 +5,9 @@
 
 class Sphere:public AbstractObject
 {
-private:
-    double radius;
 public:
     Sphere();
+    Sphere(const AbstractObject& ao):AbstractObject(ao){}
     Sphere(double radius);
 
 

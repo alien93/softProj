@@ -67,7 +67,6 @@ QString Link::toString()
                      "\niyy: " + QString::number(inertial.getIntertia().getIyy()) +
                      "\niyz: " + QString::number(inertial.getIntertia().getIyz()) +
                      "\nizz: " + QString::number(inertial.getIntertia().getIzz()) + "\n";
-
      for(unsigned i=0; i<visual.size(); i++)
      {
          retVal += "\n\nVisual:\nName:" + ((Visual)(visual.at(i))).getName() + "\n";
@@ -79,12 +78,36 @@ QString Link::toString()
                    QString::number(((Visual)(visual.at(i))).getOrigin().getRpy_p()) + "," +
                    QString::number(((Visual)(visual.at(i))).getOrigin().getRpy_y()) + "\n\n";
          retVal += "Geometry: \n";
-         QString geoName = ((Visual)(visual.at(i))).getGeometry().getObject().getName();
-         retVal += geoName;
-
+         AbstractObject ao;
+         ao = ((Visual)(visual.at(i))).getGeometry().getObject();
+         QString geoName = ao.getName();
+         retVal +=  "Object name:" + geoName;
+         if(geoName == "cylinder")
+         {
+               retVal += "\nName: " +((Cylinder)ao).getName();
+               retVal += "\nLength: " + QString::number(((Cylinder)ao).getLength());
+               retVal += "\nRadius: " + QString::number(((Cylinder)ao).getRadius()) + "\n";
+         }
+         else if(geoName == "box")
+         {
+             retVal += "\nName: " +((Box)ao).getName();
+             retVal += "\nWidth: " + QString::number(((Box)ao).getWidth());
+             retVal += "\nHeight: " + QString::number(((Box)ao).getHeight());
+             retVal += "\nDepth: " + QString::number(((Box)ao).getDepth());
+         }
+         else if(geoName == "sphere")
+         {
+             retVal += "\nName: " +((Sphere)ao).getName();
+             retVal += "\nRadius: " + QString::number(((Sphere)ao).getSphereRadius());
+         }
+         retVal += "\n\nMaterial:\nName:" + ((Visual)(visual.at(i))).getMaterial().getName() + "\n";
+         retVal += "Color: \nR:";
+         retVal += QString::number(((Visual)(visual.at(i))).getMaterial().getColor().getRed()) + "\n";
+         retVal += "Green: " + QString::number(((Visual)(visual.at(i))).getMaterial().getColor().getGreen()) + "\n";
+         retVal += "Blue: " + QString::number(((Visual)(visual.at(i))).getMaterial().getColor().getBlue()) + "\n";
+         retVal += "Alpha: " + QString::number(((Visual)(visual.at(i))).getMaterial().getColor().getAlpha()) + "\n";
      }
-     retVal+="\n**************************************\n"
-                             ;
+     retVal+="\n**************************************\n";
 
 
     return retVal;

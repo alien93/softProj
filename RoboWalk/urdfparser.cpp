@@ -56,12 +56,12 @@ void URDFparser::addInertialElementChildren(int i, QDomElement inertialElement, 
         QString iyy = inertiaElement.attribute("iyy");
         QString iyz = inertiaElement.attribute("iyz");
         QString izz = inertiaElement.attribute("izz");
-        if(ixx=="") ixx="0";
-        if(ixy=="") ixy="0";
-        if(ixz=="") ixz="0";
-        if(iyy=="") iyy="0";
-        if(iyz=="") iyz="0";
-        if(izz=="") izz="0";
+        if(ixx==" ") ixx="0";
+        if(ixy==" ") ixy="0";
+        if(ixz==" ") ixz="0";
+        if(iyy==" ") iyy="0";
+        if(iyz==" ") iyz="0";
+        if(izz==" ") izz="0";
         Inertia* inertia = new Inertia(ixx.toDouble(), ixy.toDouble(), ixz.toDouble(), iyy.toDouble(), iyz.toDouble(), izz.toDouble());
         inertial->setIntertia(*inertia);
     }
@@ -279,7 +279,7 @@ void URDFparser::parseChildNodes(QDomElement root, int i)
 
                 //geometry
                 QDomElement geometryElement = visualNode.firstChildElement("geometry");
-                Geometry* geometry;
+                Geometry* geometry = new Geometry();
 
                     //box
                     QDomElement boxElement = geometryElement.firstChildElement("box");
@@ -289,8 +289,7 @@ void URDFparser::parseChildNodes(QDomElement root, int i)
                         QStringList sizeVal = sizeText.split(" ");
                         double x_box = sizeVal[0].toDouble();
                         double y_box = sizeVal[1].toDouble();
-                        double z_box = sizeVal[2].toDouble();
-                        Box* box = new Box(x_box, y_box, z_box);
+                        double z_box = sizeVal[2].toDouble();                        Box* box = new Box(x_box, y_box, z_box);
                         box->setName("box");
                         geometry = new Geometry(*box);
                     }

@@ -10,8 +10,6 @@ private:
 public:
     Geometry();
     Geometry(AbstractObject object);
-
-
     AbstractObject getObject() const;
     void setObject(const AbstractObject &value);
 };

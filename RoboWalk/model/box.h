@@ -5,13 +5,10 @@
 
 class Box:public AbstractObject
 {
-private:
-    //size
-    double height;
-    double width;
-    double depth;
+
 public:
     Box();
+    Box(const AbstractObject& ao):AbstractObject(ao){}
     Box(double height, double width, double depth);
 
     double getHeight() const;
