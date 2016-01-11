@@ -58,7 +58,10 @@ SOURCES += main.cpp\
     model/jointstate.cpp \
     simulator/myglwidget.cpp \
     simulator/simplelegs.cpp \
-    model/robotmodel.cpp
+    model/robotmodel.cpp \
+    simulator/drawbox.cpp \
+    simulator/drawcylinder.cpp \
+    simulator/drawsphere.cpp
 
 HEADERS  += mainwindow.h \
     urdfparser.h \
@@ -104,7 +107,10 @@ HEADERS  += mainwindow.h \
     model/jointstate.h \
     simulator/myglwidget.h \
     simulator/simplelegs.h \
-    model/robotmodel.h
+    model/robotmodel.h \
+    simulator/drawbox.h \
+    simulator/drawcylinder.h \
+    simulator/drawsphere.h
 
 FORMS    += mainwindow.ui
 

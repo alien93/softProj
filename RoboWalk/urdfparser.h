@@ -15,6 +15,7 @@ class URDFparser
 private:
     static bool instanceFlag;
     static URDFparser* instance;
+    static bool fileParsed;
     URDFparser();
     void parseChildNodes(QDomElement root, int i);
     void addInertialElementChildren(int i, QDomElement inertialElement, Inertial* inertial);
@@ -27,6 +28,8 @@ public:
     {
         instanceFlag = false;
     }
+    static bool getFileParsed();
+    static void setFileParsed(bool value);
 };
 
 #endif // URDFPARSER_H

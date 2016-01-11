@@ -2,6 +2,18 @@
 #include <QDebug>
 
 //konstruktor
+
+
+bool URDFparser::getFileParsed()
+{
+    return fileParsed;
+}
+
+void URDFparser::setFileParsed(bool value)
+{
+    fileParsed = value;
+}
+
 URDFparser::URDFparser()
 {
 }
@@ -390,11 +402,13 @@ int URDFparser::parseURDF(QString filename)
     {
         parseChildNodes(root, i);
     }
+    fileParsed = true;
     return 0;
 }
 
 bool URDFparser::instanceFlag = false;
 URDFparser* URDFparser::instance = NULL;
+bool URDFparser::fileParsed = false;
 URDFparser* URDFparser::getInstance()
 {
     if(!instanceFlag)

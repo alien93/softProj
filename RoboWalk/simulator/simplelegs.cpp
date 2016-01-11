@@ -1,6 +1,7 @@
 #include "simplelegs.h"
 #include <GL/glut.h>
 
+#include "simulator/drawcylinder.h"
 SimpleLegs::SimpleLegs()
 {
 
