@@ -52,12 +52,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             ui->robotSimulation->repaint();
             break;
         case Qt::Key_Plus:
-            sceneDistance += 10.0f;
+            sceneDistance += .5f;
             ui->robotSimulation->setSceneDistance(sceneDistance);
             ui->robotSimulation->repaint();
             break;
         case Qt::Key_Minus:
-            sceneDistance -= 10.0f;
+            sceneDistance -= .5f;
             ui->robotSimulation->setSceneDistance(sceneDistance);
             ui->robotSimulation->repaint();
             break;
@@ -79,5 +79,6 @@ void MainWindow::on_actionInsert_URDF_file_triggered()
                 "URDF files (*.urdf)"
                 );
     URDFparser* parser = URDFparser::getInstance();
+    ui->robotSimulation->reset();
     parser->parseURDF(filename);
 }

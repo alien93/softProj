@@ -5,6 +5,8 @@
 #include <QTimer>
 #include "simplelegs.h"
 #include "drawcylinder.h"
+#include "drawsphere.h"
+#include "drawbox.h"
 #include <vector>
 #include "model/visual.h"
 
@@ -18,6 +20,8 @@ private:
     QTimer timer;
     SimpleLegs *sl;
     DrawCylinder *cylinder;
+    DrawBox *box;
+    DrawSphere *sphere;
     float distance;
     float rotationAngle;
     void drawGrid();
@@ -31,6 +35,7 @@ public:
     void resizeGL(int w, int h);
     void drawCylinder(Link l, double x, double y, double z);
     void adjustPosition();
+    void reset();
 
     float getXRotation() const;
     void setXRotation(float value);

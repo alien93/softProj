@@ -23,15 +23,15 @@ DrawCylinder::DrawCylinder(double length, double radius, double r, double p, dou
 
 void DrawCylinder::drawCylinder(double xc, double yc, double zc)
 {
-    glPushMatrix();
-    glTranslated(xc, yc, zc);
-    glTranslated(x,y,z);
-    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-    rotateMe(r, p, y);
-    glScalef(30, 30, 30);
+    //glTranslated(0, 0, -radius);
+    glTranslated(xc, zc+length/2, yc);
+    glTranslated(x ,z, y);
+    rotateMe(r, p, yy);
     glColor4d(red, green, blue, alpha);
     gluCylinder(gluNewQuadric(),radius, radius, length, 32, 32);
-    glPopMatrix();
+    gluDisk(gluNewQuadric(),0,radius, 32, 32);
+    glTranslated(0.0,0.0 , length);
+    gluDisk(gluNewQuadric(),0,radius, 32, 32);
 }
 
 void DrawCylinder::rotateMe(double r, double p, double y)

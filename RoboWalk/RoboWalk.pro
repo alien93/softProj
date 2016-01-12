@@ -61,7 +61,8 @@ SOURCES += main.cpp\
     model/robotmodel.cpp \
     simulator/drawbox.cpp \
     simulator/drawcylinder.cpp \
-    simulator/drawsphere.cpp
+    simulator/drawsphere.cpp \
+    simulator/cuboid.cpp
 
 HEADERS  += mainwindow.h \
     urdfparser.h \
@@ -110,7 +111,8 @@ HEADERS  += mainwindow.h \
     model/robotmodel.h \
     simulator/drawbox.h \
     simulator/drawcylinder.h \
-    simulator/drawsphere.h
+    simulator/drawsphere.h \
+    simulator/cuboid.h
 
 FORMS    += mainwindow.ui
 
