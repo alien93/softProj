@@ -1,5 +1,5 @@
 # Simulating walking robot using NEAT algorithm
 
-soft.pdf -> misija
-Wiki -> trenutno stanje aplikacije
-Issues -> todo lista nedelje
+*soft.pdf -> project mission
+*Wiki -> current application state
+*Issues -> weekly todo list
