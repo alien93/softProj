@@ -33,7 +33,7 @@ public:
     void initializeGL();
     void paintGL();
     void resizeGL(int w, int h);
-    void drawCylinder(Link l, double x, double y, double z);
+    void draw(Link l);
     void adjustPosition();
     void reset();
 

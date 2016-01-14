@@ -1,1 +1,5 @@
-# Primena NEAT algoritma na primeru simulacije kretanja robota
+# Simulating walking robot using NEAT algorithm
+
+soft.pdf -> misija
+Wiki -> trenutno stanje aplikacije
+Issues -> todo lista nedelje

@@ -79,6 +79,16 @@ void URDFparser::addInertialElementChildren(int i, QDomElement inertialElement, 
     }
 }
 
+map<QString, Link> URDFparser::getUsedLinks() const
+{
+    return usedLinks;
+}
+
+void URDFparser::setUsedLinks(const map<QString, Link> &value)
+{
+    usedLinks = value;
+}
+
 void URDFparser::parseChildNodes(QDomElement root, int i)
 {
     QDomNode node = root.childNodes().at(i);

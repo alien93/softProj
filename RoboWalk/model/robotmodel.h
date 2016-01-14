@@ -4,6 +4,7 @@
 #include "QString"
 #include <iostream>
 #include <map>
+#include <vector>
 #include "joint.h"
 #include "link.h"
 
@@ -15,6 +16,8 @@ private:
     QString name;
     map<QString, Joint> joints;
     map<QString, Link> links;
+    vector<Joint> jointsVector;
+    vector<Link> linksVector;
 public:
     RobotModel();
     RobotModel(QString name, map<QString, Joint> joints, map<QString, Link> links);
@@ -28,6 +31,10 @@ public:
     void addLink(Link newLink);
     Joint getJoint(QString name);
     Link getLink(QString name);
+    vector<Joint> getJointsVector() const;
+    void setJointsVector(const vector<Joint> &value);
+    vector<Link> getLinksVector() const;
+    void setLinksVector(const vector<Link> &value);
 };
 
 #endif // ROBOTMODEL_H

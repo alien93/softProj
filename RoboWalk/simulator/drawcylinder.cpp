@@ -21,17 +21,18 @@ DrawCylinder::DrawCylinder(double length, double radius, double r, double p, dou
     this->alpha = alpha;
 }
 
-void DrawCylinder::drawCylinder(double xc, double yc, double zc)
+void DrawCylinder::drawCylinder()
 {
-    //glTranslated(0, 0, -radius);
-    glTranslated(xc, zc+length/2, yc);
-    glTranslated(x ,z, y);
+    glTranslated(0.0, length/2, 0.0);
+    glTranslated(x, y ,z);
+    //glTranslated(0.0, 0.0, -length/2);
     rotateMe(r, p, yy);
     glColor4d(red, green, blue, alpha);
-    gluCylinder(gluNewQuadric(),radius, radius, length, 32, 32);
-    gluDisk(gluNewQuadric(),0,radius, 32, 32);
+    GLUquadric* cylinder = gluNewQuadric();
+    gluCylinder(cylinder,radius, radius, length, 32, 32);
+    gluDisk(cylinder,0,radius, 32, 32);
     glTranslated(0.0,0.0 , length);
-    gluDisk(gluNewQuadric(),0,radius, 32, 32);
+    gluDisk(cylinder,0,radius, 32, 32);
 }
 
 void DrawCylinder::rotateMe(double r, double p, double y)

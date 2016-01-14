@@ -7,7 +7,7 @@ MyGLWidget::MyGLWidget(QWidget *parent):
 {
     xRotation=0.0f;
     yRotation = 0.0f;
-    sceneDistance=-50.0f;
+    sceneDistance=-80.0f;
    // distance = -10;
    // rotationAngle = 0;
    // connect(&timer, SIGNAL(timeout()), this, SLOT(animation()));
@@ -22,131 +22,158 @@ void MyGLWidget::initializeGL()
 }
 void MyGLWidget::paintGL()
 {
+    URDFparser *parser;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    glTranslatef(0.0f, -5.0f, 0.0f);
+    glTranslatef(0.0f, -10.0f, 0.0f);
     glTranslatef(0.0f, 0.0f, sceneDistance);
     glRotatef(xRotation, 1.0f, 0.0f, 0.0f);
     glRotatef(yRotation, 0.0f, 1.0f, 0.0f);
     glScalef(30.0f, 30.0f, 30.0f);
 
     glPushMatrix();
-    glTranslatef(0.0f, -.5f, 0.0f);
+    //glTranslatef(0.0f, -.5f, 0.0f);
     drawGrid();
     glPopMatrix();
     glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+    GLfloat m[16];
    // glTranslatef(0.0f, -15, .0f);
     //glTranslatef(distance, -4.5f, -15.0f);
     //glRotatef(rotationAngle, 0, 0, 1);
     //sl->drawLegs();
-    URDFparser *parser;
     if(parser->getInstance()->getFileParsed())
     {
-        map<QString, Link> links = parser->getInstance()->rm.getLinks();
-        map<QString, Joint> joints = parser->getInstance()->rm.getJoints();
+        map<QString, Link> linksMap = parser->getInstance()->rm.getLinks();
+        vector<Link> links = parser->getInstance()->rm.getLinksVector();
+        map<QString, Joint> jointsMap = parser->getInstance()->rm.getJoints();
+        vector<Joint> joints = parser->getInstance()->rm.getJointsVector();
+
         if(joints.size()!=0)
-            for(map<QString, Joint>::iterator it=joints.begin(); it!=joints.end(); it++)
+        {
+            for(vector<Joint>::iterator it=joints.begin(); it!=joints.end(); it++)
             {
-                Joint j = it->second;
+                //Joint j = it->second;
+                Joint j = *it;
                 Parent p = j.getParent();   //parent
                 Child c = j.getChild();     //child
                 Origin o = j.getOrigin();   //position of the child link relative to parent link
                 //draw parent link
-                glPushMatrix();
-                Link lp = links.at(p.getLink());
-                drawCylinder(lp, 0.0, 0.0, 0.0);
+              //  glPushMatrix();
+                Link lp = linksMap.at(p.getLink());
+                map<QString, Link> usedLinks = parser->getInstance()->getUsedLinks();
+                map<QString, Link>::iterator iter = usedLinks.find(lp.getName());
+                if(usedLinks.count(lp.getName()))
+                {
+                    //link je vec iscrtan
+                   //glLoadIdentity();
+                    glLoadMatrixf(m);
+                    draw(lp);
+                }
+                else
+                {
+                    if(lp.getName()=="base_link")
+                        glGetFloatv (GL_MODELVIEW_MATRIX, m);
+                    usedLinks[lp.getName()] = lp;
+                    parser->getInstance()->setUsedLinks(usedLinks);
+                    qDebug()<<"Dodajem " + lp.getName();
+                    draw(lp);
+                }
                  //draw child link
-                Link lc = links.at(c.getLink());
-                drawCylinder(lc, o.getXyz_x(), o.getXyz_z(), o.getXyz_y());
-                glPopMatrix();
-            }
-        else
-            for(map<QString, Link>::iterator it=links.begin(); it!=links.end(); it++)
-            {
-                Link j = it->second;
+                glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
+                Link lc = linksMap.at(c.getLink());
+                draw(lc);
 
-                //draw parent link
+            }
+            map<QString, Link> newMap = parser->getInstance()->getUsedLinks();
+            newMap.clear();
+            parser->getInstance()->setUsedLinks(newMap);
+        }
+        else
+            for(vector<Link>::iterator it=links.begin(); it!=links.end(); it++)
+            {
                 glPushMatrix();
-                Link lp = it->second;
-                drawCylinder(lp, 0.0, 0.0, 0.0);
+                Link lp = *it;
+                draw(lp);
                 glPopMatrix();
             }
     }
-    glFlush();
 }
 
 
-void MyGLWidget::drawCylinder(Link l, double xc, double yc, double zc)
+void MyGLWidget::draw(Link l)
 {
     vector<Visual> visuals = l.getVisual();
-    for(vector<Visual>::iterator it=visuals.begin(); it!=visuals.end(); it++)
+    if(visuals.size()>0)
     {
-        Origin o = it->getOrigin();
-        Geometry g = it->getGeometry();
-        Material m = it->getMaterial();
-
-        if(g.getObject().getName() == "cylinder")
+        for(vector<Visual>::iterator it=visuals.begin(); it!=visuals.end(); it++)
         {
-            double length = g.getObject().getLength();
-            double radius = g.getObject().getRadius();
-            double r = o.getRpy_r();
-            double p = o.getRpy_p();
-            double yy = o.getRpy_y();
-            double x = o.getXyz_x();
-            double y = o.getXyz_y();
-            double z = o.getXyz_z();
-            double red = m.getColor().getRed();
-            double green = m.getColor().getGreen();
-            double blue = m.getColor().getBlue();
-            double alpha = m.getColor().getAlpha();
+            Origin o = it->getOrigin();
+            Geometry g = it->getGeometry();
+            Material m = it->getMaterial();
 
-            cylinder = new DrawCylinder(length, radius,
+            if(g.getObject().getName() == "cylinder")
+            {
+                double length = g.getObject().getLength();
+                double radius = g.getObject().getRadius();
+                double r = o.getRpy_r();
+                double p = o.getRpy_p();
+                double yy = o.getRpy_y();
+                double x = o.getXyz_x();
+                double y = o.getXyz_y();
+                double z = o.getXyz_z();
+                double red = m.getColor().getRed();
+                double green = m.getColor().getGreen();
+                double blue = m.getColor().getBlue();
+                double alpha = m.getColor().getAlpha();
+
+                cylinder = new DrawCylinder(length, radius,
+                                            r, p, yy,
+                                            x, y, z,
+                                            red, green, blue, alpha);
+                cylinder->drawCylinder();
+            }
+            else if(g.getObject().getName() == "box")
+            {
+                double width = g.getObject().getWidth();
+                double height = g.getObject().getHeight();
+                double depth = g.getObject().getDepth();
+                double r = o.getRpy_r();
+                double p = o.getRpy_p();
+                double yy = o.getRpy_y();
+                double x = o.getXyz_x();
+                double y = o.getXyz_y();
+                double z = o.getXyz_z();
+                double red = m.getColor().getRed();
+                double green = m.getColor().getGreen();
+                double blue = m.getColor().getBlue();
+                double alpha = m.getColor().getAlpha();
+
+                box = new DrawBox(width, height, depth,
+                                  r, p, yy,
+                                  x, y, z,
+                                  red, green, blue, alpha);
+                box->drawBox();
+            }
+            else if(g.getObject().getName() == "sphere")
+            {
+                double radius = g.getObject().getSphereRadius();
+                double r = o.getRpy_r();
+                double p = o.getRpy_p();
+                double yy = o.getRpy_y();
+                double x = o.getXyz_x();
+                double y = o.getXyz_y();
+                double z = o.getXyz_z();
+                double red = m.getColor().getRed();
+                double green = m.getColor().getGreen();
+                double blue = m.getColor().getBlue();
+                double alpha = m.getColor().getAlpha();
+
+                sphere = new DrawSphere(radius,
                                         r, p, yy,
                                         x, y, z,
                                         red, green, blue, alpha);
-            cylinder->drawCylinder(xc, yc, zc);
-        }
-        else if(g.getObject().getName() == "box")
-        {
-            double width = g.getObject().getWidth();
-            double height = g.getObject().getHeight();
-            double depth = g.getObject().getDepth();
-            double r = o.getRpy_r();
-            double p = o.getRpy_p();
-            double yy = o.getRpy_y();
-            double x = o.getXyz_x();
-            double y = o.getXyz_y();
-            double z = o.getXyz_z();
-            double red = m.getColor().getRed();
-            double green = m.getColor().getGreen();
-            double blue = m.getColor().getBlue();
-            double alpha = m.getColor().getAlpha();
-
-            box = new DrawBox(width, height, depth,
-                              r, p, yy,
-                              x, y, z,
-                              red, green, blue, alpha);
-            box->drawBox(xc, yc, zc);
-        }
-        else if(g.getObject().getName() == "sphere")
-        {
-            double radius = g.getObject().getSphereRadius();
-            double r = o.getRpy_r();
-            double p = o.getRpy_p();
-            double yy = o.getRpy_y();
-            double x = o.getXyz_x();
-            double y = o.getXyz_y();
-            double z = o.getXyz_z();
-            double red = m.getColor().getRed();
-            double green = m.getColor().getGreen();
-            double blue = m.getColor().getBlue();
-            double alpha = m.getColor().getAlpha();
-
-            sphere = new DrawSphere(radius,
-                                    r, p, yy,
-                                    x, y, z,
-                                    red, green, blue, alpha);
-            sphere->drawSphere(xc, yc, zc);
+                sphere->drawSphere();
+            }
         }
     }
 }

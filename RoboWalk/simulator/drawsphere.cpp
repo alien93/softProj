@@ -19,9 +19,8 @@ DrawSphere::DrawSphere( double radius, double r, double p, double yy, double x, 
     this->alpha = alpha;
 }
 
-void DrawSphere::drawSphere(double xc, double yc, double zc)
+void DrawSphere::drawSphere()
 {
-    glTranslated(xc, zc, yc);
     glTranslated(x,z, y);
     rotateMe(r, p, yy);
     glColor4d(red, green, blue, alpha);

@@ -1,5 +1,25 @@
 #include "robotmodel.h"
 
+vector<Joint> RobotModel::getJointsVector() const
+{
+    return jointsVector;
+}
+
+void RobotModel::setJointsVector(const vector<Joint> &value)
+{
+    jointsVector = value;
+}
+
+vector<Link> RobotModel::getLinksVector() const
+{
+    return linksVector;
+}
+
+void RobotModel::setLinksVector(const vector<Link> &value)
+{
+    linksVector = value;
+}
+
 RobotModel::RobotModel(){}
 RobotModel::RobotModel(QString name, map<QString, Joint> joints, map<QString, Link> links)
 {
@@ -34,10 +54,12 @@ void RobotModel::setName(const QString &value)
 void RobotModel::addJoint(Joint newJoint)
 {
     joints[newJoint.getName()] = newJoint;
+    jointsVector.push_back(newJoint);
 }
 void RobotModel::addLink(Link newLink)
 {
     links[newLink.getName()] = newLink;
+    linksVector.push_back(newLink);
 }
 Joint RobotModel::getJoint(QString name)
 {

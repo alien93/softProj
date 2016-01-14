@@ -52,12 +52,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             ui->robotSimulation->repaint();
             break;
         case Qt::Key_Plus:
-            sceneDistance += .5f;
+            sceneDistance += 10.0f;
             ui->robotSimulation->setSceneDistance(sceneDistance);
             ui->robotSimulation->repaint();
             break;
         case Qt::Key_Minus:
-            sceneDistance -= .5f;
+            sceneDistance -= 10.0f;
             ui->robotSimulation->setSceneDistance(sceneDistance);
             ui->robotSimulation->repaint();
             break;
