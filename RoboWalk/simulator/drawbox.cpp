@@ -24,7 +24,7 @@ DrawBox::DrawBox(double width, double height, double depth, double r, double p, 
 
 void DrawBox::drawBox()
 {
-    glTranslated(x,y,z);
+    glTranslated(x,z,y);
     rotateMe(r, p, yy);
     glColor4d(red, green, blue, alpha);
     Cuboid c = Cuboid(width, height, depth);

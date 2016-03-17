@@ -25,7 +25,6 @@ void DrawCylinder::drawCylinder()
 {
     glTranslated(0.0, length/2, 0.0);
     glTranslated(x, y ,z);
-    //glTranslated(0.0, 0.0, -length/2);
     rotateMe(r, p, yy);
     glColor4d(red, green, blue, alpha);
     GLUquadric* cylinder = gluNewQuadric();

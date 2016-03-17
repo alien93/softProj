@@ -2,4 +2,4 @@
 
 * soft.pdf -> project mission
 * Wiki -> current application state
-* Issues -> weekly todo list
+* Issues -> todo list

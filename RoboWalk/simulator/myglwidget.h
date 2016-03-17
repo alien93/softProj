@@ -9,6 +9,7 @@
 #include "drawbox.h"
 #include <vector>
 #include "model/visual.h"
+#include <array>
 
 using namespace std;
 
@@ -28,6 +29,7 @@ private:
     float xRotation;
     float yRotation;
     float sceneDistance;
+    map<QString,  GLfloat[16]> matrices;   //matrix for each parent node
 public:
     explicit MyGLWidget(QWidget *parent=0);
     void initializeGL();
@@ -44,6 +46,9 @@ public:
 
     float getYRotation() const;
     void setYRotation(float value);
+    void rotateMe(double r, double p, double y);
+    double convertRadToDegrees(double value);
+
 
 public Q_SLOTS:
     void animation();

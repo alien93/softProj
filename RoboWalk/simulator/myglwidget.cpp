@@ -37,16 +37,22 @@ void MyGLWidget::paintGL()
     glPopMatrix();
     glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
     GLfloat m[16];
-   // glTranslatef(0.0f, -15, .0f);
-    //glTranslatef(distance, -4.5f, -15.0f);
-    //glRotatef(rotationAngle, 0, 0, 1);
-    //sl->drawLegs();
     if(parser->getInstance()->getFileParsed())
     {
         map<QString, Link> linksMap = parser->getInstance()->rm.getLinks();
         vector<Link> links = parser->getInstance()->rm.getLinksVector();
         map<QString, Joint> jointsMap = parser->getInstance()->rm.getJoints();
-        vector<Joint> joints = parser->getInstance()->rm.getJointsVector();
+       // vector<Joint> joints = parser->getInstance()->rm.getJointsVector();
+        vector<Joint> joints = parser->getInstance()->rm.sortJoints(jointsMap);
+        qDebug()<<joints.size();
+        for(uint i=0; i<joints.size();i++)
+        {
+            qDebug()<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+            qDebug()<<joints.at(i).getParent().getLink();
+            qDebug()<<joints.at(i).getChild().getLink();
+            qDebug()<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+
+        }
 
         if(joints.size()!=0)
         {
@@ -64,28 +70,34 @@ void MyGLWidget::paintGL()
                 map<QString, Link>::iterator iter = usedLinks.find(lp.getName());
                 if(usedLinks.count(lp.getName()))
                 {
-                    //link je vec iscrtan
-                   //glLoadIdentity();
-                    glLoadMatrixf(m);
+                    //the link already exists
+                    glLoadMatrixf(matrices.at(lp.getName()));
                     draw(lp);
                 }
                 else
                 {
-                    if(lp.getName()=="base_link")
-                        glGetFloatv (GL_MODELVIEW_MATRIX, m);
+                    glGetFloatv (GL_MODELVIEW_MATRIX, m);
+                    for(int i=0; i<16; i++)
+                    {
+                        matrices[lp.getName()][i] = m[i];
+                    }
                     usedLinks[lp.getName()] = lp;
-                    parser->getInstance()->setUsedLinks(usedLinks);
                     qDebug()<<"Dodajem " + lp.getName();
+                    parser->getInstance()->setUsedLinks(usedLinks);
                     draw(lp);
                 }
-                 //draw child link
+                //joint transformations
                 glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
+                rotateMe(o.getRpy_r(), o.getRpy_p(), o.getRpy_y());
+
+                //draw child link
                 Link lc = linksMap.at(c.getLink());
                 draw(lc);
 
             }
             map<QString, Link> newMap = parser->getInstance()->getUsedLinks();
             newMap.clear();
+            matrices.clear();
             parser->getInstance()->setUsedLinks(newMap);
         }
         else
@@ -254,4 +266,32 @@ void MyGLWidget::reset()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glFlush();
+}
+
+void MyGLWidget::rotateMe(double r, double p, double y)
+{
+    double angle = 0;
+    if(r!=0)
+    {
+        angle = convertRadToDegrees(r);
+        r = 1;
+    }
+    else if(p!=0)
+    {
+        angle = convertRadToDegrees(p);
+        p = 1;
+    }
+    else if(y!=0)
+    {
+        angle = convertRadToDegrees(y);
+        y = 1;
+    }
+    glRotated(angle, r, p, y);
+}
+
+double MyGLWidget::convertRadToDegrees(double value)
+{
+    double retVal;
+    retVal = value * 180 / M_PI;
+    return retVal;
 }

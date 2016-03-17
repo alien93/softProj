@@ -7,6 +7,7 @@
 #include <vector>
 #include "joint.h"
 #include "link.h"
+#include "QDebug"
 
 using namespace std;
 
@@ -18,6 +19,8 @@ private:
     map<QString, Link> links;
     vector<Joint> jointsVector;
     vector<Link> linksVector;
+    void createBranch(vector<Joint> *retVal, map<QString, Joint> joints, QString jointName);
+
 public:
     RobotModel();
     RobotModel(QString name, map<QString, Joint> joints, map<QString, Link> links);
@@ -35,6 +38,8 @@ public:
     void setJointsVector(const vector<Joint> &value);
     vector<Link> getLinksVector() const;
     void setLinksVector(const vector<Link> &value);
+    vector<Joint> sortJoints(map<QString, Joint> map);
+    bool containsJoint(vector<Joint> values, Joint j);
 };
 
 #endif // ROBOTMODEL_H

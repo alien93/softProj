@@ -311,7 +311,8 @@ void URDFparser::parseChildNodes(QDomElement root, int i)
                         QStringList sizeVal = sizeText.split(" ");
                         double x_box = sizeVal[0].toDouble();
                         double y_box = sizeVal[1].toDouble();
-                        double z_box = sizeVal[2].toDouble();                        Box* box = new Box(x_box, y_box, z_box);
+                        double z_box = sizeVal[2].toDouble();
+                        Box* box = new Box(x_box, y_box, z_box);
                         box->setName("box");
                         geometry = new Geometry(*box);
                     }

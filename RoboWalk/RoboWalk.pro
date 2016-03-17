@@ -117,3 +117,5 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 LIBS     += -lglut -lGLU
+
+QMAKE_CXXFLAGS += -std=c++11

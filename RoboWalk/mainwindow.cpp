@@ -28,9 +28,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
      float xrotation =  ui->robotSimulation->getXRotation();
      float yrotation =  ui->robotSimulation->getYRotation();
      float sceneDistance = ui->robotSimulation->getSceneDistance();
-
-    switch(event->key())
-    {
+     switch(event->key())
+     {
         case Qt::Key_S:
             xrotation -= 5.0f;
             ui->robotSimulation->setXRotation(xrotation);
