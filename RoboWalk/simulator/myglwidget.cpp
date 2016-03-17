@@ -87,8 +87,9 @@ void MyGLWidget::paintGL()
                     draw(lp);
                 }
                 //joint transformations
-                glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
                 rotateMe(o.getRpy_r(), o.getRpy_p(), o.getRpy_y());
+
+                glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
 
                 //draw child link
                 Link lc = linksMap.at(c.getLink());
