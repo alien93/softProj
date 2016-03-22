@@ -7,6 +7,7 @@
 #include <QKeyEvent>
 #include "simulator/myglwidget.h"
 #include "ui_mainwindow.h"
+#include <QtGui>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -79,5 +80,43 @@ void MainWindow::on_actionInsert_URDF_file_triggered()
                 );
     URDFparser* parser = URDFparser::getInstance();
     ui->robotSimulation->reset();
-    parser->parseURDF(filename);
+    int result = parser->parseURDF(filename);
+    if(result == 0)
+    {
+       addButtons();
+    }
 }
+
+void MainWindow::addButtons()
+{
+    URDFparser* parser = URDFparser::getInstance();
+    RobotModel rm = parser->rm;
+    map<QString, Link> linksMap = rm.getLinks();
+    vector<Link> links = rm.getLinksVector();
+    map<QString, Joint> jointsMap = rm.getJoints();
+    vector<Joint> joints = rm.sortJoints(jointsMap);
+    QComboBox* cb = new QComboBox(ui->frame);
+    QStringList* sl = new QStringList();
+    QPushButton* button;
+    button = new QPushButton("Test", ui->frame);
+    button->show();
+
+    for(uint i=0; i<joints.size();i++)
+    {
+        if(linksMap[joints.at(i).getParent().getLink()].getVisual().size()>0)
+        {
+            sl->append("Parent: " + joints.at(i).getParent().getLink());
+        }
+        if(linksMap[joints.at(i).getChild().getLink()].getVisual().size()>0)
+        {
+            sl->append("Child: " + joints.at(i).getChild().getLink());
+        }
+
+    }
+    cb->addItems(*sl);
+    cb->setFixedWidth(150);
+    button->setFixedWidth(40);
+    ui->formLayout->addRow(cb, button);
+
+}
+

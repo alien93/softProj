@@ -44,6 +44,7 @@ void Link::setInertial(const Inertial &value)
 }
 
 
+
 Collision Link::getCollision() const
 {
     return collision;

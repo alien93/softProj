@@ -45,14 +45,7 @@ void MyGLWidget::paintGL()
        // vector<Joint> joints = parser->getInstance()->rm.getJointsVector();
         vector<Joint> joints = parser->getInstance()->rm.sortJoints(jointsMap);
         qDebug()<<joints.size();
-        for(uint i=0; i<joints.size();i++)
-        {
-            qDebug()<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
-            qDebug()<<joints.at(i).getParent().getLink();
-            qDebug()<<joints.at(i).getChild().getLink();
-            qDebug()<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
-        }
 
         if(joints.size()!=0)
         {
@@ -87,9 +80,14 @@ void MyGLWidget::paintGL()
                     draw(lp);
                 }
                 //joint transformations
+                qDebug()<<"---------------";
+                qDebug()<<o.getXyz_x();
+                qDebug()<<o.getXyz_y();
+                qDebug()<<o.getXyz_z();
+                qDebug()<< "---------------";
+                glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
                 rotateMe(o.getRpy_r(), o.getRpy_p(), o.getRpy_y());
 
-                glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
 
                 //draw child link
                 Link lc = linksMap.at(c.getLink());
@@ -277,12 +275,12 @@ void MyGLWidget::rotateMe(double r, double p, double y)
         angle = convertRadToDegrees(r);
         r = 1;
     }
-    else if(p!=0)
+    if(p!=0)
     {
         angle = convertRadToDegrees(p);
         p = 1;
     }
-    else if(y!=0)
+    if(y!=0)
     {
         angle = convertRadToDegrees(y);
         y = 1;

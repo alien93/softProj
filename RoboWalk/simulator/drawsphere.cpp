@@ -35,12 +35,12 @@ void DrawSphere::rotateMe(double r, double p, double y)
         angle = convertRadToDegrees(r);
         r = 1;
     }
-    else if(p!=0)
+     if(p!=0)
     {
         angle = convertRadToDegrees(p);
         p = 1;
     }
-    else if(y!=0)
+     if(y!=0)
     {
         angle = convertRadToDegrees(y);
         y = 1;

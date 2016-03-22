@@ -13,17 +13,19 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+
     ~MainWindow();
 
 private slots:
 
     void on_actionExit_triggered();
-
     void on_actionInsert_URDF_file_triggered();
 
 private:
-    Ui::MainWindow *ui;
     void keyPressEvent(QKeyEvent *event);
+    void addButtons();
+
+    Ui::MainWindow *ui;
 };
 
 #endif // MAINWINDOW_H

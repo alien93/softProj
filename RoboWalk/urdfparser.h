@@ -9,6 +9,8 @@
 #include "model/box.h"
 #include "model/cylinder.h"
 #include "model/sphere.h"
+#include <QtGui>
+
 
 class URDFparser
 {
