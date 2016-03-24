@@ -95,7 +95,7 @@ void MainWindow::addButtons()
     vector<Link> links = rm.getLinksVector();
     map<QString, Joint> jointsMap = rm.getJoints();
     vector<Joint> joints = rm.sortJoints(jointsMap);
-    QComboBox* cb = new QComboBox(ui->frame);
+    cb = new QComboBox(ui->frame);
     QStringList* sl = new QStringList();
     QPushButton* button;
     button = new QPushButton("Test", ui->frame);
@@ -105,18 +105,33 @@ void MainWindow::addButtons()
     {
         if(linksMap[joints.at(i).getParent().getLink()].getVisual().size()>0)
         {
-            sl->append("Parent: " + joints.at(i).getParent().getLink());
+          //  sl->append("Parent: " + joints.at(i).getParent().getLink());
+            if(!sl->contains(joints.at(i).getParent().getLink()))
+                sl->append(joints.at(i).getParent().getLink());
         }
         if(linksMap[joints.at(i).getChild().getLink()].getVisual().size()>0)
         {
-            sl->append("Child: " + joints.at(i).getChild().getLink());
+           // sl->append("Child: " + joints.at(i).getChild().getLink());
+            if(!sl->contains(joints.at(i).getChild().getLink()))
+             sl->append(joints.at(i).getChild().getLink());
         }
 
     }
     cb->addItems(*sl);
     cb->setFixedWidth(150);
     button->setFixedWidth(40);
+    connect(button, SIGNAL(released()), this, SLOT(testButtonClicked()));
     ui->formLayout->addRow(cb, button);
+}
 
+void MainWindow::testButtonClicked()
+{
+  /*  QString val = cb->currentText();
+    qDebug()<<val;
+    qDebug()<<cb->currentIndex();*/
+    MyGLWidget::jointName = cb->currentText();
+    ui->robotSimulation->repaint();
+    ui->robotSimulation->animation();
+    ui->robotSimulation->timer.start(16);
 }
 

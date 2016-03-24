@@ -52,6 +52,7 @@ void DrawBox::rotateMe(double r, double p, double y)
         y = 1;
     }
     glRotated(angle, r, p, y);
+
 }
 
 double DrawBox::convertRadToDegrees(double value)

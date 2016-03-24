@@ -177,10 +177,12 @@ void URDFparser::parseChildNodes(QDomElement root, int i)
             double x1, y1, z1, r1, p1, yy1;
             if(xyz_axis!="")
             {
-                QStringList xyz_dataAxis = xyz.split(" ");
+                QStringList xyz_dataAxis = xyz_axis.split(" ");
                 x1 = xyz_dataAxis[0].toDouble();
                 y1 = xyz_dataAxis[1].toDouble();
                 z1 = xyz_dataAxis[2].toDouble();
+                qDebug()<<"HEREHERE";
+                qDebug()<<xyz_dataAxis;
             }
             else
             {
@@ -188,7 +190,7 @@ void URDFparser::parseChildNodes(QDomElement root, int i)
             }
             if(rpy_axis!="")
             {
-                QStringList rpy_dataAxis = rpy.split(" ");
+                QStringList rpy_dataAxis = rpy_axis.split(" ");
                 r1 = rpy_dataAxis[0].toDouble();
                 p1 = rpy_dataAxis[1].toDouble();
                 yy1 = rpy_dataAxis[2].toDouble();

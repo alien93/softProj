@@ -19,11 +19,12 @@ class MyGLWidget : public QGLWidget
 {
     Q_OBJECT
 private:
-    QTimer timer;
+    bool step;
     SimpleLegs *sl;
     DrawCylinder *cylinder;
     DrawBox *box;
     DrawSphere *sphere;
+    double limit;
     float distance;
     float rotationAngle;
     void drawGrid();
@@ -32,7 +33,10 @@ private:
     float sceneDistance;
     map<QString,  GLfloat[16]> matrices;   //matrix for each parent node
 public:
+    QTimer timer;
+
     explicit MyGLWidget(QWidget *parent=0);
+    static QString jointName;
     void initializeGL();
     void paintGL();
     void resizeGL(int w, int h);

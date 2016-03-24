@@ -1,6 +1,7 @@
 #include "myglwidget.h"
 #include <GL/glut.h>
 
+QString MyGLWidget::jointName = "";
 
 MyGLWidget::MyGLWidget(QWidget *parent):
     QGLWidget(parent)
@@ -8,9 +9,11 @@ MyGLWidget::MyGLWidget(QWidget *parent):
     xRotation=0.0f;
     yRotation = 0.0f;
     sceneDistance=-80.0f;
+    limit = 0.1;
    // distance = -10;
    // rotationAngle = 0;
-   // connect(&timer, SIGNAL(timeout()), this, SLOT(animation()));
+    step = true;
+    connect(&timer, SIGNAL(timeout()), this, SLOT(animation()));
    // timer.start(16);
 }
 void MyGLWidget::initializeGL()
@@ -44,8 +47,6 @@ void MyGLWidget::paintGL()
         map<QString, Joint> jointsMap = parser->getInstance()->rm.getJoints();
        // vector<Joint> joints = parser->getInstance()->rm.getJointsVector();
         vector<Joint> joints = parser->getInstance()->rm.sortJoints(jointsMap);
-        qDebug()<<joints.size();
-
 
         if(joints.size()!=0)
         {
@@ -75,18 +76,24 @@ void MyGLWidget::paintGL()
                         matrices[lp.getName()][i] = m[i];
                     }
                     usedLinks[lp.getName()] = lp;
-                    qDebug()<<"Dodajem " + lp.getName();
                     parser->getInstance()->setUsedLinks(usedLinks);
                     draw(lp);
                 }
                 //joint transformations
-                qDebug()<<"---------------";
-                qDebug()<<o.getXyz_x();
-                qDebug()<<o.getXyz_y();
-                qDebug()<<o.getXyz_z();
-                qDebug()<< "---------------";
-                glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
-                rotateMe(o.getRpy_r(), o.getRpy_p(), o.getRpy_y());
+                qDebug()<<jointName;
+                qDebug()<<j.getParent().getLink();
+                if(jointName!="" && j.getChild().getLink()==jointName)
+                {
+                    Axis axis = j.getAxis();
+                    glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
+                    rotateMe(limit*(axis.getX()), limit*(axis.getY()), limit*(axis.getZ()));
+
+                }
+                else
+                {
+                    glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
+                    rotateMe(o.getRpy_r(), o.getRpy_p(), o.getRpy_y());
+                }
 
 
                 //draw child link
@@ -247,7 +254,25 @@ void MyGLWidget::setXRotation(float value)
 
 void MyGLWidget::animation()
 {
-    if(rotationAngle<360)
+    URDFparser *parser;
+    map<QString, Joint> jointsMap = parser->getInstance()->rm.getJoints();
+    vector<Joint> joints = parser->getInstance()->rm.sortJoints(jointsMap);
+    double lowerLimit, upperLimit;
+    if(joints.size()!=0)
+    {
+        for(vector<Joint>::iterator it=joints.begin(); it!=joints.end(); it++)
+        {
+            Joint j = *it;
+            if(jointName!="" && j.getChild().getLink()==jointName)
+            {
+
+                lowerLimit = j.getLimit().getLower();
+                upperLimit = j.getLimit().getUpper();
+
+            }
+        }
+    }
+ /*   if(rotationAngle<360)
         rotationAngle+=30;
     else
         rotationAngle = 0;
@@ -255,7 +280,38 @@ void MyGLWidget::animation()
     if(distance < 10)
         distance+=0.1;
     else
-        distance = -10;
+        distance = -10;*/
+    if(lowerLimit>upperLimit)
+    {
+        double temp = upperLimit;
+        upperLimit = lowerLimit;
+        lowerLimit = temp;
+    }
+    qDebug()<<"hello from animation";
+    if(step)
+    {
+        if(limit<lowerLimit)
+            limit = lowerLimit;
+        else if(limit<=upperLimit && limit>=lowerLimit)
+            limit+=0.01;
+        else if(limit>upperLimit)
+        {
+            limit = upperLimit;
+            step = false;
+        }
+    }
+    else
+    {
+        if(limit>upperLimit)
+            limit = upperLimit;
+        else if(limit<=upperLimit && limit>=lowerLimit)
+            limit-=0.01;
+        else if(limit<lowerLimit)
+        {
+            limit = lowerLimit;
+            step = true;
+        }
+    }
     update();
 }
 
@@ -286,6 +342,7 @@ void MyGLWidget::rotateMe(double r, double p, double y)
         y = 1;
     }
     glRotated(angle, r, p, y);
+
 }
 
 double MyGLWidget::convertRadToDegrees(double value)
