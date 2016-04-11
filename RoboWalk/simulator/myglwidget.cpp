@@ -1,7 +1,9 @@
 #include "myglwidget.h"
 #include <GL/glut.h>
 
+
 QString MyGLWidget::jointName = "";
+
 
 MyGLWidget::MyGLWidget(QWidget *parent):
     QGLWidget(parent)
@@ -34,11 +36,12 @@ void MyGLWidget::paintGL()
     glRotatef(yRotation, 0.0f, 1.0f, 0.0f);
     glScalef(30.0f, 30.0f, 30.0f);
 
+   // world->stepSimulation();
     glPushMatrix();
     //glTranslatef(0.0f, -.5f, 0.0f);
     drawGrid();
     glPopMatrix();
-    glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
     GLfloat m[16];
     if(parser->getInstance()->getFileParsed())
     {
@@ -351,3 +354,7 @@ double MyGLWidget::convertRadToDegrees(double value)
     retVal = value * 180 / M_PI;
     return retVal;
 }
+
+
+
+

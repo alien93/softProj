@@ -2,9 +2,11 @@
 
 DrawSphere::DrawSphere()
 {
+    quad = gluNewQuadric();
 }
 
 DrawSphere::DrawSphere( double radius, double r, double p, double yy, double x, double y, double z, double red, double green, double blue, double alpha)
+
 {
     this->radius = radius;
     this->r = r;
@@ -17,14 +19,18 @@ DrawSphere::DrawSphere( double radius, double r, double p, double yy, double x, 
     this->green = green;
     this->blue = blue;
     this->alpha = alpha;
+    quad = gluNewQuadric();
 }
 
 void DrawSphere::drawSphere()
 {
-    glTranslated(x,z, y);
-    rotateMe(r, p, yy);
-    glColor4d(red, green, blue, alpha);
-    glutSolidSphere(radius, 32, 32);
+
+        glTranslated(x,z, y);
+        rotateMe(r, p, yy);
+        glColor4d(red, green, blue, alpha);
+        //glutSolidSphere(radius, 32, 32);
+        gluSphere(quad, radius, 32, 32);
+
 }
 
 void DrawSphere::rotateMe(double r, double p, double y)
@@ -53,4 +59,10 @@ double DrawSphere::convertRadToDegrees(double value)
     double retVal;
     retVal = value * 180 / M_PI;
     return retVal;
+}
+
+DrawSphere::~DrawSphere()
+{
+
+    gluDeleteQuadric(quad);
 }

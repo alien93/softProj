@@ -40,7 +40,6 @@ SOURCES += main.cpp\
     model/color.cpp \
     model/texture.cpp \
     model/geometry.cpp \
-    model/abstractobject.cpp \
     model/sensor.cpp \
     model/camera.cpp \
     model/image.cpp \
@@ -62,7 +61,9 @@ SOURCES += main.cpp\
     simulator/drawbox.cpp \
     simulator/drawcylinder.cpp \
     simulator/drawsphere.cpp \
-    simulator/cuboid.cpp
+    simulator/cuboid.cpp \
+    simulator/world.cpp \
+    model/abstractobject.cpp
 
 HEADERS  += mainwindow.h \
     urdfparser.h \
@@ -90,7 +91,6 @@ HEADERS  += mainwindow.h \
     model/color.h \
     model/texture.h \
     model/geometry.h \
-    model/abstractobject.h \
     model/sensor.h \
     model/camera.h \
     model/image.h \
@@ -112,10 +112,12 @@ HEADERS  += mainwindow.h \
     simulator/drawbox.h \
     simulator/drawcylinder.h \
     simulator/drawsphere.h \
-    simulator/cuboid.h
+    simulator/cuboid.h \
+    simulator/world.h \
+    model/abstractobject.h
 
 FORMS    += mainwindow.ui
 
-LIBS     += -lglut -lGLU
+LIBS     += -lglut -lGL -lGLU -L/usr/local/lib/ode/ -lode
 
-QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++11 -dDOUBLE

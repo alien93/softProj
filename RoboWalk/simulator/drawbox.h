@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <math.h>
 #include "cuboid.h"
+#include <ode/ode.h>
 
 class DrawBox
 {

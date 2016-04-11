@@ -68,6 +68,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 void MainWindow::on_actionExit_triggered()
 {
     this->close();
+    ui->robotSimulation->reset();
 }
 
 void MainWindow::on_actionInsert_URDF_file_triggered()

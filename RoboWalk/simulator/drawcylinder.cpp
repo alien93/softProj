@@ -25,7 +25,6 @@ void DrawCylinder::drawCylinder()
 {
 
     glPushMatrix();
-
     glTranslated(x, y ,z);
     rotateMe(r, p, yy);
     glColor4d(red, green, blue, alpha);
@@ -57,7 +56,7 @@ void DrawCylinder::rotateMe(double r, double p, double y)
         y = 1;
     }
     if(r+p+y>1)
-        glRotated(angle, -r, p, -y);
+        glRotated(angle, r, p, y);
     glRotated(angle, r, p, y);
     glTranslated(0.0, 0.0, -length/2);
 

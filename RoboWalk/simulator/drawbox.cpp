@@ -1,4 +1,5 @@
 #include "drawbox.h"
+#include <math.h>
 
 DrawBox::DrawBox()
 {

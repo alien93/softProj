@@ -1,5 +1,7 @@
 #ifndef MYGLWIDGET_H
 #define MYGLWIDGET_H
+#define MAX_GEOM 1
+#define MAX_CONTACTS 3
 
 #include <QGLWidget>
 #include <QTimer>
@@ -10,10 +12,9 @@
 #include <vector>
 #include "model/visual.h"
 #include <array>
-
+#include <ode/ode.h>
 
 using namespace std;
-
 
 class MyGLWidget : public QGLWidget
 {
@@ -32,6 +33,7 @@ private:
     float yRotation;
     float sceneDistance;
     map<QString,  GLfloat[16]> matrices;   //matrix for each parent node
+
 public:
     QTimer timer;
 
