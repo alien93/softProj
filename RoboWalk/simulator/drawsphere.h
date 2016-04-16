@@ -4,7 +4,6 @@
 #include <GL/glut.h>
 #include <QDebug>
 #include <math.h>
-#include "world.h"
 #include <ode/ode.h>
 
 class DrawSphere

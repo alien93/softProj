@@ -21,12 +21,14 @@ DrawBox::DrawBox(double width, double height, double depth, double r, double p, 
     this->green = green;
     this->blue = blue;
     this->alpha = alpha;
+
+
 }
 
 void DrawBox::drawBox()
 {
     glPushMatrix();
-   // glTranslated(x,z,y);
+    glTranslated(x,z, y);
     rotateMe(r, p, yy);
     glColor4d(red, green, blue, alpha);
     Cuboid c = Cuboid(width, height, depth);

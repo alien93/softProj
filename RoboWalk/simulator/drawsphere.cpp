@@ -24,12 +24,13 @@ DrawSphere::DrawSphere( double radius, double r, double p, double yy, double x, 
 
 void DrawSphere::drawSphere()
 {
-
+        glPushMatrix();
         glTranslated(x,z, y);
         rotateMe(r, p, yy);
         glColor4d(red, green, blue, alpha);
         //glutSolidSphere(radius, 32, 32);
         gluSphere(quad, radius, 32, 32);
+        glPopMatrix();
 
 }
 

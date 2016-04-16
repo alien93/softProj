@@ -4,7 +4,7 @@
 #include <GL/glut.h>
 #include <QDebug>
 #include <math.h>
-
+#include <ode/ode.h>
 
 class DrawCylinder
 {
@@ -23,6 +23,10 @@ private:
     double alpha;
     void rotateMe(double r, double p, double y);
     double convertRadToDegrees(double value);
+
+    //ode
+    dMass mass;
+
 public:
     DrawCylinder();
     DrawCylinder(double length, double radius,

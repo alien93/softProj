@@ -62,8 +62,8 @@ SOURCES += main.cpp\
     simulator/drawcylinder.cpp \
     simulator/drawsphere.cpp \
     simulator/cuboid.cpp \
-    simulator/world.cpp \
-    model/abstractobject.cpp
+    model/abstractobject.cpp \
+    simulator/physics.cpp
 
 HEADERS  += mainwindow.h \
     urdfparser.h \
@@ -113,8 +113,8 @@ HEADERS  += mainwindow.h \
     simulator/drawcylinder.h \
     simulator/drawsphere.h \
     simulator/cuboid.h \
-    simulator/world.h \
-    model/abstractobject.h
+    model/abstractobject.h \
+    simulator/physics.h
 
 FORMS    += mainwindow.ui
 

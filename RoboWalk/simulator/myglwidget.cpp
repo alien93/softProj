@@ -8,26 +8,44 @@ QString MyGLWidget::jointName = "";
 MyGLWidget::MyGLWidget(QWidget *parent):
     QGLWidget(parent)
 {
+    p = new Physics();
+
     xRotation=0.0f;
     yRotation = 0.0f;
     sceneDistance=-80.0f;
+    gravityAnimation = false;
     limit = 0.1;
    // distance = -10;
    // rotationAngle = 0;
     step = true;
     connect(&timer, SIGNAL(timeout()), this, SLOT(animation()));
-   // timer.start(16);
+    connect(&odeTimer, SIGNAL(timeout()), this, SLOT(gravity()));
 }
+
+void MyGLWidget::gravity()
+{
+    gravityAnimation = true;
+    odeTimer.start(20);
+    if(odeTime.elapsed() < 2000)
+        repaint();
+    else
+        odeTimer.stop();
+}
+
+
+
 void MyGLWidget::initializeGL()
 {
+    p->odeInit();
     glClearColor(0.0f, 0.0f, 0, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
 
 }
+
 void MyGLWidget::paintGL()
 {
-    URDFparser *parser;
+    //rendering objects
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     glTranslatef(0.0f, -10.0f, 0.0f);
@@ -36,16 +54,20 @@ void MyGLWidget::paintGL()
     glRotatef(yRotation, 0.0f, 1.0f, 0.0f);
     glScalef(30.0f, 30.0f, 30.0f);
 
-   // world->stepSimulation();
+
     glPushMatrix();
     //glTranslatef(0.0f, -.5f, 0.0f);
     drawGrid();
     glPopMatrix();
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+
+
     GLfloat m[16];
+
+
     if(parser->getInstance()->getFileParsed())
     {
-        map<QString, Link> linksMap = parser->getInstance()->rm.getLinks();
+       map<QString, Link> linksMap = parser->getInstance()->rm.getLinks();
         vector<Link> links = parser->getInstance()->rm.getLinksVector();
         map<QString, Joint> jointsMap = parser->getInstance()->rm.getJoints();
        // vector<Joint> joints = parser->getInstance()->rm.getJointsVector();
@@ -69,7 +91,7 @@ void MyGLWidget::paintGL()
                 {
                     //the link already exists
                     glLoadMatrixf(matrices.at(lp.getName()));
-                    draw(lp);
+
                 }
                 else
                 {
@@ -80,28 +102,39 @@ void MyGLWidget::paintGL()
                     }
                     usedLinks[lp.getName()] = lp;
                     parser->getInstance()->setUsedLinks(usedLinks);
-                    draw(lp);
-                }
-                //joint transformations
-                qDebug()<<jointName;
-                qDebug()<<j.getParent().getLink();
-                if(jointName!="" && j.getChild().getLink()==jointName)
-                {
-                    Axis axis = j.getAxis();
-                    glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
-                    rotateMe(limit*(axis.getX()), limit*(axis.getY()), limit*(axis.getZ()));
 
+                    this->p->odeCreateObject(lp, links.size());
                 }
-                else
-                {
-                    glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
-                    rotateMe(o.getRpy_r(), o.getRpy_p(), o.getRpy_y());
-                }
+
 
 
                 //draw child link
                 Link lc = linksMap.at(c.getLink());
-                draw(lc);
+                //joint transformations
+                if(jointName!="" && j.getChild().getLink()==jointName)
+                {
+                    Axis axis = j.getAxis();
+                   /* glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
+                    rotateMe(limit*(axis.getX()), limit*(axis.getY()), limit*(axis.getZ()));*/
+
+
+                }
+                else
+                {
+                   /* glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
+                    rotateMe(o.getRpy_r(), o.getRpy_p(), o.getRpy_y());*/
+                }
+
+
+
+
+
+
+
+                this->p->odeCreateObject(lc, links.size(), o, j.getAxis());
+
+                //both objects are loaded
+                this->p->odeCreateJoint(j, linksMap.at(j.getParent().getLink()), linksMap.at(j.getChild().getLink()), joints.size(), links.size());
 
             }
             map<QString, Link> newMap = parser->getInstance()->getUsedLinks();
@@ -112,92 +145,30 @@ void MyGLWidget::paintGL()
         else
             for(vector<Link>::iterator it=links.begin(); it!=links.end(); it++)
             {
-                glPushMatrix();
+                //glPushMatrix();
                 Link lp = *it;
-                draw(lp);
-                glPopMatrix();
+
+                p->odeCreateObject(lp, links.size());
+
+                //glPopMatrix();
             }
     }
-}
 
 
-void MyGLWidget::draw(Link l)
-{
-    vector<Visual> visuals = l.getVisual();
-    if(visuals.size()>0)
+
+        //ode
+    if(parser->getInstance()->getFileParsed())
     {
-        for(vector<Visual>::iterator it=visuals.begin(); it!=visuals.end(); it++)
-        {
-            Origin o = it->getOrigin();
-            Geometry g = it->getGeometry();
-            Material m = it->getMaterial();
-
-            if(g.getObject().getName() == "cylinder")
-            {
-                double length = g.getObject().getLength();
-                double radius = g.getObject().getRadius();
-                double r = o.getRpy_r();
-                double p = o.getRpy_p();
-                double yy = o.getRpy_y();
-                double x = o.getXyz_x();
-                double y = o.getXyz_y();
-                double z = o.getXyz_z();
-                double red = m.getColor().getRed();
-                double green = m.getColor().getGreen();
-                double blue = m.getColor().getBlue();
-                double alpha = m.getColor().getAlpha();
-
-                cylinder = new DrawCylinder(length, radius,
-                                            r, p, yy,
-                                            x, y, z,
-                                            red, green, blue, alpha);
-                cylinder->drawCylinder();
-            }
-            else if(g.getObject().getName() == "box")
-            {
-                double width = g.getObject().getWidth();
-                double height = g.getObject().getHeight();
-                double depth = g.getObject().getDepth();
-                double r = o.getRpy_r();
-                double p = o.getRpy_p();
-                double yy = o.getRpy_y();
-                double x = o.getXyz_x();
-                double y = o.getXyz_y();
-                double z = o.getXyz_z();
-                double red = m.getColor().getRed();
-                double green = m.getColor().getGreen();
-                double blue = m.getColor().getBlue();
-                double alpha = m.getColor().getAlpha();
-
-                box = new DrawBox(width, height, depth,
-                                  r, p, yy,
-                                  x, y, z,
-                                  red, green, blue, alpha);
-                box->drawBox();
-            }
-            else if(g.getObject().getName() == "sphere")
-            {
-                double radius = g.getObject().getSphereRadius();
-                double r = o.getRpy_r();
-                double p = o.getRpy_p();
-                double yy = o.getRpy_y();
-                double x = o.getXyz_x();
-                double y = o.getXyz_y();
-                double z = o.getXyz_z();
-                double red = m.getColor().getRed();
-                double green = m.getColor().getGreen();
-                double blue = m.getColor().getBlue();
-                double alpha = m.getColor().getAlpha();
-
-                sphere = new DrawSphere(radius,
-                                        r, p, yy,
-                                        x, y, z,
-                                        red, green, blue, alpha);
-                sphere->drawSphere();
-            }
-        }
+        p->odeLoop();
+        if(!gravityAnimation)
+            gravity();
     }
+
+
 }
+
+
+
 
 
 void MyGLWidget::resizeGL(int w, int h)
@@ -290,7 +261,6 @@ void MyGLWidget::animation()
         upperLimit = lowerLimit;
         lowerLimit = temp;
     }
-    qDebug()<<"hello from animation";
     if(step)
     {
         if(limit<lowerLimit)

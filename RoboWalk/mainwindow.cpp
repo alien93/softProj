@@ -1,13 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QDebug>
-#include "urdfparser.h"
-#include <QKeyEvent>
-#include "simulator/myglwidget.h"
-#include "ui_mainwindow.h"
-#include <QtGui>
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -47,6 +40,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             ui->robotSimulation->repaint();
             break;
         case Qt::Key_A:
+            qDebug()<<"AAAAAAAAAAAAAAAAA";
             yrotation += 5.0f;
             ui->robotSimulation->setYRotation(yrotation);
             ui->robotSimulation->repaint();
@@ -67,8 +61,14 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::on_actionExit_triggered()
 {
+    qDebug()<<"Exit";
     this->close();
     ui->robotSimulation->reset();
+    ui->robotSimulation->p->odeClose();
+    //ode
+  /*  dJointGroupDestroy(ui->robotSimulation->jointGroup);
+    dSpaceDestroy(ui->robotSimulation->space);
+    dWorldDestroy(ui->robotSimulation->world);*/
 }
 
 void MainWindow::on_actionInsert_URDF_file_triggered()
@@ -84,6 +84,7 @@ void MainWindow::on_actionInsert_URDF_file_triggered()
     int result = parser->parseURDF(filename);
     if(result == 0)
     {
+       ui->robotSimulation->odeTime.start();
        addButtons();
     }
 }
@@ -98,7 +99,6 @@ void MainWindow::addButtons()
     vector<Joint> joints = rm.sortJoints(jointsMap);
     cb = new QComboBox(ui->frame);
     QStringList* sl = new QStringList();
-    QPushButton* button;
     button = new QPushButton("Test", ui->frame);
     button->show();
 
@@ -130,9 +130,18 @@ void MainWindow::testButtonClicked()
   /*  QString val = cb->currentText();
     qDebug()<<val;
     qDebug()<<cb->currentIndex();*/
-    MyGLWidget::jointName = cb->currentText();
-    ui->robotSimulation->repaint();
-    ui->robotSimulation->animation();
-    ui->robotSimulation->timer.start(16);
+    if(button->text() == "Test")
+    {
+        button->setText("Stop");
+        MyGLWidget::jointName = cb->currentText();
+        ui->robotSimulation->repaint();
+        ui->robotSimulation->animation();
+        ui->robotSimulation->timer.start(16);
+    }
+    else
+    {
+        button->setText("Test");
+        ui->robotSimulation->timer.stop();
+    }
 }
 
