@@ -6,8 +6,9 @@
 #include <math.h>
 #include "world.h"
 #include <ode/ode.h>
+#include "objectode.h"
 
-class DrawSphere
+class DrawSphere:public ObjectODE
 {
 private:
     double radius;
@@ -24,9 +25,9 @@ private:
     GLUquadric* quad;
     void rotateMe(double r, double p, double y);
     double convertRadToDegrees(double value);
+
 public:
-    DrawSphere();
-    DrawSphere( double radius,
+    DrawSphere(World* world, bool body, double radius,
                  double r, double p, double yy,
                  double x, double y, double z,
                  double red, double green, double blue, double alpha);

@@ -1,14 +1,4 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QDebug>
-#include "urdfparser.h"
-#include <QKeyEvent>
-#include "simulator/myglwidget.h"
-#include "ui_mainwindow.h"
-#include <QtGui>
-
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -98,7 +88,6 @@ void MainWindow::addButtons()
     vector<Joint> joints = rm.sortJoints(jointsMap);
     cb = new QComboBox(ui->frame);
     QStringList* sl = new QStringList();
-    QPushButton* button;
     button = new QPushButton("Test", ui->frame);
     button->show();
 
@@ -130,9 +119,18 @@ void MainWindow::testButtonClicked()
   /*  QString val = cb->currentText();
     qDebug()<<val;
     qDebug()<<cb->currentIndex();*/
-    MyGLWidget::jointName = cb->currentText();
-    ui->robotSimulation->repaint();
-    ui->robotSimulation->animation();
-    ui->robotSimulation->timer.start(16);
+    if(button->text() == "Test")
+       {
+           button->setText("Stop");
+           MyGLWidget::jointName = cb->currentText();
+           ui->robotSimulation->repaint();
+           ui->robotSimulation->animation();
+           ui->robotSimulation->timer.start(16);
+       }
+       else
+       {
+           button->setText("Test");
+           ui->robotSimulation->timer.stop();
+       }
 }
 

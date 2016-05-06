@@ -1,7 +1,5 @@
 #ifndef MYGLWIDGET_H
 #define MYGLWIDGET_H
-#define MAX_GEOM 1
-#define MAX_CONTACTS 3
 
 #include <QGLWidget>
 #include <QTimer>
@@ -25,15 +23,20 @@ private:
     DrawCylinder *cylinder;
     DrawBox *box;
     DrawSphere *sphere;
+    URDFparser *parser;
+    GLfloat m[16];
     double limit;
     float distance;
     float rotationAngle;
     void drawGrid();
+    void drawRobot();
     float xRotation;
     float yRotation;
     float sceneDistance;
     map<QString,  GLfloat[16]> matrices;   //matrix for each parent node
 
+    //ODE
+    World* w;
 public:
     QTimer timer;
 
