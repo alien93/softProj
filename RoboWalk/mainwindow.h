@@ -3,13 +3,21 @@
 
 #include <QMainWindow>
 #include <QComboBox>
+<<<<<<< HEAD
 #include "ui_mainwindow.h"
+=======
+#include <ode/ode.h>
+>>>>>>> origin
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDebug>
 #include "urdfparser.h"
 #include <QKeyEvent>
 #include "simulator/myglwidget.h"
+<<<<<<< HEAD
+=======
+#include "ui_mainwindow.h"
+>>>>>>> origin
 #include <QtGui>
 
 namespace Ui {
@@ -31,6 +39,8 @@ private slots:
     void testButtonClicked();
 
 private:
+    QPushButton* button;
+
     QComboBox* cb;
     QPushButton* button;
     void keyPressEvent(QKeyEvent *event);

@@ -16,6 +16,7 @@ DrawCylinder::DrawCylinder(World* world, bool body, double length, double radius
     this->blue = blue;
     this->alpha = alpha;
 
+<<<<<<< HEAD
     //ODE
     geomID = dCreateCylinder(world->getSpaceID(), radius, length);
 
@@ -42,10 +43,15 @@ DrawCylinder::~DrawCylinder()
     if(hasBody)
         dBodyDestroy(bodyID);
     dGeomDestroy(geomID);
+=======
+    //ode
+    //dMassSetCylinder(&mass, 0.5, 2, radius, length); //direction x=1, y=2, z=3
+>>>>>>> origin
 }
 
 void DrawCylinder::drawCylinder()
 {
+<<<<<<< HEAD
 
     if(hasBody)
     {
@@ -117,6 +123,10 @@ void DrawCylinder::drawCylinder()
 
   /*  glPushMatrix();
     glTranslated(x, y ,z);
+=======
+    glPushMatrix();
+    glTranslated(x, z, y);
+>>>>>>> origin
     rotateMe(r, p, yy);
     glColor4d(red, green, blue, alpha);
     GLUquadric* cylinder = gluNewQuadric();
@@ -125,7 +135,10 @@ void DrawCylinder::drawCylinder()
     glTranslated(0.0,0.0 , length);
     gluDisk(cylinder,0,radius, 32, 32);
     glPopMatrix();
+<<<<<<< HEAD
     glPopMatrix();*/
+=======
+>>>>>>> origin
 }
 
 void DrawCylinder::rotateMe(double r, double p, double y)
@@ -146,10 +159,10 @@ void DrawCylinder::rotateMe(double r, double p, double y)
         angle = convertRadToDegrees(y);
         y = 1;
     }
-    if(r+p+y>1)
-        glRotated(angle, r, p, y);
+   /* if(r+p+y>1)
+        glRotated(angle, r, p, y);*/
     glRotated(angle, r, p, y);
-    glTranslated(0.0, 0.0, -length/2);
+   // glTranslated(0.0, 0.0, -length/2);
 
 }
 

@@ -8,19 +8,38 @@ QString MyGLWidget::jointName = "";
 MyGLWidget::MyGLWidget(QWidget *parent):
     QGLWidget(parent)
 {
+    p = new Physics();
+
     xRotation=0.0f;
     yRotation = 0.0f;
     sceneDistance=-80.0f;
+    gravityAnimation = false;
     limit = 0.1;
    // distance = -10;
    // rotationAngle = 0;
     step = true;
     connect(&timer, SIGNAL(timeout()), this, SLOT(animation()));
-   // timer.start(16);
+    connect(&odeTimer, SIGNAL(timeout()), this, SLOT(gravity()));
 }
 
+<<<<<<< HEAD
+=======
+void MyGLWidget::gravity()
+{
+    gravityAnimation = true;
+    odeTimer.start(20);
+    if(odeTime.elapsed() < 2000)
+        repaint();
+    else
+        odeTimer.stop();
+}
+
+
+
+>>>>>>> origin
 void MyGLWidget::initializeGL()
 {
+    p->odeInit();
     glClearColor(0.0f, 0.0f, 0, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
@@ -31,6 +50,10 @@ void MyGLWidget::initializeGL()
 
 void MyGLWidget::paintGL()
 {
+<<<<<<< HEAD
+=======
+    //rendering objects
+>>>>>>> origin
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     glTranslatef(0.0f, -10.0f, 0.0f);
@@ -39,12 +62,13 @@ void MyGLWidget::paintGL()
     glRotatef(yRotation, 0.0f, 1.0f, 0.0f);
     glScalef(30.0f, 30.0f, 30.0f);
 
-   // world->stepSimulation();
+
     glPushMatrix();
     //glTranslatef(0.0f, -.5f, 0.0f);
     drawGrid();     //ground
     glPopMatrix();
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+<<<<<<< HEAD
     if(parser->getInstance()->getFileParsed())
     {
         drawRobot();    //robot
@@ -71,6 +95,20 @@ void MyGLWidget::drawRobot()
     map<QString, Joint> jointsMap = parser->getInstance()->rm.getJoints();
    // vector<Joint> joints = parser->getInstance()->rm.getJointsVector();
     vector<Joint> joints = parser->getInstance()->rm.sortJoints(jointsMap);
+=======
+
+
+    GLfloat m[16];
+
+
+    if(parser->getInstance()->getFileParsed())
+    {
+       map<QString, Link> linksMap = parser->getInstance()->rm.getLinks();
+        vector<Link> links = parser->getInstance()->rm.getLinksVector();
+        map<QString, Joint> jointsMap = parser->getInstance()->rm.getJoints();
+       // vector<Joint> joints = parser->getInstance()->rm.getJointsVector();
+        vector<Joint> joints = parser->getInstance()->rm.sortJoints(jointsMap);
+>>>>>>> origin
 
     if(joints.size()!=0)
     {
@@ -88,6 +126,7 @@ void MyGLWidget::drawRobot()
             map<QString, Link>::iterator iter = usedLinks.find(lp.getName());
             if(usedLinks.count(lp.getName()))
             {
+<<<<<<< HEAD
                 //the link already exists
                 glLoadMatrixf(matrices.at(lp.getName()));
                 draw(lp);
@@ -123,8 +162,69 @@ void MyGLWidget::drawRobot()
             //draw child link
             Link lc = linksMap.at(c.getLink());
             draw(lc);
+=======
+                //Joint j = it->second;
+                Joint j = *it;
+                Parent p = j.getParent();   //parent
+                Child c = j.getChild();     //child
+                Origin o = j.getOrigin();   //position of the child link relative to parent link
+                //draw parent link
+              //  glPushMatrix();
+                Link lp = linksMap.at(p.getLink());
+                map<QString, Link> usedLinks = parser->getInstance()->getUsedLinks();
+                map<QString, Link>::iterator iter = usedLinks.find(lp.getName());
+                if(usedLinks.count(lp.getName()))
+                {
+                    //the link already exists
+                    glLoadMatrixf(matrices.at(lp.getName()));
+
+                }
+                else
+                {
+                    glGetFloatv (GL_MODELVIEW_MATRIX, m);
+                    for(int i=0; i<16; i++)
+                    {
+                        matrices[lp.getName()][i] = m[i];
+                    }
+                    usedLinks[lp.getName()] = lp;
+                    parser->getInstance()->setUsedLinks(usedLinks);
+
+                    this->p->odeCreateObject(lp, links.size());
+                }
+
+
+
+                //draw child link
+                Link lc = linksMap.at(c.getLink());
+                //joint transformations
+                if(jointName!="" && j.getChild().getLink()==jointName)
+                {
+                    Axis axis = j.getAxis();
+                   /* glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
+                    rotateMe(limit*(axis.getX()), limit*(axis.getY()), limit*(axis.getZ()));*/
+
+
+                }
+                else
+                {
+                   /* glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
+                    rotateMe(o.getRpy_r(), o.getRpy_p(), o.getRpy_y());*/
+                }
+
+
+
+
+
+
+
+                this->p->odeCreateObject(lc, links.size(), o, j.getAxis());
+
+                //both objects are loaded
+                this->p->odeCreateJoint(j, linksMap.at(j.getParent().getLink()), linksMap.at(j.getChild().getLink()), joints.size(), links.size());
+>>>>>>> origin
 
         }
+<<<<<<< HEAD
         map<QString, Link> newMap = parser->getInstance()->getUsedLinks();
         newMap.clear();
         matrices.clear();
@@ -217,9 +317,51 @@ void MyGLWidget::draw(Link l)
                 sphere->drawSphere();
             }
         }
+=======
+        else
+            for(vector<Link>::iterator it=links.begin(); it!=links.end(); it++)
+            {
+                //glPushMatrix();
+                Link lp = *it;
+
+                p->odeCreateObject(lp, links.size());
+
+                //glPopMatrix();
+            }
     }
+
+
+
+        //ode
+    if(parser->getInstance()->getFileParsed())
+    {
+        p->odeLoop();
+        if(!gravityAnimation)
+            gravity();
+>>>>>>> origin
+    }
+
+
 }
 
+<<<<<<< HEAD
+=======
+
+
+
+
+void MyGLWidget::resizeGL(int w, int h)
+{
+    glViewport(0,0,w,h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45, (float)w/h, 1.0, 150.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+}
+
+>>>>>>> origin
 void MyGLWidget::drawGrid()
 {
     glColor3ub(0,255,255);
@@ -299,7 +441,6 @@ void MyGLWidget::animation()
         upperLimit = lowerLimit;
         lowerLimit = temp;
     }
-    qDebug()<<"hello from animation";
     if(step)
     {
         if(limit<lowerLimit)

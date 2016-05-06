@@ -4,10 +4,16 @@
 #include <GL/glut.h>
 #include <QDebug>
 #include <math.h>
+<<<<<<< HEAD
 #include "objectode.h"
 #include "world.h"
 
 class DrawCylinder:public ObjectODE
+=======
+#include <ode/ode.h>
+
+class DrawCylinder
+>>>>>>> origin
 {
 private:
     double length;
@@ -24,6 +30,10 @@ private:
     double alpha;
     void rotateMe(double r, double p, double y);
     double convertRadToDegrees(double value);
+
+    //ode
+    dMass mass;
+
 public:
     DrawCylinder(World* world, bool body, double length, double radius,
                  double r, double p, double yy,

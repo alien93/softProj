@@ -40,6 +40,7 @@ DrawSphere::DrawSphere(World* world, bool body, double radius, double r, double 
 
 void DrawSphere::drawSphere()
 {
+<<<<<<< HEAD
     if(hasBody)
     {
         //position
@@ -99,6 +100,15 @@ void DrawSphere::drawSphere()
         glColor4d(red, green, blue, alpha);
         //glutSolidSphere(radius, 32, 32);
         gluSphere(quad, radius, 32, 32);*/
+=======
+        glPushMatrix();
+        glTranslated(x,z, y);
+        rotateMe(r, p, yy);
+        glColor4d(red, green, blue, alpha);
+        //glutSolidSphere(radius, 32, 32);
+        gluSphere(quad, radius, 32, 32);
+        glPopMatrix();
+>>>>>>> origin
 
 }
 

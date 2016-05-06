@@ -19,6 +19,7 @@ DrawBox::DrawBox(World* world, bool body, double width, double height, double de
     this->blue = blue;
     this->alpha = alpha;
 
+<<<<<<< HEAD
     //ODE
     geomID = dCreateBox(world->getSpaceID(), width, height, depth);
 
@@ -39,10 +40,14 @@ DrawBox::DrawBox(World* world, bool body, double width, double height, double de
 
     Point3 position = {(dReal)x, (dReal)y, (dReal)z};
     setPosition(position);
+=======
+
+>>>>>>> origin
 }
 
 void DrawBox::drawBox()
 {
+<<<<<<< HEAD
     if(hasBody)
     {
         //position
@@ -127,6 +132,10 @@ void DrawBox::drawBox()
 
     /*glPushMatrix();
    // glTranslated(x,z,y);
+=======
+    glPushMatrix();
+    glTranslated(x,z, y);
+>>>>>>> origin
     rotateMe(r, p, yy);
     glColor4d(red, green, blue, alpha);
     Cuboid c = Cuboid(width, height, depth);
