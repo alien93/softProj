@@ -38,7 +38,7 @@ DrawSphere::DrawSphere(World* world, bool body, double radius, double r, double 
     setPosition(position);
 }
 
-void DrawSphere::drawSphere()
+void DrawSphere::draw()
 {
     if(hasBody)
     {

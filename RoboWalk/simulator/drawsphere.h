@@ -32,7 +32,7 @@ public:
                  double x, double y, double z,
                  double red, double green, double blue, double alpha);
     ~DrawSphere();
-    void drawSphere();
+    void draw();
 };
 
 #endif // DRAWSPHERE_H

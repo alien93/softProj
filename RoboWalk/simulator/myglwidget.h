@@ -11,6 +11,8 @@
 #include "model/visual.h"
 #include <array>
 #include <ode/ode.h>
+#include "objectode.h"
+#include "robotdemo.h"
 
 using namespace std;
 
@@ -24,6 +26,13 @@ private:
     DrawBox *box;
     DrawSphere *sphere;
     URDFparser *parser;
+
+    ObjectODE* elem1;   //for joints
+    ObjectODE* elem2;
+
+    ObjectODE* ground;
+    ObjectODE* robot;
+
     GLfloat m[16];
     double limit;
     float distance;
@@ -45,7 +54,7 @@ public:
     void initializeGL();
     void paintGL();
     void resizeGL(int w, int h);
-    void draw(Link l);
+    ObjectODE *draw(Link l);
     void adjustPosition();
     void reset();
 

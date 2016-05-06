@@ -22,18 +22,21 @@ DrawCylinder::DrawCylinder(World* world, bool body, double length, double radius
     if(hasBody)
     {
         bodyID = dBodyCreate(world->getWorldID());
-        dGeomSetBody(geomID, bodyID);
+        dBodySetPosition(bodyID, (dReal)x, (dReal)y, (dReal)z);
 
         dReal newMass = 8*(4.2*pow(radius, 3))*length;
         dMass mass;
         dBodyGetMass(bodyID, &mass);
         dMassAdjust(&mass, newMass);
+        dBodySetMass(bodyID, &mass);
+        dGeomSetBody(geomID, bodyID);
+
     }
     else
     {
         dGeomSetBody(geomID, 0);
     }
-    Point3 position = {x, y, z};
+    Point3 position = {(dReal)x, (dReal)y, (dReal)z};
     setPosition(position);
 }
 
@@ -44,7 +47,7 @@ DrawCylinder::~DrawCylinder()
     dGeomDestroy(geomID);
 }
 
-void DrawCylinder::drawCylinder()
+void DrawCylinder::draw()
 {
 
     if(hasBody)

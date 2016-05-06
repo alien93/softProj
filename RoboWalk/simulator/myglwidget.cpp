@@ -12,11 +12,11 @@ MyGLWidget::MyGLWidget(QWidget *parent):
     yRotation = 0.0f;
     sceneDistance=-80.0f;
     limit = 0.1;
-   // distance = -10;
-   // rotationAngle = 0;
+    // distance = -10;
+    // rotationAngle = 0;
     step = true;
     connect(&timer, SIGNAL(timeout()), this, SLOT(animation()));
-   // timer.start(16);
+    // timer.start(16);
 }
 
 void MyGLWidget::initializeGL()
@@ -24,9 +24,18 @@ void MyGLWidget::initializeGL()
     glClearColor(0.0f, 0.0f, 0, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
-    dInitODE();
 
-    w = new World(-1.0);
+    w = new World(-1.0);    //initialise ode
+
+    //setup ground
+    ground = new DrawBox(w, false, 20, 0.01, 20, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+    Point3 position = {0, 0, 0};
+    ground->setPosition(position);
+
+    Point3 initPosition = {0, 0.4, 0};
+    robot = new RobotDemo(w, initPosition.x, initPosition.y, initPosition.z, (dReal)0.1);
+
+
 }
 
 void MyGLWidget::paintGL()
@@ -39,16 +48,17 @@ void MyGLWidget::paintGL()
     glRotatef(yRotation, 0.0f, 1.0f, 0.0f);
     glScalef(30.0f, 30.0f, 30.0f);
 
-   // world->stepSimulation();
+    // world->stepSimulation();
     glPushMatrix();
     //glTranslatef(0.0f, -.5f, 0.0f);
     drawGrid();     //ground
+    ground->draw();
+    robot->draw();
     glPopMatrix();
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
     if(parser->getInstance()->getFileParsed())
     {
         drawRobot();    //robot
-        w->loop();
     }
 }
 
@@ -69,7 +79,7 @@ void MyGLWidget::drawRobot()
     map<QString, Link> linksMap = parser->getInstance()->rm.getLinks();
     vector<Link> links = parser->getInstance()->rm.getLinksVector();
     map<QString, Joint> jointsMap = parser->getInstance()->rm.getJoints();
-   // vector<Joint> joints = parser->getInstance()->rm.getJointsVector();
+    // vector<Joint> joints = parser->getInstance()->rm.getJointsVector();
     vector<Joint> joints = parser->getInstance()->rm.sortJoints(jointsMap);
 
     if(joints.size()!=0)
@@ -82,7 +92,7 @@ void MyGLWidget::drawRobot()
             Child c = j.getChild();     //child
             Origin o = j.getOrigin();   //position of the child link relative to parent link
             //draw parent link
-          //  glPushMatrix();
+            //  glPushMatrix();
             Link lp = linksMap.at(p.getLink());
             map<QString, Link> usedLinks = parser->getInstance()->getUsedLinks();
             map<QString, Link>::iterator iter = usedLinks.find(lp.getName());
@@ -90,7 +100,7 @@ void MyGLWidget::drawRobot()
             {
                 //the link already exists
                 glLoadMatrixf(matrices.at(lp.getName()));
-                draw(lp);
+                elem1 = draw(lp);
             }
             else
             {
@@ -101,7 +111,7 @@ void MyGLWidget::drawRobot()
                 }
                 usedLinks[lp.getName()] = lp;
                 parser->getInstance()->setUsedLinks(usedLinks);
-                draw(lp);
+                elem1 = draw(lp);
             }
             //joint transformations
             qDebug()<<jointName;
@@ -122,8 +132,20 @@ void MyGLWidget::drawRobot()
 
             //draw child link
             Link lc = linksMap.at(c.getLink());
-            draw(lc);
+            elem2 = draw(lc);
 
+
+            //create joints
+            if(elem1 != NULL && elem2 != NULL)
+            {
+                dJointID joint = dJointCreateHinge(w->getWorldID(), 0);
+                dJointAttach(joint, elem1->getBodyID(), elem2->getBodyID());
+                Point3 jointPoint = {(dReal)j.getOrigin().getXyz_x(), (dReal)j.getOrigin().getXyz_y(), (dReal)j.getOrigin().getXyz_z()};
+                dJointSetHingeAnchor(joint, jointPoint.x, jointPoint.y, jointPoint.z);
+                dJointSetHingeAxis(joint, 1, 0, 0);
+                dJointSetHingeParam(joint, dParamLoStop, j.getLimit().getLower());
+                dJointSetHingeParam(joint, dParamHiStop, j.getLimit().getUpper());
+            }
         }
         map<QString, Link> newMap = parser->getInstance()->getUsedLinks();
         newMap.clear();
@@ -131,6 +153,7 @@ void MyGLWidget::drawRobot()
         parser->getInstance()->setUsedLinks(newMap);
     }
     else
+        //single link, no joints
         for(vector<Link>::iterator it=links.begin(); it!=links.end(); it++)
         {
             glPushMatrix();
@@ -142,7 +165,7 @@ void MyGLWidget::drawRobot()
 
 
 //draw a link
-void MyGLWidget::draw(Link l)
+ObjectODE* MyGLWidget::draw(Link l)
 {
     vector<Visual> visuals = l.getVisual();
     if(visuals.size()>0)
@@ -172,7 +195,8 @@ void MyGLWidget::draw(Link l)
                                             r, p, yy,
                                             x, y, z,
                                             red, green, blue, alpha);
-                cylinder->drawCylinder();
+                cylinder->draw();
+                return cylinder;
             }
             else if(g.getObject().getName() == "box")
             {
@@ -194,7 +218,8 @@ void MyGLWidget::draw(Link l)
                                   r, p, yy,
                                   x, y, z,
                                   red, green, blue, alpha);
-                box->drawBox();
+                box->draw();
+                return box;
             }
             else if(g.getObject().getName() == "sphere")
             {
@@ -214,10 +239,12 @@ void MyGLWidget::draw(Link l)
                                         r, p, yy,
                                         x, y, z,
                                         red, green, blue, alpha);
-                sphere->drawSphere();
+                sphere->draw();
+                return sphere;
             }
         }
     }
+    return NULL;
 }
 
 void MyGLWidget::drawGrid()
@@ -232,6 +259,10 @@ void MyGLWidget::drawGrid()
         glVertex3f(i, 0.0f, 88.0f);
         glEnd();
     }
+    /* ObjectODE* ground = new DrawBox(w, false, 160.0,1.0,160.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
+    Point3 position = {0, -1, 0};
+    ground->setPosition(position);
+    ground->draw();*/
 }
 
 float MyGLWidget::getYRotation() const
@@ -284,7 +315,7 @@ void MyGLWidget::animation()
             }
         }
     }
- /*   if(rotationAngle<360)
+    /*   if(rotationAngle<360)
         rotationAngle+=30;
     else
         rotationAngle = 0;
@@ -293,6 +324,8 @@ void MyGLWidget::animation()
         distance+=0.1;
     else
         distance = -10;*/
+    w->loop();
+
     if(lowerLimit>upperLimit)
     {
         double temp = upperLimit;

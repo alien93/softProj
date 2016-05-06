@@ -41,7 +41,7 @@ DrawBox::DrawBox(World* world, bool body, double width, double height, double de
     setPosition(position);
 }
 
-void DrawBox::drawBox()
+void DrawBox::draw()
 {
     if(hasBody)
     {
@@ -77,7 +77,7 @@ void DrawBox::drawBox()
         glTranslatef(position.x, position.y, position.z);
         glMultMatrixd(m);
         glColor4d(red, green, blue, alpha);
-        Cuboid c = Cuboid(width, height, depth);
+        Cuboid c = Cuboid(height, width, depth);
         c.drawCuboid();
         glPopMatrix();
     }
@@ -118,7 +118,7 @@ void DrawBox::drawBox()
 
 
         glColor4d(red, green, blue, alpha);
-        Cuboid c = Cuboid(width, height, depth);
+        Cuboid c = Cuboid(height,width,  depth);
         c.drawCuboid();
         glPopMatrix();
     }
@@ -168,4 +168,19 @@ DrawBox::~DrawBox()
     if(hasBody)
         dBodyDestroy(bodyID);
     dGeomDestroy(geomID);
+}
+
+dReal DrawBox::getDepth()
+{
+    return (dReal)depth;
+}
+
+dReal DrawBox::getWidth()
+{
+    return (dReal)width;
+}
+
+dReal DrawBox::getHeight()
+{
+    return (dReal)height;
 }

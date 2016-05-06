@@ -65,7 +65,8 @@ SOURCES += main.cpp\
     simulator/world.cpp \
     model/abstractobject.cpp \
     simulator/myobject.cpp \
-    simulator/objectode.cpp
+    simulator/objectode.cpp \
+    simulator/robotdemo.cpp
 
 HEADERS  += mainwindow.h \
     urdfparser.h \
@@ -118,7 +119,8 @@ HEADERS  += mainwindow.h \
     simulator/world.h \
     model/abstractobject.h \
     simulator/myobject.h \
-    simulator/objectode.h
+    simulator/objectode.h \
+    simulator/robotdemo.h
 
 FORMS    += mainwindow.ui
 

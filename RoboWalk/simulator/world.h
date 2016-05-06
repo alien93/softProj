@@ -5,7 +5,7 @@
 #include <QDebug>
 
 #define MAX_CONTACTS 32
-#define STEP_ITERATIONS 10
+#define STEP_ITERATIONS 0.05
 
 class World
 {
