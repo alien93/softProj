@@ -2,15 +2,23 @@
 #define WORLD_H
 
 #include <ode/ode.h>
+#include <QDebug>
+
+#define MAX_CONTACTS 32
+#define STEP_ITERATIONS 10
 
 class World
 {
-public:
+private:
     dWorldID worldID;   //dynamics world that contains all the simulation data
     dSpaceID spaceID;   //a collision sace, used to organise and speed up collision tests
     dJointGroupID jointGroupID; //a group of joints, makes it easy to destroy all joints at once
-
-
+    dReal rayIntersectionDepth;
+public:
+    dWorldID getWorldID();
+    dSpaceID getSpaceID();
+    dReal getRayIntersectionDepth();
+    void loop();
     World(dReal gravity);
     ~World();
 };
