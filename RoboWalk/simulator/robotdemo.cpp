@@ -71,7 +71,7 @@ RobotDemo::RobotDemo(World *world, dReal posX, dReal posY, dReal posZ, dReal siz
     jointPosition = r_upperLeg->getPosition();
     jointPosition.y -= r_upperLeg->getHeight()/2;
     jointPosition.z += r_upperLeg->getDepth()/2;
-    dJointSetHingeAnchor(l_knee, jointPosition.x, jointPosition.y, jointPosition.z);
+    dJointSetHingeAnchor(r_knee, jointPosition.x, jointPosition.y, jointPosition.z);
     dJointSetHingeAxis(r_knee, 1, 0, 0);
     dJointSetHingeParam(r_knee, dParamLoStop, -PI/2);
     dJointSetHingeParam(r_knee, dParamHiStop, 0);

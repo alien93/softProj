@@ -10,54 +10,32 @@ static dGeomID ground;
 
 static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 {
-    if(dGeomIsSpace(o1) || dGeomIsSpace(o2))
-    {
-        dSpaceCollide2(o1, o2, data, &nearCallback);
 
-        if(dGeomIsSpace(o1))
-            dSpaceCollide((dSpaceID)o1, data, &nearCallback);
-        if(dGeomIsSpace(o2))
-            dSpaceCollide((dSpaceID)o2, data, &nearCallback);
+    dBodyID b1 = dGeomGetBody(o1);
+    dBodyID b2 = dGeomGetBody(o2);
+
+    if(b1 && b2 && dAreConnectedExcluding(b1, b2, dJointTypeContact))
+        return;
+
+    dContact contact[MAX_CONTACTS];
+
+    for(int i=0; i<MAX_CONTACTS; i++)
+    {
+        contact[i].surface.mode = dContactBounce | dContactSoftCFM;
+        contact[i].surface.mu = dInfinity;
+        contact[i].surface.mu2 = 0;
+        contact[i].surface.bounce = 0.1;
+        contact[i].surface.bounce_vel = 0.1;
+        contact[i].surface.soft_cfm = 0.01;
     }
-    else
+
+    if(int numc = dCollide (o1, o2, MAX_CONTACTS, &contact[0].geom, sizeof(dContact)))
     {
-        if((dGeomGetCollideBits(o1) == RAY_COLLIDE_BITS &&
-           dGeomGetCollideBits(o2) == CAMERA_COLLIDE_BITS) ||
-           (dGeomGetCollideBits(o1) == CAMERA_COLLIDE_BITS &&
-           dGeomGetCollideBits(o2) == RAY_COLLIDE_BITS))
-            return;
-        int numberCP;
-        dContactGeom cpArray[MAX_CONTACTS];
-        numberCP = dCollide(o1, o2, MAX_CONTACTS, cpArray, sizeof(dContactGeom));
-        dBodyID o1_bodyID = dGeomGetBody(o1);
-        dBodyID o2_bodyID = dGeomGetBody(o2);
-
-        if(o1_bodyID != 0 && o2_bodyID != 0 &&
-           numberCP > 0 && dAreConnectedExcluding(o1_bodyID, o2_bodyID, dJointTypeContact))
-                return;
-
-        if(dGeomGetCollideBits(o1) == RAY_COLLIDE_BITS || dGeomGetCollideBits(o2) == RAY_COLLIDE_BITS)
-        {
-            if(numberCP > 0)
-            {
-                if(globalRayIntersectionDepth == -1 || cpArray[0].depth < globalRayIntersectionDepth)
-                {
-                    globalRayIntersectionDepth = cpArray[0].depth;
-                }
-            }
+        for (int i=0; i<numc; i++) {
+            dJointID c = dJointCreateContact (globalWorldID,globalJointGroupID,contact+i);
+            dJointAttach (c,b1,b2);
         }
-        else
-        {
-            for(int i=0; i<numberCP; i++)
-            {
-                dContact tempContact;
-                tempContact.surface.mode = 0;
-                tempContact.surface.mu = dInfinity;
-                tempContact.geom = cpArray[i];
-                dJointID j = dJointCreateContact(globalWorldID, globalJointGroupID, &tempContact);
-                dJointAttach(j, dGeomGetBody(o1), dGeomGetBody(o2));  //joint and bodies must be in same world
-            }
-        }
+
     }
 }
 

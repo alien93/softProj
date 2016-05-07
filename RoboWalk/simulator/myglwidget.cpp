@@ -32,10 +32,10 @@ void MyGLWidget::initializeGL()
     Point3 position = {0, 0, 0};
     ground->setPosition(position);
 
-    Point3 initPosition = {0, 0.4, 0};
+    Point3 initPosition = {0, 1, 0};
     robot = new RobotDemo(w, initPosition.x, initPosition.y, initPosition.z, (dReal)0.1);
 
-
+    w->loop();
 }
 
 void MyGLWidget::paintGL()
@@ -50,9 +50,10 @@ void MyGLWidget::paintGL()
 
     // world->stepSimulation();
     glPushMatrix();
-    //glTranslatef(0.0f, -.5f, 0.0f);
+    glTranslatef(0.0f, -.04f, 0.0f);
     drawGrid();     //ground
-    ground->draw();
+    glPopMatrix();
+    //ground->draw();
     robot->draw();
     glPopMatrix();
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
@@ -60,6 +61,7 @@ void MyGLWidget::paintGL()
     {
         drawRobot();    //robot
     }
+    w->loop();
 }
 
 void MyGLWidget::resizeGL(int w, int h)
