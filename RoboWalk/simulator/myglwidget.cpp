@@ -8,6 +8,8 @@ QString MyGLWidget::jointName = "";
 MyGLWidget::MyGLWidget(QWidget *parent):
     QGLWidget(parent)
 {
+    annCreated = false;
+
     xRotation=0.0f;
     yRotation = 0.0f;
     sceneDistance=-80.0f;
@@ -34,6 +36,9 @@ void MyGLWidget::initializeGL()
 
     Point3 initPosition = {0, 1, 0};
     robot = new RobotDemo(w, initPosition.x, initPosition.y, initPosition.z, (dReal)0.1);
+    //create ann
+    if(!annCreated)
+        createANN();
 
     w->loop();
 }
@@ -61,6 +66,7 @@ void MyGLWidget::paintGL()
     {
         drawRobot();    //robot
     }
+
     w->loop();
 }
 
@@ -397,6 +403,38 @@ double MyGLWidget::convertRadToDegrees(double value)
     double retVal;
     retVal = value * 180 / M_PI;
     return retVal;
+}
+
+void MyGLWidget::createANN()
+{
+    qDebug()<<"I'm creating ann";
+    //for ANN with 2 hidden layers the neuronsPerLayer vector
+    //should look something like this {2, 3, 3, 1}
+    //2-number of neurons, input value
+    //1-number of neurons, output value
+    //3-number of neurons per hidden layer
+    vector<unsigned> neuronsPerLayer;
+    unsigned numOfInputs = 2;
+    unsigned numOfOutputs = 1;
+    unsigned numOfNeurons1hidden = 3;
+    unsigned numOfNeurons2hidden = 3;
+    neuronsPerLayer.push_back(numOfInputs);
+    neuronsPerLayer.push_back(numOfNeurons1hidden);
+    neuronsPerLayer.push_back(numOfNeurons2hidden);
+    neuronsPerLayer.push_back(numOfOutputs);
+    ann = new ANN(neuronsPerLayer);
+
+    vector<double> inputValues;
+    ann->feedForward(inputValues);
+
+    vector<double> targetValues;
+    ann->backPropagation(targetValues);
+
+    vector<double> resultValues;
+    ann->getOutput(resultValues);
+
+    annCreated = true;
+    qDebug()<<"Ann is created";
 }
 
 

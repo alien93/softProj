@@ -21,22 +21,6 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="4">
-     <widget class="MyGLWidget" name="annSimulation" native="true">
-      <property name="minimumSize">
-       <size>
-        <width>250</width>
-        <height>200</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>250</width>
-        <height>200</height>
-       </size>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0" rowspan="2">
      <widget class="MyGLWidget" name="robotSimulation" native="true"/>
     </item>
@@ -81,6 +65,22 @@
      <widget class="Line" name="line">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4">
+     <widget class="MyAnnWidget" name="annSimulation" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>250</width>
+        <height>200</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>250</width>
+        <height>200</height>
+       </size>
       </property>
      </widget>
     </item>
@@ -139,6 +139,12 @@
    <class>MyGLWidget</class>
    <extends>QWidget</extends>
    <header>simulator/myglwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MyAnnWidget</class>
+   <extends>QWidget</extends>
+   <header>simulator/myannwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

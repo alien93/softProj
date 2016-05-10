@@ -13,6 +13,7 @@
 #include <ode/ode.h>
 #include "objectode.h"
 #include "robotdemo.h"
+#include "ann/ann.h"
 
 using namespace std;
 
@@ -32,6 +33,12 @@ private:
 
     ObjectODE* ground;
     ObjectODE* robot;
+
+    //ANN
+    ANN* ann;
+    bool annCreated;
+    void createANN();
+    //
 
     GLfloat m[16];
     double limit;
