@@ -15,17 +15,22 @@ ANN::ANN(const vector<unsigned> &neuronsPerLayer)
         //number of requested neurons + bias
         for(unsigned j=0; j<=neuronsPerLayer[i]; j++)
         {
-            vector<Neuron> &lastLayer = layers.back();
-            lastLayer.push_back(Neuron(numNrNextLayer, j));
+            layers.back().push_back(Neuron(numNrNextLayer, j));
             qDebug()<<"Neuron: ";
             qDebug()<<i;
             qDebug()<<j;
         }
+
+        //set bias node's output value
+        layers.back().back().setOutputValue(1.0);
     }
 }
 
 void ANN::feedForward(const vector<double> &inputValues)
 {
+    qDebug()<<"here";
+    qDebug()<<inputValues.size();
+    qDebug()<<layers[0].size() - 1;
     assert(inputValues.size() == layers[0].size() - 1 &&
            "Number of input values is different than number"
            "of nodes in the input layer. Terminating.");
@@ -33,7 +38,7 @@ void ANN::feedForward(const vector<double> &inputValues)
     //put input values in input neurons
     for(unsigned i=0; i<inputValues.size(); i++)
     {
-        layers[0][i].setOutputValue(inputValues.at(i));
+        layers[0][i].setOutputValue(inputValues[i]);
     }
 
     //forward propagation
@@ -60,20 +65,17 @@ void ANN::backPropagation(const vector<double> &targetValues)
     //for all neurons in ann's output layer (- bias)
     for(unsigned i=0; i<numOutputs; i++)
     {
-       double actual = outputLayer[i].getOutputValue(); //get the actual output value of the neuron
-       double target = targetValues[i];                 //target value for the neuron
-       sum += pow(target - actual, 2);             //sum of the errors
+        double target = targetValues[i];                 //target value for the neuron
+        double actual = outputLayer[i].getOutputValue(); //get the actual output value of the neuron
+        sum += pow(target - actual, 2);             //sum of the errors
     }
     annError = sqrt(sum/numOutputs);
 
     //output gradients
     for(unsigned i=0; i<numOutputs; i++)
     {
-        Neuron &neuron = outputLayer[i];
-        neuron.setGradient(targetValues[i]);
+        outputLayer[i].setGradient(targetValues[i]);
     }
-
-
 
     //hidden layer gradients
 
@@ -87,8 +89,7 @@ void ANN::backPropagation(const vector<double> &targetValues)
         //for all neurons in the hidden layer
         for(unsigned j=0; j<hiddenLayer.size(); i++)
         {
-            Neuron &neuron = hiddenLayer[i];
-            neuron.setHiddenGradients(nextLayer);
+            hiddenLayer[i].setHiddenGradients(nextLayer);
         }
 
     }
@@ -105,15 +106,20 @@ void ANN::backPropagation(const vector<double> &targetValues)
         //for each neuron (- bias)
         for(unsigned j=0; j<layer.size() - 1; j++)
         {
-            Neuron &neuron = layer[j];
-            //neuron.setInputWeights();
+            layer[j].updateInputWeights(previousLayer);
         }
     }
-
-
 }
 
 void ANN::getOutput(vector<double> &outputValues) const
 {
+    outputValues.clear();
 
+    qDebug()<<"Output values";
+
+    for(unsigned i=0; i<layers.back().size() -1; i++)
+    {
+        outputValues.push_back(layers.back()[i].getOutputValue());
+        qDebug()<<outputValues.back();
+    }
 }

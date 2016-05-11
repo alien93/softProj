@@ -417,21 +417,22 @@ void MyGLWidget::createANN()
     unsigned numOfInputs = 2;
     unsigned numOfOutputs = 1;
     unsigned numOfNeurons1hidden = 3;
-    unsigned numOfNeurons2hidden = 3;
+   // unsigned numOfNeurons2hidden = 3;
     neuronsPerLayer.push_back(numOfInputs);
     neuronsPerLayer.push_back(numOfNeurons1hidden);
-    neuronsPerLayer.push_back(numOfNeurons2hidden);
+    //neuronsPerLayer.push_back(numOfNeurons2hidden);
     neuronsPerLayer.push_back(numOfOutputs);
     ann = new ANN(neuronsPerLayer);
 
-    vector<double> inputValues;
+    //preparing training data
+    vector<double> inputValues = {1,0};
     ann->feedForward(inputValues);
-
-    vector<double> targetValues;
-    ann->backPropagation(targetValues);
 
     vector<double> resultValues;
     ann->getOutput(resultValues);
+
+    vector<double> targetValues = {1};
+    ann->backPropagation(targetValues);
 
     annCreated = true;
     qDebug()<<"Ann is created";

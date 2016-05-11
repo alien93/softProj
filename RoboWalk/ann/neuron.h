@@ -15,9 +15,13 @@ private:
     vector<Connection> inputWeights;
     vector<Connection> outputWeights;
     double gradient;
+    double alpha;
+    double eta;
 
     double activationFunction(double sum, unsigned type);  //type: 0-sigmoid, 1-hyperbolic tangent function
     double dActivationFunction(double sum, unsigned type);
+
+    double dSumWeights(const vector<Neuron> &nextLayer) const;
 public:
     Neuron(unsigned numOutputs, unsigned neuronIndex);
     void feedForward(const vector<Neuron> &previousLayer);
@@ -28,11 +32,12 @@ public:
     void setOutputWeights(const vector<Connection> &value);
     vector<Connection> getInputWeights() const;
     void setInputWeights(const vector<Connection> &value);
+    void updateInputWeights(vector<Neuron> &previousLayer);
 
 
     //gradients
     double setGradient(double targetValue);
-    double setHiddenGradients(vector<Neuron> layer);
+    double setHiddenGradients(const vector<Neuron> &layer);
 };
 
 #endif // NEURON_H
