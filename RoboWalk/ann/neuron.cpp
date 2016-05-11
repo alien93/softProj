@@ -27,10 +27,20 @@ void Neuron::feedForward(const vector<Neuron> &previousLayer)
 }
 
 
+vector<Connection> Neuron::getInputWeights() const
+{
+    return inputWeights;
+}
+
+void Neuron::setInputWeights(const vector<Connection> &value)
+{
+    inputWeights = value;
+}
+
 double Neuron::activationFunction(double sum, unsigned type)
 {
     double output = 0.0;
-
+    
     switch(type)
     {
     case 0: //sigmoid, aproximation; //original: 1/(1 + exp(-sum))
@@ -77,6 +87,18 @@ double Neuron::dActivationFunction(double sum, unsigned type)
     }
     return output;
 }
+
+double Neuron::setGradient(double targetValue)
+{
+    double delta = targetValue - outputValue;
+    gradient = delta * dActivationFunction(outputValue, 1);
+}
+
+double Neuron::setHiddenGradients(vector<Neuron> layer)
+{
+
+}
+
 
 double Neuron::getOutputValue() const
 {

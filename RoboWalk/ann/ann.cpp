@@ -15,7 +15,8 @@ ANN::ANN(const vector<unsigned> &neuronsPerLayer)
         //number of requested neurons + bias
         for(unsigned j=0; j<=neuronsPerLayer[i]; j++)
         {
-            layers.back().push_back(Neuron(numNrNextLayer, j));
+            vector<Neuron> &lastLayer = layers.back();
+            lastLayer.push_back(Neuron(numNrNextLayer, j));
             qDebug()<<"Neuron: ";
             qDebug()<<i;
             qDebug()<<j;
@@ -47,8 +48,68 @@ void ANN::feedForward(const vector<double> &inputValues)
 
 }
 
+//calculates error, gradients and updates connection weights
 void ANN::backPropagation(const vector<double> &targetValues)
 {
+    //RMSE = sqrt(1/n*sum(i-n)sqr(target(i)-actual(i))
+    double sum = 0.0;
+    annError = 0.0;
+    vector<Neuron> &outputLayer = layers.back();
+    unsigned numOutputs = outputLayer.size() - 1;
+
+    //for all neurons in ann's output layer (- bias)
+    for(unsigned i=0; i<numOutputs; i++)
+    {
+       double actual = outputLayer[i].getOutputValue(); //get the actual output value of the neuron
+       double target = targetValues[i];                 //target value for the neuron
+       sum += pow(target - actual, 2);             //sum of the errors
+    }
+    annError = sqrt(sum/numOutputs);
+
+    //output gradients
+    for(unsigned i=0; i<numOutputs; i++)
+    {
+        Neuron &neuron = outputLayer[i];
+        neuron.setGradient(targetValues[i]);
+    }
+
+
+
+    //hidden layer gradients
+
+    unsigned idxLastHiddenLayer = layers.size() - 2;
+    //for all hidden layers
+    for(unsigned i=idxLastHiddenLayer; i>0; i--)
+    {
+        vector<Neuron> &hiddenLayer = layers[i];
+        vector<Neuron> &nextLayer = layers[i + 1];
+
+        //for all neurons in the hidden layer
+        for(unsigned j=0; j<hiddenLayer.size(); i++)
+        {
+            Neuron &neuron = hiddenLayer[i];
+            neuron.setHiddenGradients(nextLayer);
+        }
+
+    }
+
+    //update the weights
+
+    //for all layers (- the input layer)
+    unsigned idxOutputLayer = layers.size() - 1;
+    for(unsigned i = idxOutputLayer; i > 0; i--)
+    {
+        vector<Neuron> &layer = layers[i];
+        vector<Neuron> &previousLayer = layers[i - 1];
+
+        //for each neuron (- bias)
+        for(unsigned j=0; j<layer.size() - 1; j++)
+        {
+            Neuron &neuron = layer[j];
+            //neuron.setInputWeights();
+        }
+    }
+
 
 }
 

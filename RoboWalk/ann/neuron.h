@@ -12,7 +12,9 @@ class Neuron
 private:
     unsigned index;     //neuron's index
     double outputValue;
+    vector<Connection> inputWeights;
     vector<Connection> outputWeights;
+    double gradient;
 
     double activationFunction(double sum, unsigned type);  //type: 0-sigmoid, 1-hyperbolic tangent function
     double dActivationFunction(double sum, unsigned type);
@@ -24,6 +26,13 @@ public:
     void setOutputValue(double value);
     vector<Connection> getOutputWeights() const;
     void setOutputWeights(const vector<Connection> &value);
+    vector<Connection> getInputWeights() const;
+    void setInputWeights(const vector<Connection> &value);
+
+
+    //gradients
+    double setGradient(double targetValue);
+    double setHiddenGradients(vector<Neuron> layer);
 };
 
 #endif // NEURON_H

@@ -11,6 +11,7 @@ using namespace std;
 class ANN
 {
 private:
+    double annError;
     vector<vector<Neuron>> layers;
 public:
     ANN(const vector<unsigned> &neuronsPerLayer);
