@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "neuron.h"
+#include <assert.h>
 #include <QDebug>
 
 using namespace std;

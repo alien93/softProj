@@ -69,7 +69,8 @@ SOURCES += main.cpp\
     simulator/robotdemo.cpp \
     ann/ann.cpp \
     ann/neuron.cpp \
-    simulator/myannwidget.cpp
+    simulator/myannwidget.cpp \
+    ann/connection.cpp
 
 HEADERS  += mainwindow.h \
     urdfparser.h \
@@ -126,7 +127,8 @@ HEADERS  += mainwindow.h \
     simulator/robotdemo.h \
     ann/ann.h \
     ann/neuron.h \
-    simulator/myannwidget.h
+    simulator/myannwidget.h \
+    ann/connection.h
 
 FORMS    += mainwindow.ui
 
