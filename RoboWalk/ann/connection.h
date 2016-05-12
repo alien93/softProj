@@ -2,6 +2,7 @@
 #define CONNECTION_H
 
 #include <cstdlib>
+#include <QDebug>
 
 class Connection
 {

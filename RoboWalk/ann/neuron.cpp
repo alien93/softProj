@@ -7,6 +7,7 @@ Neuron::Neuron(unsigned numOutputs, unsigned neuronIndex)
     eta = 0.15; //overall learning rate
     alpha = 0.5; //momentum, multiplier of last deltaWeight
 
+
     for(unsigned i=0; i<numOutputs; i++)
     {
         outputWeights.push_back(Connection());
