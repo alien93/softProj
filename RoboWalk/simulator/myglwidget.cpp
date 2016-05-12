@@ -37,10 +37,10 @@ void MyGLWidget::initializeGL()
     Point3 initPosition = {0, 1, 0};
     robot = new RobotDemo(w, initPosition.x, initPosition.y, initPosition.z, (dReal)0.1);
     //create ann
-    if(!annCreated)
+    //if(!annCreated)
         createANN();
 
-    w->loop();
+    //w->loop();
 }
 
 void MyGLWidget::paintGL()

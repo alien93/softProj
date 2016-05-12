@@ -87,7 +87,7 @@ void ANN::backPropagation(const vector<double> &targetValues)
         vector<Neuron> &nextLayer = layers[i + 1];
 
         //for all neurons in the hidden layer
-        for(unsigned j=0; j<hiddenLayer.size(); i++)
+        for(unsigned j=0; j<hiddenLayer.size(); j++)
         {
             hiddenLayer[j].setHiddenGradients(nextLayer);
         }
