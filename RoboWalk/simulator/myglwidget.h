@@ -14,6 +14,7 @@
 #include "objectode.h"
 #include "robotdemo.h"
 #include "ann/ann.h"
+#include "timer.h"
 
 using namespace std;
 
@@ -37,7 +38,9 @@ private:
     //ANN
     ANN* ann;
     bool annCreated;
+    bool animateRobot;
     void createANN();
+    void trainANN();
     //
 
     GLfloat m[16];
@@ -55,6 +58,8 @@ private:
     World* w;
 public:
     QTimer timer;
+    QElapsedTimer annElapsedTimer;
+    QTimer annTimer;
 
     explicit MyGLWidget(QWidget *parent=0);
     static QString jointName;
@@ -75,9 +80,9 @@ public:
     void rotateMe(double r, double p, double y);
     double convertRadToDegrees(double value);
 
-
 public Q_SLOTS:
     void animation();
+    void animateAnn();
 };
 
 #endif // MYGLWIDGET_H

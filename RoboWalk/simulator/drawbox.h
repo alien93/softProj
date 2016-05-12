@@ -38,7 +38,6 @@ public:
     dReal getDepth();
     ~DrawBox();
 
-    void testRotation();
 };
 
 #endif // DRAWBOX_H

@@ -50,7 +50,7 @@ World::World(dReal gravity)
 
     //ground = dCreatePlane(spaceID, 0, 1, 0, 0);
 
-    dWorldSetERP(worldID, (dReal)0.9);  //controls how much error correction is performed in each time step
+    dWorldSetERP(worldID, (dReal)0.3);  //controls how much error correction is performed in each time step
 
     globalWorldID = worldID;
     globalJointGroupID = jointGroupID;

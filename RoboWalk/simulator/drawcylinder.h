@@ -32,7 +32,6 @@ public:
     void draw();
     ~DrawCylinder();
 
-    void testRotation();
 };
 
 #endif // DRAWCYLINDER_H

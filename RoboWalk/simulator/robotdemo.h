@@ -5,6 +5,7 @@
 #include "objectode.h"
 #include "world.h"
 #include "drawbox.h"
+#include "drawcylinder.h"
 
 class RobotDemo:public ObjectODE
 {
@@ -33,10 +34,7 @@ public:
     void setPosition(Point3 newPosition);
     Point3 getPosition();
     void setVelocity(Vector3 velocity);
-
-    void testRotation();
-
-
+    void rotateRightThigh(double angle);
 };
 
 #endif // ROBOTDEMO_H

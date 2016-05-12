@@ -102,11 +102,6 @@ void DrawSphere::draw()
 
 }
 
-void DrawSphere::testRotation()
-{
-
-}
-
 void DrawSphere::rotateMe(double r, double p, double y)
 {
     double angle = 0;

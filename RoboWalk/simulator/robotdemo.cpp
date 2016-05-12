@@ -70,7 +70,7 @@ RobotDemo::RobotDemo(World *world, dReal posX, dReal posY, dReal posZ, dReal siz
     jointPosition.y -= r_upperLeg->getHeight()/2;
     jointPosition.z += r_upperLeg->getDepth()/2;
     dJointSetHingeAnchor(r_knee, jointPosition.x, jointPosition.y, jointPosition.z);
-    dJointSetHingeAxis(r_knee, 1, 0, 0);
+    dJointSetHingeAxis(r_knee,  1, 0, 0);
     dJointSetHingeParam(r_knee, dParamLoStop, -PI/2);
     dJointSetHingeParam(r_knee, dParamHiStop, 0);
 
@@ -108,49 +108,16 @@ RobotDemo::~RobotDemo()
     dJointDestroy(r_ankle);
 }
 
-void RobotDemo::testRotation()
-{
-    qDebug()<<"Hello from test rotation";
-   /* qDebug()<<"Previous rotation:";
-    qDebug()<<dBodyGetRotation(r_lowerLeg->getBodyID());
-    dBodyID body = r_lowerLeg->getBodyID();
-    dMatrix3 R;
-    dRFromEulerAngles(R, 90, 0, 0);
-    dBodySetRotation(body, R);
-    qDebug()<<"New rotation:";
-    qDebug()<<dBodyGetRotation(r_lowerLeg->getBodyID());*/
-
-    Point3 jointPosition = r_lowerLeg->getPosition();
-    //jointPosition.y -= r_lowerLeg->getHeight()/2;
-    jointPosition.x += 1.5;
-    jointPosition.z += 1.5;
-    dJointSetHingeAnchor(r_ankle, jointPosition.x, jointPosition.y, jointPosition.z);
-}
 
 void RobotDemo::draw()
 {
-    qDebug()<<"left upper leg:";
     l_upperLeg->draw();
-    qDebug()<<"right upper leg:";
     r_upperLeg->draw();
-    qDebug()<<"left lower leg:";
     l_lowerLeg->draw();
-    qDebug()<<"right lower leg:";
     r_lowerLeg->draw();
-    qDebug()<<"left foot:";
     l_foot->draw();
-    qDebug()<<"right foot:";
     r_foot->draw();
-    qDebug()<<"torso:";
     torso->draw();
-
-
-    qDebug()<<"right ankle angle";
-    qDebug()<<dJointGetHingeAngle(r_ankle);
-    qDebug()<<"left ankle angle";
-    qDebug()<<dJointGetHingeAngle(l_ankle);
-    qDebug()<<"right knee angle";
-    qDebug()<<dJointGetHingeAngle(r_knee);
 }
 
 void RobotDemo::setPosition(Point3 newPosition)
@@ -231,4 +198,10 @@ void RobotDemo::setVelocity(Vector3 velocity)
     r_lowerLeg->setVelocity(velocity);
     l_foot->setVelocity(velocity);
     r_foot->setVelocity(velocity);
+}
+
+
+void RobotDemo::rotateRightThigh(double angle)
+{
+    r_upperLeg->setOrientation(0, angle);
 }

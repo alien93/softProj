@@ -11,14 +11,13 @@ MyGLWidget::MyGLWidget(QWidget *parent):
     annCreated = false;
 
     xRotation=0.0f;
-    yRotation = 0.0f;
-    sceneDistance=-80.0f;
+    yRotation = -90.0f;
+    sceneDistance=-50.0f;
     limit = 0.1;
-    // distance = -10;
-    // rotationAngle = 0;
     step = true;
+    animateRobot = true;
     connect(&timer, SIGNAL(timeout()), this, SLOT(animation()));
-    // timer.start(16);
+    connect(&annTimer, SIGNAL(timeout()), this, SLOT(animateAnn()));
 }
 
 void MyGLWidget::initializeGL()
@@ -37,7 +36,7 @@ void MyGLWidget::initializeGL()
     Point3 initPosition = {0, 0.38, 0};     //initial torso position
     robot = new RobotDemo(w, initPosition.x, initPosition.y, initPosition.z, (dReal)0.1);
     //create ann
-    //if(!annCreated)
+    if(!annCreated)
         createANN();
 
     //w->loop();
@@ -66,7 +65,9 @@ void MyGLWidget::paintGL()
     {
         drawRobot();    //robot from urdf
     }
-    robot->testRotation();
+    //robot->testRotation(w);
+    if(animateRobot)
+        trainANN();
     w->loop();
 }
 
@@ -323,16 +324,6 @@ void MyGLWidget::animation()
             }
         }
     }
-    /*   if(rotationAngle<360)
-        rotationAngle+=30;
-    else
-        rotationAngle = 0;
-
-    if(distance < 10)
-        distance+=0.1;
-    else
-        distance = -10;*/
-    w->loop();
 
     if(lowerLimit>upperLimit)
     {
@@ -340,7 +331,7 @@ void MyGLWidget::animation()
         upperLimit = lowerLimit;
         lowerLimit = temp;
     }
-    qDebug()<<"hello from animation";
+
     if(step)
     {
         if(limit<lowerLimit)
@@ -366,6 +357,14 @@ void MyGLWidget::animation()
         }
     }
     update();
+}
+
+void MyGLWidget::animateAnn()
+{
+    qDebug()<<"Hello from animateAnn";
+    while(!annElapsedTimer.hasExpired(5000))
+        repaint();
+    robot->setPosition({0, 0.38, 0});
 }
 
 void MyGLWidget::reset()
@@ -414,32 +413,46 @@ void MyGLWidget::createANN()
     //1-number of neurons, output value
     //3-number of neurons per hidden layer
     vector<unsigned> neuronsPerLayer;
-    unsigned numOfInputs = 2;
-    unsigned numOfOutputs = 1;
+    unsigned numOfInputs = 6;
+    unsigned numOfOutputs = 6;
     unsigned numOfNeurons1hidden = 3;
-   // unsigned numOfNeurons2hidden = 3;
     neuronsPerLayer.push_back(numOfInputs);
     neuronsPerLayer.push_back(numOfNeurons1hidden);
     //neuronsPerLayer.push_back(numOfNeurons2hidden);
     neuronsPerLayer.push_back(numOfOutputs);
     ann = new ANN(neuronsPerLayer);
 
-    for(int i=0; i<200; i++)
+
+}
+
+void MyGLWidget::trainANN()
+{
+    animateRobot = false;
+    for(int i=0; i<20; i++)
     {
         //preparing training data
-        vector<double> inputValues = {1,0};
+        vector<double> inputValues = {0, 0, 0, 0, 0, 0};
         ann->feedForward(inputValues);
 
         vector<double> resultValues;
         ann->getOutput(resultValues);
 
-        vector<double> targetValues = {1};
+        if(round(resultValues[0])==1)
+            robot->rotateRightThigh(30);
+        annElapsedTimer.restart();
+        animateAnn();
+        qDebug()<<"Function finished at: ";
+        qDebug()<<annElapsedTimer.elapsed();
+
+
+        vector<double> targetValues = {1, 0, 0, 0, 0, 0};
         ann->backPropagation(targetValues);
     }
+
+    animateRobot = true;
     annCreated = true;
     qDebug()<<"Ann is created";
 }
-
 
 
 

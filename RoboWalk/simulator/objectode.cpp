@@ -107,7 +107,34 @@ bool ObjectODE::isHasBody()
     return hasBody;
 }
 
-void ObjectODE::testRotation()
+void ObjectODE::rotateRightThigh(double angle)
 {
 
 }
+
+void ObjectODE::rotateLeftThigh(double angle)
+{
+
+}
+
+void ObjectODE::rotateRightLowerLeg(double angle)
+{
+
+}
+
+void ObjectODE::rotateLeftLowerLeg(double angle)
+{
+
+}
+
+void ObjectODE::rotateRightFoot(double angle)
+{
+
+}
+
+void ObjectODE::rotateLeftFoot(double angle)
+{
+
+}
+
+

@@ -176,11 +176,6 @@ DrawBox::~DrawBox()
     dGeomDestroy(geomID);
 }
 
-void DrawBox::testRotation()
-{
-
-}
-
 dReal DrawBox::getDepth()
 {
     return (dReal)depth;

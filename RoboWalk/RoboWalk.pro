@@ -128,7 +128,8 @@ HEADERS  += mainwindow.h \
     ann/ann.h \
     ann/neuron.h \
     simulator/myannwidget.h \
-    ann/connection.h
+    ann/connection.h \
+    simulator/timer.h
 
 FORMS    += mainwindow.ui
 
