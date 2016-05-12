@@ -47,6 +47,11 @@ DrawCylinder::~DrawCylinder()
     dGeomDestroy(geomID);
 }
 
+void DrawCylinder::testRotation()
+{
+
+}
+
 void DrawCylinder::draw()
 {
 

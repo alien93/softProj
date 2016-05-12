@@ -34,7 +34,7 @@ void MyGLWidget::initializeGL()
     Point3 position = {0, 0, 0};
     ground->setPosition(position);
 
-    Point3 initPosition = {0, 1, 0};
+    Point3 initPosition = {0, 0.38, 0};     //initial torso position
     robot = new RobotDemo(w, initPosition.x, initPosition.y, initPosition.z, (dReal)0.1);
     //create ann
     //if(!annCreated)
@@ -59,14 +59,14 @@ void MyGLWidget::paintGL()
     drawGrid();     //ground
     glPopMatrix();
     //ground->draw();
-    robot->draw();
+    robot->draw();  //demo robot
     glPopMatrix();
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
     if(parser->getInstance()->getFileParsed())
     {
-        drawRobot();    //robot
+        drawRobot();    //robot from urdf
     }
-
+    robot->testRotation();
     w->loop();
 }
 
@@ -424,16 +424,18 @@ void MyGLWidget::createANN()
     neuronsPerLayer.push_back(numOfOutputs);
     ann = new ANN(neuronsPerLayer);
 
-    //preparing training data
-    vector<double> inputValues = {1,0};
-    ann->feedForward(inputValues);
+    for(int i=0; i<200; i++)
+    {
+        //preparing training data
+        vector<double> inputValues = {1,0};
+        ann->feedForward(inputValues);
 
-    vector<double> resultValues;
-    ann->getOutput(resultValues);
+        vector<double> resultValues;
+        ann->getOutput(resultValues);
 
-    vector<double> targetValues = {1};
-    ann->backPropagation(targetValues);
-
+        vector<double> targetValues = {1};
+        ann->backPropagation(targetValues);
+    }
     annCreated = true;
     qDebug()<<"Ann is created";
 }

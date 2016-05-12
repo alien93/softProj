@@ -5,8 +5,6 @@ RobotDemo::RobotDemo(World *world, dReal posX, dReal posY, dReal posZ, dReal siz
 {
     Point3 jointPosition;
 
-
-
     //body parts dimensions
     Point3 torso_dim = {(dReal)size, (dReal).5*size, (dReal).5*size};
     Point3 upperLeg_dim = {(dReal).4*size, (dReal)1.7*size, (dReal).4*size};
@@ -42,7 +40,7 @@ RobotDemo::RobotDemo(World *world, dReal posX, dReal posY, dReal posZ, dReal siz
     dJointSetHingeAnchor(l_hip, jointPosition.x, jointPosition.y, jointPosition.z);
     dJointSetHingeAxis(l_hip, 1, 0, 0);
     dJointSetHingeParam(l_hip, dParamLoStop, -PI/6);
-    dJointSetHingeParam(l_hip, dParamHiStop, 3*PI/4);
+    dJointSetHingeParam(l_hip, dParamHiStop, PI/2);
 
     //right hip
     r_hip = dJointCreateHinge(world->getWorldID(), 0);
@@ -52,7 +50,7 @@ RobotDemo::RobotDemo(World *world, dReal posX, dReal posY, dReal posZ, dReal siz
     dJointSetHingeAnchor(r_hip, jointPosition.x, jointPosition.y, jointPosition.z);
     dJointSetHingeAxis(r_hip, 1, 0, 0);
     dJointSetHingeParam(r_hip, dParamLoStop, -PI/6);
-    dJointSetHingeParam(r_hip, dParamHiStop, 3*PI/4);
+    dJointSetHingeParam(r_hip, dParamHiStop, PI/2);
 
     //left knee
     l_knee = dJointCreateHinge(world->getWorldID(), 0);
@@ -95,6 +93,9 @@ RobotDemo::RobotDemo(World *world, dReal posX, dReal posY, dReal posZ, dReal siz
     dJointSetHingeAxis(r_ankle, 1, 0, 0);
     dJointSetHingeParam(r_ankle, dParamLoStop, -PI/2);
     dJointSetHingeParam(r_ankle, dParamHiStop, PI/6);
+
+
+
 }
 
 RobotDemo::~RobotDemo()
@@ -107,15 +108,49 @@ RobotDemo::~RobotDemo()
     dJointDestroy(r_ankle);
 }
 
+void RobotDemo::testRotation()
+{
+    qDebug()<<"Hello from test rotation";
+   /* qDebug()<<"Previous rotation:";
+    qDebug()<<dBodyGetRotation(r_lowerLeg->getBodyID());
+    dBodyID body = r_lowerLeg->getBodyID();
+    dMatrix3 R;
+    dRFromEulerAngles(R, 90, 0, 0);
+    dBodySetRotation(body, R);
+    qDebug()<<"New rotation:";
+    qDebug()<<dBodyGetRotation(r_lowerLeg->getBodyID());*/
+
+    Point3 jointPosition = r_lowerLeg->getPosition();
+    //jointPosition.y -= r_lowerLeg->getHeight()/2;
+    jointPosition.x += 1.5;
+    jointPosition.z += 1.5;
+    dJointSetHingeAnchor(r_ankle, jointPosition.x, jointPosition.y, jointPosition.z);
+}
+
 void RobotDemo::draw()
 {
+    qDebug()<<"left upper leg:";
     l_upperLeg->draw();
+    qDebug()<<"right upper leg:";
     r_upperLeg->draw();
+    qDebug()<<"left lower leg:";
     l_lowerLeg->draw();
+    qDebug()<<"right lower leg:";
     r_lowerLeg->draw();
+    qDebug()<<"left foot:";
     l_foot->draw();
+    qDebug()<<"right foot:";
     r_foot->draw();
+    qDebug()<<"torso:";
     torso->draw();
+
+
+    qDebug()<<"right ankle angle";
+    qDebug()<<dJointGetHingeAngle(r_ankle);
+    qDebug()<<"left ankle angle";
+    qDebug()<<dJointGetHingeAngle(l_ankle);
+    qDebug()<<"right knee angle";
+    qDebug()<<dJointGetHingeAngle(r_knee);
 }
 
 void RobotDemo::setPosition(Point3 newPosition)

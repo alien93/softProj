@@ -106,3 +106,8 @@ bool ObjectODE::isHasBody()
 {
     return hasBody;
 }
+
+void ObjectODE::testRotation()
+{
+
+}

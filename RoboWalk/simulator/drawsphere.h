@@ -33,6 +33,8 @@ public:
                  double red, double green, double blue, double alpha);
     ~DrawSphere();
     void draw();
+
+    void testRotation();
 };
 
 #endif // DRAWSPHERE_H

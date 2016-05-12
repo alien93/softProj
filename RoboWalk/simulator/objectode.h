@@ -30,6 +30,10 @@ public:
     dGeomID getGeomID();
     void setGeomID(dGeomID geomID);
     bool isHasBody();
+
+
+    //temp TODO
+    virtual void testRotation();
 };
 
 #endif // OBJECTODE_H

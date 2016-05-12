@@ -41,6 +41,8 @@ DrawBox::DrawBox(World* world, bool body, double width, double height, double de
     setPosition(position);
 }
 
+
+
 void DrawBox::draw()
 {
     if(hasBody)
@@ -48,6 +50,10 @@ void DrawBox::draw()
         //position
         const dReal* bodyPosition;
         bodyPosition = dBodyGetPosition(bodyID);
+        qDebug()<<"bodyPosition";
+        qDebug()<<bodyPosition[0];
+        qDebug()<<bodyPosition[1];
+        qDebug()<<bodyPosition[2];
         position.x = bodyPosition[0];
         position.y = bodyPosition[1];
         position.z = bodyPosition[2];
@@ -75,7 +81,7 @@ void DrawBox::draw()
 
         glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
-        glMultMatrixd(m);
+        glMultMatrixd(m);       //multiplies current matrix with specified matrix
         glColor4d(red, green, blue, alpha);
         Cuboid c = Cuboid(height, width, depth);
         c.drawCuboid();
@@ -168,6 +174,11 @@ DrawBox::~DrawBox()
     if(hasBody)
         dBodyDestroy(bodyID);
     dGeomDestroy(geomID);
+}
+
+void DrawBox::testRotation()
+{
+
 }
 
 dReal DrawBox::getDepth()

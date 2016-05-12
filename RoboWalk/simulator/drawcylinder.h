@@ -31,6 +31,8 @@ public:
                  double red, double green, double blue, double alpha);
     void draw();
     ~DrawCylinder();
+
+    void testRotation();
 };
 
 #endif // DRAWCYLINDER_H

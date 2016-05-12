@@ -34,6 +34,9 @@ public:
     Point3 getPosition();
     void setVelocity(Vector3 velocity);
 
+    void testRotation();
+
+
 };
 
 #endif // ROBOTDEMO_H
