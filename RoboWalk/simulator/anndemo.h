@@ -15,6 +15,8 @@ private:
     bool annCreated;
     bool animateRobot;
     QElapsedTimer annElapsedTimer;
+    void printResults(vector<double> results);
+    void initRobot(MyGLWidget *robotSimulation);
 public:
     AnnDemo();
     void createANN(MyAnnWidget* annSimulation);

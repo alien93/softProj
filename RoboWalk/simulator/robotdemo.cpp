@@ -1,4 +1,4 @@
-#include "robotdemo.h"
+﻿#include "robotdemo.h"
 
 RobotDemo::RobotDemo(World *world, dReal posX, dReal posY, dReal posZ, dReal size)
     :ObjectODE(true, posX, posY, posZ)
@@ -201,4 +201,149 @@ void RobotDemo::setVelocity(Vector3 velocity)
 void RobotDemo::rotateRightThigh(double angle)
 {
     r_upperLeg->setOrientation(0, angle);
+}
+
+void RobotDemo::rotateRightLowerLeg(double angle)
+{
+    r_lowerLeg->setOrientation(0, angle);
+}
+
+void RobotDemo::rotateRightFoot(double angle)
+{
+    r_foot->setOrientation(0, angle);
+}
+
+void RobotDemo::rotateLeftThigh(double angle)
+{
+    l_upperLeg->setOrientation(0, angle);
+}
+
+void RobotDemo::rotateLeftLowerLeg(double angle)
+{
+    l_lowerLeg->setOrientation(0, angle);
+}
+
+void RobotDemo::rotateLeftFoot(double angle)
+{
+    l_foot->setOrientation(0, angle);
+}
+
+DrawBox *RobotDemo::getL_upperLeg() const
+{
+    return l_upperLeg;
+}
+
+void RobotDemo::setL_upperLeg(DrawBox *value)
+{
+    l_upperLeg = value;
+}
+
+DrawBox *RobotDemo::getR_upperLeg() const
+{
+    return r_upperLeg;
+}
+
+void RobotDemo::setR_upperLeg(DrawBox *value)
+{
+    r_upperLeg = value;
+}
+
+DrawBox *RobotDemo::getL_lowerLeg() const
+{
+    return l_lowerLeg;
+}
+
+void RobotDemo::setL_lowerLeg(DrawBox *value)
+{
+    l_lowerLeg = value;
+}
+
+DrawBox *RobotDemo::getR_lowerLeg() const
+{
+    return r_lowerLeg;
+}
+
+void RobotDemo::setR_lowerLeg(DrawBox *value)
+{
+    r_lowerLeg = value;
+}
+
+DrawBox *RobotDemo::getL_foot() const
+{
+    return l_foot;
+}
+
+void RobotDemo::setL_foot(DrawBox *value)
+{
+    l_foot = value;
+}
+
+DrawBox *RobotDemo::getR_foot() const
+{
+    return r_foot;
+}
+
+void RobotDemo::setR_foot(DrawBox *value)
+{
+    r_foot = value;
+}
+
+dJointID RobotDemo::getL_hip() const
+{
+    return l_hip;
+}
+
+void RobotDemo::setL_hip(const dJointID &value)
+{
+    l_hip = value;
+}
+
+dJointID RobotDemo::getR_hip() const
+{
+    return r_hip;
+}
+
+void RobotDemo::setR_hip(const dJointID &value)
+{
+    r_hip = value;
+}
+
+dJointID RobotDemo::getL_knee() const
+{
+    return l_knee;
+}
+
+void RobotDemo::setL_knee(const dJointID &value)
+{
+    l_knee = value;
+}
+
+dJointID RobotDemo::getR_knee() const
+{
+    return r_knee;
+}
+
+void RobotDemo::setR_knee(const dJointID &value)
+{
+    r_knee = value;
+}
+
+dJointID RobotDemo::getL_ankle() const
+{
+    return l_ankle;
+}
+
+void RobotDemo::setL_ankle(const dJointID &value)
+{
+    l_ankle = value;
+}
+
+dJointID RobotDemo::getR_ankle() const
+{
+    return r_ankle;
+}
+
+void RobotDemo::setR_ankle(const dJointID &value)
+{
+    r_ankle = value;
 }

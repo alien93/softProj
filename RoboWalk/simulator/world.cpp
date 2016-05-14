@@ -6,7 +6,6 @@
 static dWorldID globalWorldID;
 static dJointGroupID globalJointGroupID;
 static dReal globalRayIntersectionDepth = -1;
-static dGeomID ground;
 
 static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 {
@@ -50,7 +49,7 @@ World::World(dReal gravity)
 
     //ground = dCreatePlane(spaceID, 0, 1, 0, 0);
 
-    dWorldSetERP(worldID, (dReal)0.3);  //controls how much error correction is performed in each time step
+    dWorldSetERP(worldID, (dReal)0.2);  //controls how much error correction is performed in each time step
 
     globalWorldID = worldID;
     globalJointGroupID = jointGroupID;
@@ -71,7 +70,7 @@ void World::loop()
     globalRayIntersectionDepth = -1;
     dSpaceCollide(spaceID, 0, &nearCallback);
     rayIntersectionDepth = globalRayIntersectionDepth;
-    dWorldStep(worldID, STEP_ITERATIONS);
+    dWorldQuickStep(worldID, STEP_ITERATIONS);
     dJointGroupEmpty(jointGroupID);
 }
 

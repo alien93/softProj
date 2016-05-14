@@ -23,8 +23,6 @@ void Connection::setDWeight(double value)
 Connection::Connection()
 {
     weight = randomWeight();
-    qDebug()<<"Weight";
-    qDebug()<<weight;
 }
 
 

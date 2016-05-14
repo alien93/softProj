@@ -15,6 +15,7 @@
 #include "ann/ann.h"
 #include "timer.h"
 #include "urdfparser.h"
+#include <cmath>
 
 using namespace std;
 
@@ -32,15 +33,9 @@ private:
     ObjectODE* elem2;
 
     ObjectODE* ground;
-    ObjectODE* robot;
+    RobotDemo* robot;
 
-    //ANN
     ANN* ann;
-    bool annCreated;
-    bool animateRobot;
-    void createANN();
-    void trainANN();
-    //
 
     GLfloat m[16];
     double limit;
@@ -52,6 +47,7 @@ private:
     float yRotation;
     float sceneDistance;
     map<QString,  GLfloat[16]> matrices;   //matrix for each parent node
+    vector<Point3> initPositions;          //rightThigh, leftThigh, rightLowerLeg, leftLowerLeg, rightFoot, leftFoot
 
     //ODE
     World* w;
@@ -79,12 +75,12 @@ public:
 
 
 
-    ObjectODE *getRobot() const;
+    RobotDemo *getRobot() const;
     void setRobot(ObjectODE *value);
 
 public Q_SLOTS:
     void animation();
-    void animateAnn(QElapsedTimer annElapsedTimer);
+    void animateAnn(QElapsedTimer annElapsedTimer, vector<double> &resultValues);
 };
 
 #endif // MYGLWIDGET_H

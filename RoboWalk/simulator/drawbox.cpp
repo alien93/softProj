@@ -50,10 +50,6 @@ void DrawBox::draw()
         //position
         const dReal* bodyPosition;
         bodyPosition = dBodyGetPosition(bodyID);
-        qDebug()<<"bodyPosition";
-        qDebug()<<bodyPosition[0];
-        qDebug()<<bodyPosition[1];
-        qDebug()<<bodyPosition[2];
         position.x = bodyPosition[0];
         position.y = bodyPosition[1];
         position.z = bodyPosition[2];

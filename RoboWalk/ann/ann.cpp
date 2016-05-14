@@ -16,9 +16,6 @@ ANN::ANN(const vector<unsigned> &neuronsPerLayer)
         for(unsigned j=0; j<=neuronsPerLayer[i]; j++)
         {
             layers.back().push_back(Neuron(numNrNextLayer, j));
-            qDebug()<<"Neuron: ";
-            qDebug()<<i;
-            qDebug()<<j;
         }
 
         //set bias node's output value
@@ -28,9 +25,6 @@ ANN::ANN(const vector<unsigned> &neuronsPerLayer)
 
 void ANN::feedForward(const vector<double> &inputValues)
 {
-    qDebug()<<"here";
-    qDebug()<<inputValues.size();
-    qDebug()<<layers[0].size() - 1;
     assert(inputValues.size() == layers[0].size() - 1 &&
            "Number of input values is different than number"
            "of nodes in the input layer. Terminating.");
@@ -53,7 +47,7 @@ void ANN::feedForward(const vector<double> &inputValues)
 
 }
 
-//calculates error, gradients and updates connection weights
+//!calculates error, gradients and updates connection weights
 void ANN::backPropagation(const vector<double> &targetValues)
 {
     //RMSE = sqrt(1/n*sum(i-n)sqr(target(i)-actual(i))
@@ -67,7 +61,7 @@ void ANN::backPropagation(const vector<double> &targetValues)
     {
         double target = targetValues[i];                 //target value for the neuron
         double actual = outputLayer[i].getOutputValue(); //get the actual output value of the neuron
-        sum += pow(target - actual, 2);             //sum of the errors
+        sum += pow(target - actual, 2);                  //sum of the errors
     }
     annError = sqrt(sum/numOutputs);
 
@@ -115,11 +109,8 @@ void ANN::getOutput(vector<double> &outputValues) const
 {
     outputValues.clear();
 
-    qDebug()<<"Output values";
-
     for(unsigned i=0; i<layers.back().size() -1; i++)
     {
         outputValues.push_back(layers.back()[i].getOutputValue());
-        qDebug()<<outputValues.back();
     }
 }

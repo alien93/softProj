@@ -1,5 +1,34 @@
 #include "myannwidget.h"
 
+MyAnnWidget::MyAnnWidget(QWidget *parent) : QGLWidget(parent)
+{
+}
+
+void MyAnnWidget::initializeGL()
+{
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_POINT_SMOOTH);
+    glPointSize(10.0);
+
+}
+
+void MyAnnWidget::paintGL()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    draw();
+}
+
+void MyAnnWidget::resizeGL(int w, int h)
+{
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45, (float)w/h, 1.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
 
 unsigned MyAnnWidget::findMaxVal(std::vector<unsigned> values)
 {
@@ -14,16 +43,12 @@ unsigned MyAnnWidget::findMaxVal(std::vector<unsigned> values)
     return maxVal;
 }
 
-MyAnnWidget::MyAnnWidget(QWidget *parent) : QGLWidget(parent)
-{
-}
+
 
 //!Draws neural net
 //!Window dimensions - width -1 to 1; height -1 to 1
-
 void MyAnnWidget::draw()
 {
-    qDebug()<<annLayers.size();
     unsigned counter = 0;
     //draw neurons
     glBegin(GL_POINTS);
@@ -75,37 +100,10 @@ void MyAnnWidget::createNet(const std::vector<unsigned> &layers)
     annLayers = layers;
     numCols = annLayers.size();
     numRows = findMaxVal(layers) + 1;       //+ bias
-    qDebug()<<numCols;
     rowDelta = 2.0/numCols;                 //2.0 - width and hight of glpanel
     colDelta = 2.0/numRows;
     annCreated = true;
-    qDebug()<<"hello from create net";
-    qDebug()<<annCreated;
     updateGL();
 }
 
-void MyAnnWidget::initializeGL()
-{
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_POINT_SMOOTH);
-    glPointSize(10.0);
 
-}
-
-void MyAnnWidget::paintGL()
-{
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-    draw();
-}
-
-void MyAnnWidget::resizeGL(int w, int h)
-{
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45, (float)w/h, 1.0, 1.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}

@@ -35,14 +35,6 @@ public:
     void setGeomID(dGeomID geomID);
 
     bool isHasBody();
-
-
-    virtual void rotateRightThigh(double angle);
-    virtual void rotateLeftThigh(double angle);
-    virtual void rotateRightLowerLeg(double angle);
-    virtual void rotateLeftLowerLeg(double angle);
-    virtual void rotateRightFoot(double angle);
-    virtual void rotateLeftFoot(double angle);
 };
 
 #endif // OBJECTODE_H

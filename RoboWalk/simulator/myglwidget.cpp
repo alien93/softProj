@@ -8,14 +8,11 @@ QString MyGLWidget::jointName = "";
 MyGLWidget::MyGLWidget(QWidget *parent):
     QGLWidget(parent)
 {
-    annCreated = false;
-
     xRotation=0.0f;
     yRotation = -90.0f;
     sceneDistance=-50.0f;
     limit = 0.1;
     step = true;
-    animateRobot = true;
     connect(&timer, SIGNAL(timeout()), this, SLOT(animation()));
 }
 
@@ -23,20 +20,19 @@ void MyGLWidget::initializeGL()
 {
     glClearColor(0.0f, 0.0f, 0, 1.0f);
     glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_COLOR_MATERIAL);
-
-    w = new World(-1.0);    //initialise ode world
-
-    //setup ground
-    ground = new DrawBox(w, false, 20, 0.01, 20, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+    w = new World(-0.05);                         //initialise ode world
+    ground = new DrawBox(w, false, 20, 0.01, 20, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0);  //setup ground
     Point3 position = {0, 0, 0};
     ground->setPosition(position);
-
     Point3 initPosition = {0, 0.38, 0};     //initial torso position
     robot = new RobotDemo(w, initPosition.x, initPosition.y, initPosition.z, (dReal)0.1);
-    //create ann
-   /* if(!annCreated)
-        createANN();*/
+    initPositions.push_back(robot->getR_upperLeg()->getPosition());
+    initPositions.push_back(robot->getL_upperLeg()->getPosition());
+    initPositions.push_back(robot->getR_lowerLeg()->getPosition());
+    initPositions.push_back(robot->getL_lowerLeg()->getPosition());
+    initPositions.push_back(robot->getR_foot()->getPosition());
+    initPositions.push_back(robot->getL_foot()->getPosition());
+
 }
 
 void MyGLWidget::paintGL()
@@ -51,19 +47,18 @@ void MyGLWidget::paintGL()
 
     glPushMatrix();
     glTranslatef(0.0f, -.04f, 0.0f);
-    drawGrid();     //ground
+    drawGrid();
     glPopMatrix();
-    //ground->draw();
-    robot->draw();  //demo robot
+    robot->draw();
     glPopMatrix();
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+    w->loop();
+
+
    /* if(parser->getInstance()->getFileParsed())
     {
         drawRobot();    //robot from urdf
     }*/
-  /* if(animateRobot)
-        trainANN();*/
-    w->loop();
 }
 
 void MyGLWidget::resizeGL(int w, int h)
@@ -77,7 +72,7 @@ void MyGLWidget::resizeGL(int w, int h)
 
 }
 
-
+//!Draws a robot
 void MyGLWidget::drawRobot()
 {
     map<QString, Link> linksMap = parser->getInstance()->rm.getLinks();
@@ -118,8 +113,6 @@ void MyGLWidget::drawRobot()
                 elem1 = draw(lp);
             }
             //joint transformations
-            qDebug()<<jointName;
-            qDebug()<<j.getParent().getLink();
             if(jointName!="" && j.getChild().getLink()==jointName)
             {
                 Axis axis = j.getAxis();
@@ -168,7 +161,7 @@ void MyGLWidget::drawRobot()
 }
 
 
-//draw a link
+//!Draws a link
 ObjectODE* MyGLWidget::draw(Link l)
 {
     vector<Visual> visuals = l.getVisual();
@@ -251,6 +244,7 @@ ObjectODE* MyGLWidget::draw(Link l)
     return NULL;
 }
 
+//!Draws a ground
 void MyGLWidget::drawGrid()
 {
     glColor3ub(0,255,255);
@@ -263,42 +257,10 @@ void MyGLWidget::drawGrid()
         glVertex3f(i, 0.0f, 88.0f);
         glEnd();
     }
-    /* ObjectODE* ground = new DrawBox(w, false, 160.0,1.0,160.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
-    Point3 position = {0, -1, 0};
-    ground->setPosition(position);
-    ground->draw();*/
+    //ground->draw();
 }
 
-float MyGLWidget::getYRotation() const
-{
-    return yRotation;
-}
-
-void MyGLWidget::setYRotation(float value)
-{
-    yRotation = value;
-}
-
-float MyGLWidget::getSceneDistance() const
-{
-    return sceneDistance;
-}
-
-void MyGLWidget::setSceneDistance(float value)
-{
-    sceneDistance = value;
-}
-
-float MyGLWidget::getXRotation() const
-{
-    return xRotation;
-}
-
-void MyGLWidget::setXRotation(float value)
-{
-    xRotation = value;
-}
-
+//!Animating joint movements
 void MyGLWidget::animation()
 {
     URDFparser *parser;
@@ -354,12 +316,30 @@ void MyGLWidget::animation()
     update();
 }
 
-void MyGLWidget::animateAnn(QElapsedTimer annElapsedTimer)
+//!Animating the training process of ANN
+void MyGLWidget::animateAnn(QElapsedTimer annElapsedTimer, vector<double> &resultValues)
 {
-    qDebug()<<"Hello from animateAnn";
-    while(!annElapsedTimer.hasExpired(5000))
+    if(round(resultValues[0]) == 1)// && dJointGetHingeAngle(robotSimulation->getRobot()->getR_hip()) == inputValues[0])
+        dJointAddHingeTorque(robot->getR_hip(), -50);
+    if(round(resultValues[1]) == 1)// && dJointGetHingeAngle(robotSimulation->getRobot()->getL_hip()) == inputValues[0])
+        dJointAddHingeTorque(robot->getL_hip(), -50);
+    if(round(resultValues[2]) == 1)// && dJointGetHingeAngle(robotSimulation->getRobot()->getR_knee()) == inputValues[0])
+    {
+        dJointAddHingeTorque(robot->getR_knee(), -100);
+    }
+    if(round(resultValues[3]) == 1)// && dJointGetHingeAngle(robotSimulation->getRobot()->getL_knee()) == inputValues[0])
+        dJointAddHingeTorque(robot->getL_knee(), -100);
+    if(round(resultValues[4]) == 1)// && dJointGetHingeAngle(robotSimulation->getRobot()->getR_ankle()) == inputValues[0])
+        dJointAddHingeTorque(robot->getR_ankle(), 20);
+    if(round(resultValues[5]) == 1)// && dJointGetHingeAngle(robotSimulation->getRobot()->getL_ankle()) == inputValues[0])
+        dJointAddHingeTorque(robot->getL_ankle(), 20);
+
+
+    while(!annElapsedTimer.hasExpired(3000))
+    {
+
         repaint();
-    robot->setPosition({0, 0.38, 0});
+    }
 }
 
 void MyGLWidget::reset()
@@ -369,6 +349,42 @@ void MyGLWidget::reset()
     glLoadIdentity();
     glFlush();
 }
+
+float MyGLWidget::getYRotation() const
+{
+    return yRotation;
+}
+
+void MyGLWidget::setYRotation(float value)
+{
+    yRotation = value;
+}
+
+float MyGLWidget::getSceneDistance() const
+{
+    return sceneDistance;
+}
+
+void MyGLWidget::setSceneDistance(float value)
+{
+    sceneDistance = value;
+}
+
+float MyGLWidget::getXRotation() const
+{
+    return xRotation;
+}
+
+void MyGLWidget::setXRotation(float value)
+{
+    xRotation = value;
+}
+
+RobotDemo *MyGLWidget::getRobot() const
+{
+    return robot;
+}
+
 
 void MyGLWidget::rotateMe(double r, double p, double y)
 {
@@ -397,27 +413,6 @@ double MyGLWidget::convertRadToDegrees(double value)
     double retVal;
     retVal = value * 180 / M_PI;
     return retVal;
-}
-
-ObjectODE *MyGLWidget::getRobot() const
-{
-    return robot;
-}
-
-void MyGLWidget::setRobot(ObjectODE *value)
-{
-    robot = value;
-}
-
-void MyGLWidget::createANN()
-{
-
-
-}
-
-void MyGLWidget::trainANN()
-{
-
 }
 
 
