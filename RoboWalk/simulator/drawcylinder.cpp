@@ -115,20 +115,6 @@ void DrawCylinder::draw()
 
         glPopMatrix();
     }
-
-
-
-  /*  glPushMatrix();
-    glTranslated(x, y ,z);
-    rotateMe(r, p, yy);
-    glColor4d(red, green, blue, alpha);
-    GLUquadric* cylinder = gluNewQuadric();
-    gluCylinder(cylinder,radius, radius, length, 32, 32);
-    gluDisk(cylinder,0,radius, 32, 32);
-    glTranslated(0.0,0.0 , length);
-    gluDisk(cylinder,0,radius, 32, 32);
-    glPopMatrix();
-    glPopMatrix();*/
 }
 
 void DrawCylinder::rotateMe(double r, double p, double y)

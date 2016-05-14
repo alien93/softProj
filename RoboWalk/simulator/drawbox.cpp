@@ -128,16 +128,6 @@ void DrawBox::draw()
         c.drawCuboid();
         glPopMatrix();
     }
-
-
-
-    /*glPushMatrix();
-   // glTranslated(x,z,y);
-    rotateMe(r, p, yy);
-    glColor4d(red, green, blue, alpha);
-    Cuboid c = Cuboid(width, height, depth);
-    c.drawCuboid();
-    glPopMatrix();*/
 }
 
 void DrawBox::rotateMe(double r, double p, double y)

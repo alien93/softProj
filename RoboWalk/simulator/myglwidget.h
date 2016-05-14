@@ -3,7 +3,6 @@
 
 #include <QGLWidget>
 #include <QTimer>
-#include "simplelegs.h"
 #include "drawcylinder.h"
 #include "drawsphere.h"
 #include "drawbox.h"
@@ -15,6 +14,7 @@
 #include "robotdemo.h"
 #include "ann/ann.h"
 #include "timer.h"
+#include "urdfparser.h"
 
 using namespace std;
 
@@ -23,7 +23,6 @@ class MyGLWidget : public QGLWidget
     Q_OBJECT
 private:
     bool step;
-    SimpleLegs *sl;
     DrawCylinder *cylinder;
     DrawBox *box;
     DrawSphere *sphere;
@@ -58,8 +57,6 @@ private:
     World* w;
 public:
     QTimer timer;
-    QElapsedTimer annElapsedTimer;
-    QTimer annTimer;
 
     explicit MyGLWidget(QWidget *parent=0);
     static QString jointName;
@@ -80,9 +77,14 @@ public:
     void rotateMe(double r, double p, double y);
     double convertRadToDegrees(double value);
 
+
+
+    ObjectODE *getRobot() const;
+    void setRobot(ObjectODE *value);
+
 public Q_SLOTS:
     void animation();
-    void animateAnn();
+    void animateAnn(QElapsedTimer annElapsedTimer);
 };
 
 #endif // MYGLWIDGET_H

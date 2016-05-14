@@ -3,7 +3,9 @@
 
 
 //konstruktor
-
+URDFparser::URDFparser()
+{
+}
 
 bool URDFparser::getFileParsed()
 {
@@ -15,9 +17,6 @@ void URDFparser::setFileParsed(bool value)
     fileParsed = value;
 }
 
-URDFparser::URDFparser()
-{
-}
 
 void URDFparser::addInertialElementChildren(int i, QDomElement inertialElement, Inertial* inertial)
 {

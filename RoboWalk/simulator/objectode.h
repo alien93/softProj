@@ -19,8 +19,10 @@ public:
     ObjectODE(bool body, dReal posX, dReal posY, dReal posZ);
     virtual ~ObjectODE();
     virtual void draw();
+
     void setPosition(Point3 newPosition);
     Point3 getPosition();
+
     void setOrientation(int axis, dReal angle);
 
     void setVelocity(Vector3 velocity);
@@ -28,8 +30,10 @@ public:
 
     dBodyID getBodyID();
     void setBodyID(dBodyID bodyID);
+
     dGeomID getGeomID();
     void setGeomID(dGeomID geomID);
+
     bool isHasBody();
 
 

@@ -17,16 +17,15 @@ MyGLWidget::MyGLWidget(QWidget *parent):
     step = true;
     animateRobot = true;
     connect(&timer, SIGNAL(timeout()), this, SLOT(animation()));
-    connect(&annTimer, SIGNAL(timeout()), this, SLOT(animateAnn()));
 }
 
 void MyGLWidget::initializeGL()
 {
     glClearColor(0.0f, 0.0f, 0, 1.0f);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_COLOR_MATERIAL);
+    //glEnable(GL_COLOR_MATERIAL);
 
-    w = new World(-1.0);    //initialise ode
+    w = new World(-1.0);    //initialise ode world
 
     //setup ground
     ground = new DrawBox(w, false, 20, 0.01, 20, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
@@ -36,10 +35,8 @@ void MyGLWidget::initializeGL()
     Point3 initPosition = {0, 0.38, 0};     //initial torso position
     robot = new RobotDemo(w, initPosition.x, initPosition.y, initPosition.z, (dReal)0.1);
     //create ann
-    if(!annCreated)
-        createANN();
-
-    //w->loop();
+   /* if(!annCreated)
+        createANN();*/
 }
 
 void MyGLWidget::paintGL()
@@ -52,7 +49,6 @@ void MyGLWidget::paintGL()
     glRotatef(yRotation, 0.0f, 1.0f, 0.0f);
     glScalef(30.0f, 30.0f, 30.0f);
 
-    // world->stepSimulation();
     glPushMatrix();
     glTranslatef(0.0f, -.04f, 0.0f);
     drawGrid();     //ground
@@ -61,13 +57,12 @@ void MyGLWidget::paintGL()
     robot->draw();  //demo robot
     glPopMatrix();
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-    if(parser->getInstance()->getFileParsed())
+   /* if(parser->getInstance()->getFileParsed())
     {
         drawRobot();    //robot from urdf
-    }
-    //robot->testRotation(w);
-    if(animateRobot)
-        trainANN();
+    }*/
+  /* if(animateRobot)
+        trainANN();*/
     w->loop();
 }
 
@@ -359,7 +354,7 @@ void MyGLWidget::animation()
     update();
 }
 
-void MyGLWidget::animateAnn()
+void MyGLWidget::animateAnn(QElapsedTimer annElapsedTimer)
 {
     qDebug()<<"Hello from animateAnn";
     while(!annElapsedTimer.hasExpired(5000))
@@ -404,54 +399,25 @@ double MyGLWidget::convertRadToDegrees(double value)
     return retVal;
 }
 
+ObjectODE *MyGLWidget::getRobot() const
+{
+    return robot;
+}
+
+void MyGLWidget::setRobot(ObjectODE *value)
+{
+    robot = value;
+}
+
 void MyGLWidget::createANN()
 {
-    qDebug()<<"I'm creating ann";
-    //for ANN with 2 hidden layers the neuronsPerLayer vector
-    //should look something like this {2, 3, 3, 1}
-    //2-number of neurons, input value
-    //1-number of neurons, output value
-    //3-number of neurons per hidden layer
-    vector<unsigned> neuronsPerLayer;
-    unsigned numOfInputs = 6;
-    unsigned numOfOutputs = 6;
-    unsigned numOfNeurons1hidden = 3;
-    neuronsPerLayer.push_back(numOfInputs);
-    neuronsPerLayer.push_back(numOfNeurons1hidden);
-    //neuronsPerLayer.push_back(numOfNeurons2hidden);
-    neuronsPerLayer.push_back(numOfOutputs);
-    ann = new ANN(neuronsPerLayer);
 
 
 }
 
 void MyGLWidget::trainANN()
 {
-    animateRobot = false;
-    for(int i=0; i<20; i++)
-    {
-        //preparing training data
-        vector<double> inputValues = {0, 0, 0, 0, 0, 0};
-        ann->feedForward(inputValues);
 
-        vector<double> resultValues;
-        ann->getOutput(resultValues);
-
-        if(round(resultValues[0])==1)
-            robot->rotateRightThigh(30);
-        annElapsedTimer.restart();
-        animateAnn();
-        qDebug()<<"Function finished at: ";
-        qDebug()<<annElapsedTimer.elapsed();
-
-
-        vector<double> targetValues = {1, 0, 0, 0, 0, 0};
-        ann->backPropagation(targetValues);
-    }
-
-    animateRobot = true;
-    annCreated = true;
-    qDebug()<<"Ann is created";
 }
 
 

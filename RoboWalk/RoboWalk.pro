@@ -56,7 +56,6 @@ SOURCES += main.cpp\
     model/modelstate.cpp \
     model/jointstate.cpp \
     simulator/myglwidget.cpp \
-    simulator/simplelegs.cpp \
     model/robotmodel.cpp \
     simulator/drawbox.cpp \
     simulator/drawcylinder.cpp \
@@ -70,7 +69,8 @@ SOURCES += main.cpp\
     ann/ann.cpp \
     ann/neuron.cpp \
     simulator/myannwidget.cpp \
-    ann/connection.cpp
+    ann/connection.cpp \
+    simulator/anndemo.cpp
 
 HEADERS  += mainwindow.h \
     urdfparser.h \
@@ -114,7 +114,6 @@ HEADERS  += mainwindow.h \
     model/modelstate.h \
     model/jointstate.h \
     simulator/myglwidget.h \
-    simulator/simplelegs.h \
     model/robotmodel.h \
     simulator/drawbox.h \
     simulator/drawcylinder.h \
@@ -129,7 +128,8 @@ HEADERS  += mainwindow.h \
     ann/neuron.h \
     simulator/myannwidget.h \
     ann/connection.h \
-    simulator/timer.h
+    simulator/timer.h \
+    simulator/anndemo.h
 
 FORMS    += mainwindow.ui
 

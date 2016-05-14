@@ -92,14 +92,7 @@ void DrawSphere::draw()
         glColor4d(red, green, blue, alpha);
         gluSphere(quad, radius, 32, 32);
         glPopMatrix();
-
     }
-      /*  glTranslated(x,z, y);
-        rotateMe(r, p, yy);
-        glColor4d(red, green, blue, alpha);
-        //glutSolidSphere(radius, 32, 32);
-        gluSphere(quad, radius, 32, 32);*/
-
 }
 
 void DrawSphere::rotateMe(double r, double p, double y)

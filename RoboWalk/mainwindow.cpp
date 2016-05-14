@@ -83,7 +83,6 @@ void MainWindow::addButtons()
     URDFparser* parser = URDFparser::getInstance();
     RobotModel rm = parser->rm;
     map<QString, Link> linksMap = rm.getLinks();
-    vector<Link> links = rm.getLinksVector();
     map<QString, Joint> jointsMap = rm.getJoints();
     vector<Joint> joints = rm.sortJoints(jointsMap);
     cb = new QComboBox(ui->frame);
@@ -95,13 +94,11 @@ void MainWindow::addButtons()
     {
         if(linksMap[joints.at(i).getParent().getLink()].getVisual().size()>0)
         {
-          //  sl->append("Parent: " + joints.at(i).getParent().getLink());
             if(!sl->contains(joints.at(i).getParent().getLink()))
                 sl->append(joints.at(i).getParent().getLink());
         }
         if(linksMap[joints.at(i).getChild().getLink()].getVisual().size()>0)
         {
-           // sl->append("Child: " + joints.at(i).getChild().getLink());
             if(!sl->contains(joints.at(i).getChild().getLink()))
              sl->append(joints.at(i).getChild().getLink());
         }
@@ -116,9 +113,6 @@ void MainWindow::addButtons()
 
 void MainWindow::testButtonClicked()
 {
-  /*  QString val = cb->currentText();
-    qDebug()<<val;
-    qDebug()<<cb->currentIndex();*/
     if(button->text() == "Test")
        {
            button->setText("Stop");
@@ -134,3 +128,12 @@ void MainWindow::testButtonClicked()
        }
 }
 
+void MainWindow::on_createANN_clicked()
+{
+    annDemo.createANN(ui->annSimulation);
+}
+
+void MainWindow::on_trainANN_clicked()
+{
+    annDemo.trainANN(ui->robotSimulation);
+}

@@ -5,7 +5,7 @@ Neuron::Neuron(unsigned numOutputs, unsigned neuronIndex)
     index = neuronIndex;
 
     eta = 0.15; //overall learning rate
-    alpha = 0.5; //momentum, multiplier of last deltaWeight
+    alpha = 0.5; //momentum, multiplier of the last deltaWeight
 
 
     for(unsigned i=0; i<numOutputs; i++)
@@ -116,7 +116,7 @@ double Neuron::dSumWeights(const vector<Neuron> &nextLayer) const
     return dSumWeights;
 }
 
-double Neuron::setGradient(double targetValue)
+void Neuron::setGradient(double targetValue)
 {
     double delta = targetValue - outputValue;
     gradient = delta * dActivationFunction(outputValue, 1);

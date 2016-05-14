@@ -93,9 +93,6 @@ RobotDemo::RobotDemo(World *world, dReal posX, dReal posY, dReal posZ, dReal siz
     dJointSetHingeAxis(r_ankle, 1, 0, 0);
     dJointSetHingeParam(r_ankle, dParamLoStop, -PI/2);
     dJointSetHingeParam(r_ankle, dParamHiStop, PI/6);
-
-
-
 }
 
 RobotDemo::~RobotDemo()

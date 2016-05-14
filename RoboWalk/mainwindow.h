@@ -11,6 +11,7 @@
 #include <QKeyEvent>
 #include "simulator/myglwidget.h"
 #include <QtGui>
+#include "simulator/anndemo.h"
 
 namespace Ui {
 class MainWindow;
@@ -29,6 +30,9 @@ private slots:
     void on_actionExit_triggered();
     void on_actionInsert_URDF_file_triggered();
     void testButtonClicked();
+    void on_createANN_clicked();
+
+    void on_trainANN_clicked();
 
 private:
     QComboBox* cb;
@@ -36,6 +40,7 @@ private:
     void keyPressEvent(QKeyEvent *event);
     void addButtons();
     Ui::MainWindow *ui;
+    AnnDemo annDemo;
 };
 
 #endif // MAINWINDOW_H

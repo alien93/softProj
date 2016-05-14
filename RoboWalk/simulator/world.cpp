@@ -43,8 +43,8 @@ World::World(dReal gravity)
 {
     dInitODE2(0);
     dAllocateODEDataForThread(dAllocateMaskAll);
-    worldID = dWorldCreate();   //creates a new, empty world
-    dWorldSetGravity(worldID, 0, gravity, 0);   //0,0,-9.81
+    worldID = dWorldCreate();                   //creates a new, empty world
+    dWorldSetGravity(worldID, 0, gravity, 0);   //0,-9.81,0
     spaceID = dHashSpaceCreate(0);
     jointGroupID = dJointGroupCreate(0);
 
@@ -71,8 +71,7 @@ void World::loop()
     globalRayIntersectionDepth = -1;
     dSpaceCollide(spaceID, 0, &nearCallback);
     rayIntersectionDepth = globalRayIntersectionDepth;
-    //    dWorldStep(worldID, STEP_ITERATIONS);
-    dWorldQuickStep(worldID, STEP_ITERATIONS);
+    dWorldStep(worldID, STEP_ITERATIONS);
     dJointGroupEmpty(jointGroupID);
 }
 

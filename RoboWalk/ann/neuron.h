@@ -36,7 +36,7 @@ public:
 
 
     //gradients
-    double setGradient(double targetValue);
+    void setGradient(double targetValue);
     double setHiddenGradients(const vector<Neuron> &layer);
 };
 
