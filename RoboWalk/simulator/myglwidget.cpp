@@ -317,26 +317,56 @@ void MyGLWidget::animation()
 }
 
 //!Animating the training process of ANN
-void MyGLWidget::animateAnn(QElapsedTimer annElapsedTimer, vector<double> &resultValues)
+void MyGLWidget::animateAnn(QElapsedTimer annElapsedTimer, ANN* ann)
 {
-    if(round(resultValues[0]) == 1)// && dJointGetHingeAngle(robotSimulation->getRobot()->getR_hip()) == inputValues[0])
-        dJointAddHingeTorque(robot->getR_hip(), -50);
-    if(round(resultValues[1]) == 1)// && dJointGetHingeAngle(robotSimulation->getRobot()->getL_hip()) == inputValues[0])
-        dJointAddHingeTorque(robot->getL_hip(), -50);
-    if(round(resultValues[2]) == 1)// && dJointGetHingeAngle(robotSimulation->getRobot()->getR_knee()) == inputValues[0])
-    {
-        dJointAddHingeTorque(robot->getR_knee(), -100);
-    }
-    if(round(resultValues[3]) == 1)// && dJointGetHingeAngle(robotSimulation->getRobot()->getL_knee()) == inputValues[0])
-        dJointAddHingeTorque(robot->getL_knee(), -100);
-    if(round(resultValues[4]) == 1)// && dJointGetHingeAngle(robotSimulation->getRobot()->getR_ankle()) == inputValues[0])
-        dJointAddHingeTorque(robot->getR_ankle(), 20);
-    if(round(resultValues[5]) == 1)// && dJointGetHingeAngle(robotSimulation->getRobot()->getL_ankle()) == inputValues[0])
-        dJointAddHingeTorque(robot->getL_ankle(), 20);
+    vector<double> inputs;
+    vector<double> result;
 
 
-    while(!annElapsedTimer.hasExpired(3000))
+    while(!annElapsedTimer.hasExpired(5000))
     {
+        inputs.clear();
+        result.clear();
+
+        qDebug()<<"Robot position:";
+        qDebug()<<robot->getPosition().x;
+        qDebug()<<robot->getPosition().y;
+        qDebug()<<robot->getPosition().z;
+        qDebug()<<round(robot->getPosition().y*10)/10;
+        if(round(robot->getPosition().y*10)/10 <= 0.25)      //robot's on the ground
+            robot->setPosition({0, 0.38, 0});
+
+        inputs.push_back(round(dJointGetHingeAngle(robot->getR_hip()) * 10)/10);
+
+        inputs.push_back(round(dJointGetHingeAngle(robot->getL_hip()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getR_knee()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getL_knee()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getR_ankle()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getL_ankle()) * 10)/10);
+
+        ann->feedForward(inputs);
+
+        ann->getOutput(result);
+
+        if(round(result[0]) == 1)
+            dJointAddHingeTorque(robot->getR_hip(), -50);
+        if(round(result[1]) == 1)
+            dJointAddHingeTorque(robot->getL_hip(), -50);
+        if(round(result[2]) == 1)
+            dJointAddHingeTorque(robot->getR_knee(), -100);
+        if(round(result[2]) == -1)
+            dJointAddHingeTorque(robot->getR_knee(), 20);
+        if(round(result[3]) == 1)
+            dJointAddHingeTorque(robot->getL_knee(), -100);
+        if(round(result[4]) == 1)
+            dJointAddHingeTorque(robot->getR_ankle(), 20);
+        if(round(result[5]) == 1)
+            dJointAddHingeTorque(robot->getL_ankle(), 20);
+
+        qDebug()<<"Angle";
+        qDebug()<<round(dJointGetHingeAngle(robot->getR_knee()) * 10)/10;
+
+
 
         repaint();
     }

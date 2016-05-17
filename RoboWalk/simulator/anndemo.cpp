@@ -29,30 +29,35 @@ void AnnDemo::trainANN(MyGLWidget *robotSimulation)
     vector<vector<double>> inputs;
     vector<vector<double>> outputs;
     inputs.push_back({0, 0, 0, 0, 0, 0});       //starting position
-    outputs.push_back({0, 0, 1, 0, 0, 0});      //rotate right foot CW
+    outputs.push_back({0, 0, 0, 0, 0, 1});      //rotate left foot CW
+
+    inputs.push_back({0, 0, 0, 0, 0, 0.3});     //left foot rotated
+    outputs.push_back({0, 0, 1, 0, 0, 0});      //rotate right knee CCW
+
+    inputs.push_back({0, 0, -1.57, 0, 0, 0.3});
+    outputs.push_back({0, 0, 0, 0, 1, 0});
+
 
     animateRobot = false;
-    for(int j=0; j<100; j++)
-    for(int i=0; i<inputs.size(); i++)
-    {
-        //preparing training data
-        inputValues = inputs[i];
-        ann->feedForward(inputValues);
+    for(unsigned j=0; j<1000; j++)
+        for(unsigned i=0; i<inputs.size(); i++)
+        {
+            //preparing training data
+            inputValues = inputs[i];
+            ann->feedForward(inputValues);
 
-        resultValues;
-        ann->getOutput(resultValues);
-        printResults(resultValues);
+            ann->getOutput(resultValues);
+            printResults(resultValues);
 
-        annElapsedTimer.restart();
-        initRobot(robotSimulation);
-        robotSimulation->animateAnn(annElapsedTimer, resultValues);
-
-        targetValues = outputs[i];
-        ann->backPropagation(targetValues);
+            targetValues = outputs[i];
+            ann->backPropagation(targetValues);
 
 
-    }
+        }
 
+    annElapsedTimer.restart();
+    initRobot(robotSimulation);
+    robotSimulation->animateAnn(annElapsedTimer, ann);
 
     animateRobot = true;
     annCreated = true;

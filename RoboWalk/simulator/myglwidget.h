@@ -35,7 +35,6 @@ private:
     ObjectODE* ground;
     RobotDemo* robot;
 
-    ANN* ann;
 
     GLfloat m[16];
     double limit;
@@ -80,7 +79,7 @@ public:
 
 public Q_SLOTS:
     void animation();
-    void animateAnn(QElapsedTimer annElapsedTimer, vector<double> &resultValues);
+    void animateAnn(QElapsedTimer annElapsedTimer, ANN *ann);
 };
 
 #endif // MYGLWIDGET_H
