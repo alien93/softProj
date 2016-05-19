@@ -8,6 +8,7 @@
 #include "myglwidget.h"
 #include "myannwidget.h"
 
+
 class AnnDemo
 {
 private:
@@ -15,10 +16,15 @@ private:
     bool annCreated;
     bool animateRobot;
     QElapsedTimer annElapsedTimer;
+    vector<unsigned> neuronsPerLayer;
+    unsigned numOfIterations;
+    vector<vector<double>> inputs;
+    vector<vector<double>> outputs;
     void printResults(vector<double> results);
     void initRobot(MyGLWidget *robotSimulation);
 public:
     AnnDemo();
+    void parseTrainingData(QString filename);
     void createANN(MyAnnWidget* annSimulation);
     void trainANN(MyGLWidget* robotSimulation);
 };

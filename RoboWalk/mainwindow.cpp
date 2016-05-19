@@ -130,6 +130,13 @@ void MainWindow::testButtonClicked()
 
 void MainWindow::on_createANN_clicked()
 {
+    QString filename = QFileDialog::getOpenFileName(
+                this,
+                tr("Training data"),
+                "",
+                "RW files (*.rw)"
+                );
+    annDemo.parseTrainingData(filename);
     annDemo.createANN(ui->annSimulation);
 }
 

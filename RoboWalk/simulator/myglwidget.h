@@ -77,9 +77,12 @@ public:
     RobotDemo *getRobot() const;
     void setRobot(ObjectODE *value);
 
+    void moveRightLeg();
+    void moveLeftLeg();
+
 public Q_SLOTS:
     void animation();
-    void animateAnn(QElapsedTimer annElapsedTimer, ANN *ann);
+    void animateAnn(QElapsedTimer annElapsedTimer, ANN *ann, unsigned numOfOutputs);
 };
 
 #endif // MYGLWIDGET_H

@@ -317,27 +317,21 @@ void MyGLWidget::animation()
 }
 
 //!Animating the training process of ANN
-void MyGLWidget::animateAnn(QElapsedTimer annElapsedTimer, ANN* ann)
+void MyGLWidget::animateAnn(QElapsedTimer annElapsedTimer, ANN* ann, unsigned numOfOutputs)
 {
     vector<double> inputs;
     vector<double> result;
 
 
-    while(!annElapsedTimer.hasExpired(5000))
+    while(!annElapsedTimer.hasExpired(30000))
     {
         inputs.clear();
         result.clear();
 
-        qDebug()<<"Robot position:";
-        qDebug()<<robot->getPosition().x;
-        qDebug()<<robot->getPosition().y;
-        qDebug()<<robot->getPosition().z;
-        qDebug()<<round(robot->getPosition().y*10)/10;
-        if(round(robot->getPosition().y*10)/10 <= 0.25)      //robot's on the ground
+        if(round(robot->getPosition().y*10)/10 <= 0.25)      //robot's on the ground, reinitialise
             robot->setPosition({0, 0.38, 0});
 
         inputs.push_back(round(dJointGetHingeAngle(robot->getR_hip()) * 10)/10);
-
         inputs.push_back(round(dJointGetHingeAngle(robot->getL_hip()) * 10)/10);
         inputs.push_back(round(dJointGetHingeAngle(robot->getR_knee()) * 10)/10);
         inputs.push_back(round(dJointGetHingeAngle(robot->getL_knee()) * 10)/10);
@@ -348,28 +342,65 @@ void MyGLWidget::animateAnn(QElapsedTimer annElapsedTimer, ANN* ann)
 
         ann->getOutput(result);
 
-        if(round(result[0]) == 1)
-            dJointAddHingeTorque(robot->getR_hip(), -50);
-        if(round(result[1]) == 1)
-            dJointAddHingeTorque(robot->getL_hip(), -50);
-        if(round(result[2]) == 1)
-            dJointAddHingeTorque(robot->getR_knee(), -100);
-        if(round(result[2]) == -1)
-            dJointAddHingeTorque(robot->getR_knee(), 20);
-        if(round(result[3]) == 1)
-            dJointAddHingeTorque(robot->getL_knee(), -100);
-        if(round(result[4]) == 1)
-            dJointAddHingeTorque(robot->getR_ankle(), 20);
-        if(round(result[5]) == 1)
-            dJointAddHingeTorque(robot->getL_ankle(), 20);
 
-        qDebug()<<"Angle";
-        qDebug()<<round(dJointGetHingeAngle(robot->getR_knee()) * 10)/10;
+        if(numOfOutputs == 2)
+        {
+            if(annElapsedTimer.elapsed()%1000 == 0)
+            {
+                if(round(result[0])==1)
+                {
+                    moveRightLeg();
 
+                }
+                else if(round(result[1])==1)
+                {
+                    moveLeftLeg();
 
-
+                }
+            }
+        }
+        else if(numOfOutputs == 6)
+        {
+                if(round(result[0]) == 1)
+                    dJointAddHingeTorque(robot->getR_hip(), 50);
+                if(round(result[0]) == -1)
+                    dJointAddHingeTorque(robot->getR_hip(), -50);
+                if(round(result[1]) == 1)
+                    dJointAddHingeTorque(robot->getL_hip(), 50);
+                if(round(result[1]) == -1)
+                    dJointAddHingeTorque(robot->getL_hip(), -50);
+                if(round(result[2]) == 1)
+                    dJointAddHingeTorque(robot->getR_knee(), 20);
+                if(round(result[2]) == -1)
+                    dJointAddHingeTorque(robot->getR_knee(), -20);
+                if(round(result[3]) == 1)
+                    dJointAddHingeTorque(robot->getL_knee(), 20);
+                if(round(result[3]) == -1)
+                    dJointAddHingeTorque(robot->getL_knee(), -20);
+                if(round(result[4]) == 1)
+                    dJointAddHingeTorque(robot->getR_ankle(), 20);
+                if(round(result[4]) == -1)
+                    dJointAddHingeTorque(robot->getR_ankle(), -20);
+                if(round(result[5]) == 1)
+                    dJointAddHingeTorque(robot->getL_ankle(), 20);
+                if(round(result[5]) == -1)
+                    dJointAddHingeTorque(robot->getL_ankle(), -20);
+        }
         repaint();
     }
+}
+
+void MyGLWidget::moveRightLeg()
+{
+
+    robot->getR_lowerLeg()->setPosition({robot->getR_lowerLeg()->getPosition().x, robot->getR_lowerLeg()->getPosition().y, robot->getR_lowerLeg()->getPosition().z + 0.09});
+    robot->getR_foot()->setPosition({robot->getR_foot()->getPosition().x, robot->getR_foot()->getPosition().y, robot->getR_foot()->getPosition().z + 0.1});
+}
+
+void MyGLWidget::moveLeftLeg()
+{
+    robot->getL_lowerLeg()->setPosition({robot->getL_lowerLeg()->getPosition().x, robot->getL_lowerLeg()->getPosition().y, robot->getL_lowerLeg()->getPosition().z + 0.09});
+    robot->getL_foot()->setPosition({robot->getL_foot()->getPosition().x, robot->getL_foot()->getPosition().y, robot->getL_foot()->getPosition().z + 0.1});
 }
 
 void MyGLWidget::reset()
