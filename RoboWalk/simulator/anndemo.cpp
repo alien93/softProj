@@ -33,12 +33,17 @@ void AnnDemo::trainANN(MyGLWidget *robotSimulation)
             //preparing training data
             inputValues = inputs[i];
             ann->feedForward(inputValues);
+            qDebug()<<"Input";
+            printResults(inputValues);
 
             ann->getOutput(resultValues);
+            qDebug()<<"Output";
             printResults(resultValues);
 
             targetValues = outputs[i];
             ann->backPropagation(targetValues);
+            qDebug()<<"Target value";
+            printResults(targetValues);
         }
 
 
@@ -48,6 +53,7 @@ void AnnDemo::trainANN(MyGLWidget *robotSimulation)
 
     animateRobot = true;
     annCreated = true;
+
 }
 
 
