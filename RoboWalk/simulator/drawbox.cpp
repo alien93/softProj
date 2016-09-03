@@ -1,5 +1,6 @@
 #include "drawbox.h"
 #include <math.h>
+#include <qdebug.h>
 
 
 DrawBox::DrawBox(World* world, bool body, double width, double height, double depth, double r, double p, double yy, double x, double y, double z, double red, double green, double blue, double alpha)
@@ -58,13 +59,13 @@ void DrawBox::draw()
         const dReal* R;
         R = dBodyGetRotation(bodyID);
         double m[16];
-        m[0] = R[0];
-        m[1] = R[4];
-        m[2] = R[8];
+        m[0] = R[1];
+        m[1] = R[5];
+        m[2] = R[9];
         m[3] = 0;
-        m[4] = R[1];
-        m[5] = R[5];
-        m[6] = R[9];
+        m[4] = R[0];
+        m[5] = R[4];
+        m[6] = R[8];
         m[7] = 0;
         m[8] = R[2];
         m[9] = R[6];

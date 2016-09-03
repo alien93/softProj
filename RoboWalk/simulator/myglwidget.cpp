@@ -49,16 +49,16 @@ void MyGLWidget::paintGL()
     glTranslatef(0.0f, -.04f, 0.0f);
     drawGrid();
     glPopMatrix();
-    robot->draw();
+    //robot->draw();    //demo robot
     glPopMatrix();
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-    w->loop();
+    //w->loop();
 
 
-   /* if(parser->getInstance()->getFileParsed())
+    if(parser->getInstance()->getFileParsed())
     {
         drawRobot();    //robot from urdf
-    }*/
+    }
 }
 
 void MyGLWidget::resizeGL(int w, int h)
@@ -94,12 +94,12 @@ void MyGLWidget::drawRobot()
             //  glPushMatrix();
             Link lp = linksMap.at(p.getLink());
             map<QString, Link> usedLinks = parser->getInstance()->getUsedLinks();
-            map<QString, Link>::iterator iter = usedLinks.find(lp.getName());
+
             if(usedLinks.count(lp.getName()))
             {
                 //the link already exists
                 glLoadMatrixf(matrices.at(lp.getName()));
-                elem1 = draw(lp);
+                //elem1 = draw(lp);
             }
             else
             {
