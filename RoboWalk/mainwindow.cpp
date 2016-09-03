@@ -117,6 +117,7 @@ void MainWindow::testButtonClicked()
        {
            button->setText("Stop");
            MyGLWidget::jointName = cb->currentText();
+           Robot::jointName = cb->currentText();
            ui->robotSimulation->repaint();
            ui->robotSimulation->animation();
            ui->robotSimulation->timer.start(16);

@@ -16,6 +16,7 @@
 #include "timer.h"
 #include "urdfparser.h"
 #include <cmath>
+#include "robot.h"
 
 using namespace std;
 
@@ -33,20 +34,18 @@ private:
     ObjectODE* elem2;
 
     ObjectODE* ground;
-    RobotDemo* robot;
+    RobotDemo* robotDemo;
+    Robot* robot;
 
 
     GLfloat m[16];
-    double limit;
     float distance;
     float rotationAngle;
     void drawGrid();
-    void drawRobot();
     float xRotation;
     float yRotation;
     float sceneDistance;
     map<QString,  GLfloat[16]> matrices;   //matrix for each parent node
-    vector<Point3> initPositions;          //rightThigh, leftThigh, rightLowerLeg, leftLowerLeg, rightFoot, leftFoot
 
     //ODE
     World* w;

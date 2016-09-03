@@ -70,7 +70,8 @@ SOURCES += main.cpp\
     ann/neuron.cpp \
     simulator/myannwidget.cpp \
     ann/connection.cpp \
-    simulator/anndemo.cpp
+    simulator/anndemo.cpp \
+    simulator/robot.cpp
 
 HEADERS  += mainwindow.h \
     urdfparser.h \
@@ -129,7 +130,8 @@ HEADERS  += mainwindow.h \
     simulator/myannwidget.h \
     ann/connection.h \
     simulator/timer.h \
-    simulator/anndemo.h
+    simulator/anndemo.h \
+    simulator/robot.h
 
 FORMS    += mainwindow.ui
 
