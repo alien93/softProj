@@ -33,6 +33,8 @@ private:
     DrawBox *box;
     DrawSphere *sphere;
 
+    vector<ObjectODE*> objects;
+
 public:
     static QString jointName;
 
@@ -50,6 +52,7 @@ public:
     void setPosition(Point3 newPosition);
     Point3 getPosition();
     void setOrientation(int axis, dReal angle);
+    void createRobot();
     void draw();
     double getLimit() const;
     void setLimit(double value);

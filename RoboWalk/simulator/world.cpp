@@ -6,11 +6,12 @@
 static dWorldID globalWorldID;
 static dJointGroupID globalJointGroupID;
 static dReal globalRayIntersectionDepth = -1;
+static dGeomID ground;
 
 static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 {
 
-    dBodyID b1 = dGeomGetBody(o1);
+    /*dBodyID b1 = dGeomGetBody(o1);
     dBodyID b2 = dGeomGetBody(o2);
 
     if(b1 && b2 && dAreConnectedExcluding(b1, b2, dJointTypeContact))
@@ -35,6 +36,31 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
             dJointAttach (c,b1,b2);
         }
 
+    }*/
+    int i,n;
+
+    // only collide things with the ground
+    int g1 = (o1 == ground);
+    int g2 = (o2 == ground);
+    if (!(g1 ^ g2)) return;
+
+    const int N = 10;
+    dContact contact[N];
+    n = dCollide (o1,o2,N,&contact[0].geom,sizeof(dContact));
+    if (n > 0) {
+      for (i=0; i<n; i++) {
+        contact[i].surface.mode = dContactSlip1 | dContactSlip2 |
+      dContactSoftERP | dContactSoftCFM | dContactApprox1;
+        contact[i].surface.mu = dInfinity;
+        contact[i].surface.slip1 = 0.1;
+        contact[i].surface.slip2 = 0.1;
+        contact[i].surface.soft_erp = 0.5;
+        contact[i].surface.soft_cfm = 0.3;
+        dJointID c = dJointCreateContact (globalWorldID,globalJointGroupID,&contact[i]);
+        dJointAttach (c,
+              dGeomGetBody(contact[i].geom.g1),
+              dGeomGetBody(contact[i].geom.g2));
+      }
     }
 }
 
@@ -43,11 +69,11 @@ World::World(dReal gravity)
     dInitODE2(0);
     dAllocateODEDataForThread(dAllocateMaskAll);
     worldID = dWorldCreate();                   //creates a new, empty world
-    dWorldSetGravity(worldID, 0, gravity, 0);   //0,-9.81,0
+    dWorldSetGravity(worldID, 0, 0, gravity);   //0,-9.81,0
     spaceID = dHashSpaceCreate(0);
     jointGroupID = dJointGroupCreate(0);
 
-    //ground = dCreatePlane(spaceID, 0, 1, 0, 0);
+    ground = dCreatePlane(spaceID, 0, 0, 1, 0);
 
     dWorldSetERP(worldID, (dReal)0.2);  //controls how much error correction is performed in each time step
 

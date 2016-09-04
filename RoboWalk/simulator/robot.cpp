@@ -18,6 +18,7 @@ Robot::Robot(World* world, dReal posX, dReal posY, dReal posZ)
 {
     this->w = world;
     this->limit = 0.1;
+    createRobot();
 }
 
 Robot::~Robot()
@@ -25,6 +26,13 @@ Robot::~Robot()
 
 }
 
+void Robot::draw()
+{
+    for(vector<ObjectODE*>::iterator it=objects.begin(); it!=objects.end(); it++)
+    {
+        (*it)->draw();
+    }
+}
 
 ObjectODE* Robot::draw(Link l)
 {
@@ -56,7 +64,8 @@ ObjectODE* Robot::draw(Link l)
                                             r, p, yy,
                                             x, y, z,
                                             red, green, blue, alpha);
-                cylinder->draw();
+                //cylinder->draw();
+                objects.push_back(cylinder);
                 return cylinder;
             }
             else if(g.getObject().getName() == "box")
@@ -79,7 +88,8 @@ ObjectODE* Robot::draw(Link l)
                                   r, p, yy,
                                   x, y, z,
                                   red, green, blue, alpha);
-                box->draw();
+                //box->draw();
+                objects.push_back(box);
                 return box;
             }
             else if(g.getObject().getName() == "sphere")
@@ -100,7 +110,8 @@ ObjectODE* Robot::draw(Link l)
                                         r, p, yy,
                                         x, y, z,
                                         red, green, blue, alpha);
-                sphere->draw();
+                //sphere->draw();
+                objects.push_back(sphere);
                 return sphere;
             }
         }
@@ -151,7 +162,7 @@ void Robot::setOrientation(int axis, dReal angle)
 
 }
 
-void Robot::draw()
+void Robot::createRobot()
 {
     map<QString, Link> linksMap = parser->getInstance()->rm.getLinks();
     vector<Link> links = parser->getInstance()->rm.getLinksVector();
@@ -191,21 +202,40 @@ void Robot::draw()
             //joint transformations
             if(jointName!="" && j.getChild().getLink()==jointName)
             {
-                Axis axis = j.getAxis();
-                glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
-                rotateMe(limit*(axis.getX()), limit*(axis.getY()), limit*(axis.getZ()));
+               // Axis axis = j.getAxis();
+                //glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
+               // rotateMe(limit*(axis.getX()), limit*(axis.getY()), limit*(axis.getZ()));
 
             }
             else
             {
-                glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
-                rotateMe(o.getRpy_r(), o.getRpy_p(), o.getRpy_y());
+                //glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
+                //rotateMe(o.getRpy_r(), o.getRpy_p(), o.getRpy_y());
             }
 
 
             //draw child link
             Link lc = linksMap.at(c.getLink());
-            elem2 = draw(lc);
+            vector<Visual> visual = lc.getVisual();
+            if(visual.size()>0)
+            {
+                Origin origin = visual.at(0).getOrigin();
+                origin.setXyz_x(origin.getXyz_x() + o.getXyz_x());
+                origin.setXyz_y(origin.getXyz_y() + o.getXyz_y());
+                origin.setXyz_z(origin.getXyz_z() + o.getXyz_z());
+                origin.setRpy_r(origin.getRpy_r() + o.getRpy_r());
+                origin.setRpy_p(origin.getRpy_p() + o.getRpy_p());
+                origin.setRpy_y(origin.getRpy_y() + o.getRpy_y());
+                visual.at(0).setOrigin(origin);
+                lc.setVisual(visual);
+                elem2 = draw(lc);
+            }
+           /* else
+            {
+                glTranslated(o.getXyz_x(), o.getXyz_y(), o.getXyz_z());
+                rotateMe(o.getRpy_r(), o.getRpy_p(), o.getRpy_y());
+            }*/
+
 
 
             //create joints
@@ -215,7 +245,7 @@ void Robot::draw()
                 dJointAttach(joint, elem1->getBodyID(), elem2->getBodyID());
                 Point3 jointPoint = {(dReal)j.getOrigin().getXyz_x(), (dReal)j.getOrigin().getXyz_y(), (dReal)j.getOrigin().getXyz_z()};
                 dJointSetHingeAnchor(joint, jointPoint.x, jointPoint.y, jointPoint.z);
-                dJointSetHingeAxis(joint, 1, 0, 0);
+                //dJointSetHingeAxis(joint, j.getAxis().getX(), j.getAxis().getY(), j.getAxis().getZ());
                 dJointSetHingeParam(joint, dParamLoStop, j.getLimit().getLower());
                 dJointSetHingeParam(joint, dParamHiStop, j.getLimit().getUpper());
             }

@@ -12,6 +12,7 @@ MyGLWidget::MyGLWidget(QWidget *parent):
     yRotation = -90.0f;
     sceneDistance=-50.0f;
     step = true;
+    robotLoaded = false;
     connect(&timer, SIGNAL(timeout()), this, SLOT(animation()));
 }
 
@@ -19,13 +20,13 @@ void MyGLWidget::initializeGL()
 {
     glClearColor(0.0f, 0.0f, 0, 1.0f);
     glEnable(GL_DEPTH_TEST);
-    w = new World(-0.05);                         //initialise ode world
+    w = new World(-0.5);                         //initialise ode world
     ground = new DrawBox(w, false, 20, 0.01, 20, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0);  //setup ground
-    Point3 position = {0, 0, 0};
+    Point3 position = {0, 0, -5};
     ground->setPosition(position);
     Point3 initPosition = {0, 0.5, 0};     //initial torso position
     //robotDemo = new RobotDemo(w, initPosition.x, initPosition.y, initPosition.z, (dReal)0.1);
-    robot = new Robot(w, initPosition.x, initPosition.y, initPosition.z);
+    //robot = new Robot(w, initPosition.x, initPosition.y, initPosition.z);
 }
 
 void MyGLWidget::paintGL()
@@ -45,12 +46,19 @@ void MyGLWidget::paintGL()
     //robotDemo->draw();    //demo robot
     glPopMatrix();
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-    //w->loop();
 
 
     if(parser->getInstance()->getFileParsed())
     {
+        if(!robotLoaded)
+        {
+            Point3 initPosition = {0, 0, 0};     //initial torso position
+            robot = new Robot(w, initPosition.x, initPosition.y, initPosition.z);
+            robotLoaded = true;
+
+        }
         robot->draw(); //robot from URDF
+        w->loop();
     }
 }
 

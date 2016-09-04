@@ -59,13 +59,13 @@ void DrawBox::draw()
         const dReal* R;
         R = dBodyGetRotation(bodyID);
         double m[16];
-        m[0] = R[1];
-        m[1] = R[5];
-        m[2] = R[9];
+        m[0] = R[0];
+        m[1] = R[4];
+        m[2] = R[8];
         m[3] = 0;
-        m[4] = R[0];
-        m[5] = R[4];
-        m[6] = R[8];
+        m[4] = R[1];
+        m[5] = R[5];
+        m[6] = R[9];
         m[7] = 0;
         m[8] = R[2];
         m[9] = R[6];
@@ -80,7 +80,7 @@ void DrawBox::draw()
         glTranslatef(position.x, position.y, position.z);
         glMultMatrixd(m);       //multiplies current matrix with specified matrix
         glColor4d(red, green, blue, alpha);
-        Cuboid c = Cuboid(height, width, depth);
+        Cuboid c = Cuboid(width, height, depth);
         c.drawCuboid();
         glPopMatrix();
     }
@@ -121,7 +121,7 @@ void DrawBox::draw()
 
 
         glColor4d(red, green, blue, alpha);
-        Cuboid c = Cuboid(height,width,  depth);
+        Cuboid c = Cuboid(width, height, depth);
         c.drawCuboid();
         glPopMatrix();
     }

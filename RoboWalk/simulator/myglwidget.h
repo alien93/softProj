@@ -25,6 +25,7 @@ class MyGLWidget : public QGLWidget
     Q_OBJECT
 private:
     bool step;
+    bool robotLoaded;
     DrawCylinder *cylinder;
     DrawBox *box;
     DrawSphere *sphere;
