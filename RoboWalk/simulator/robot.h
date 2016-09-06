@@ -34,14 +34,14 @@ private:
     DrawSphere *sphere;
 
     vector<ObjectODE*> objects;
-
+    map<QString, ObjectODE*> objectsMap;
 public:
     static QString jointName;
 
     Robot(World* world, dReal posX, dReal posY, dReal posZ);
     ~Robot();
 
-    ObjectODE *draw(Link l);
+    void draw(Link l);
     void animation();
 
     void rotateMe(double r, double p, double y);
@@ -53,6 +53,7 @@ public:
     Point3 getPosition();
     void setOrientation(int axis, dReal angle);
     void createRobot();
+    void createLink(Link l);
     void draw();
     double getLimit() const;
     void setLimit(double value);

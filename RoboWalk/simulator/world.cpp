@@ -37,7 +37,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
         }
 
     }*/
-    int i,n;
+   int i,n;
 
     // only collide things with the ground
     int g1 = (o1 == ground);
@@ -48,6 +48,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
     dContact contact[N];
     n = dCollide (o1,o2,N,&contact[0].geom,sizeof(dContact));
     if (n > 0) {
+        qDebug()<<"collision";
       for (i=0; i<n; i++) {
         contact[i].surface.mode = dContactSlip1 | dContactSlip2 |
       dContactSoftERP | dContactSoftCFM | dContactApprox1;
@@ -55,7 +56,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
         contact[i].surface.slip1 = 0.1;
         contact[i].surface.slip2 = 0.1;
         contact[i].surface.soft_erp = 0.5;
-        contact[i].surface.soft_cfm = 0.3;
+        contact[i].surface.soft_cfm = 0.01;
         dJointID c = dJointCreateContact (globalWorldID,globalJointGroupID,&contact[i]);
         dJointAttach (c,
               dGeomGetBody(contact[i].geom.g1),
@@ -69,13 +70,13 @@ World::World(dReal gravity)
     dInitODE2(0);
     dAllocateODEDataForThread(dAllocateMaskAll);
     worldID = dWorldCreate();                   //creates a new, empty world
-    dWorldSetGravity(worldID, 0, 0, gravity);   //0,-9.81,0
+    dWorldSetGravity(worldID, 0, 0, gravity);   //0,0,-9.81
     spaceID = dHashSpaceCreate(0);
     jointGroupID = dJointGroupCreate(0);
 
     ground = dCreatePlane(spaceID, 0, 0, 1, 0);
 
-    dWorldSetERP(worldID, (dReal)0.2);  //controls how much error correction is performed in each time step
+    dWorldSetERP(worldID, (dReal)0.1);  //controls how much error correction is performed in each time step
 
     globalWorldID = worldID;
     globalJointGroupID = jointGroupID;
@@ -96,7 +97,7 @@ void World::loop()
     globalRayIntersectionDepth = -1;
     dSpaceCollide(spaceID, 0, &nearCallback);
     rayIntersectionDepth = globalRayIntersectionDepth;
-    dWorldQuickStep(worldID, STEP_ITERATIONS);
+    dWorldStep(worldID, 0.01);
     dJointGroupEmpty(jointGroupID);
 }
 

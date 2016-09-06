@@ -20,11 +20,11 @@ void MyGLWidget::initializeGL()
 {
     glClearColor(0.0f, 0.0f, 0, 1.0f);
     glEnable(GL_DEPTH_TEST);
-    w = new World(-0.5);                         //initialise ode world
-    ground = new DrawBox(w, false, 20, 0.01, 20, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0);  //setup ground
-    Point3 position = {0, 0, -5};
-    ground->setPosition(position);
-    Point3 initPosition = {0, 0.5, 0};     //initial torso position
+    w = new World(-9.81);                         //initialise ode world
+    //ground = new DrawBox(w, false, 20, 0.1, 20, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0);  //setup ground
+    //Point3 position = {0, 0, 0};
+    //ground->setPosition(position);
+    //Point3 initPosition = {0, 0.5, 0};     //initial torso position
     //robotDemo = new RobotDemo(w, initPosition.x, initPosition.y, initPosition.z, (dReal)0.1);
     //robot = new Robot(w, initPosition.x, initPosition.y, initPosition.z);
 }
@@ -40,7 +40,7 @@ void MyGLWidget::paintGL()
     glScalef(30.0f, 30.0f, 30.0f);
 
     glPushMatrix();
-    glTranslatef(0.0f, -.04f, 0.0f);
+    //glTranslatef(0.0f, -.04f, 0.0f);
     drawGrid();
     glPopMatrix();
     //robotDemo->draw();    //demo robot
