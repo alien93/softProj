@@ -26,7 +26,7 @@ ANN::ANN(const vector<unsigned> &neuronsPerLayer)
 void ANN::feedForward(const vector<double> &inputValues)
 {
     assert(inputValues.size() == layers[0].size() - 1 &&
-           "Number of input values is different than number"
+           "Number of input values is different than the number"
            "of nodes in the input layer. Terminating.");
 
     //put input values in input neurons

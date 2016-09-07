@@ -12,6 +12,7 @@
 #include "simulator/myglwidget.h"
 #include <QtGui>
 #include "simulator/anndemo.h"
+#include "ann/neatann.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,6 +35,8 @@ private slots:
 
     void on_trainANN_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     QComboBox* cb;
     QPushButton* button;
@@ -41,6 +44,7 @@ private:
     void addButtons();
     Ui::MainWindow *ui;
     AnnDemo annDemo;
+    NeatAnn neatAnn;
 };
 
 #endif // MAINWINDOW_H
