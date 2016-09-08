@@ -79,12 +79,12 @@ void URDFparser::addInertialElementChildren(int i, QDomElement inertialElement, 
     }
 }
 
-map<QString, Link> URDFparser::getUsedLinks() const
+map<QString, MyLink> URDFparser::getUsedLinks() const
 {
     return usedLinks;
 }
 
-void URDFparser::setUsedLinks(const map<QString, Link> &value)
+void URDFparser::setUsedLinks(const map<QString, MyLink> &value)
 {
     usedLinks = value;
 }
@@ -378,7 +378,7 @@ void URDFparser::parseChildNodes(QDomElement root, int i)
 
 
             Collision collision;
-            Link* link = new Link(name, inertial, visuals, collision);
+            MyLink* link = new MyLink(name, inertial, visuals, collision);
             QString val  = link->toString();
             qDebug()<<val;
             rm.addLink(*link);

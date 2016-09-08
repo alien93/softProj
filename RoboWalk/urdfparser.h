@@ -21,7 +21,7 @@ private:
     URDFparser();
     void parseChildNodes(QDomElement root, int i);
     void addInertialElementChildren(int i, QDomElement inertialElement, Inertial* inertial);
-    map<QString, Link> usedLinks; //iscrtani linkovi za myglwidget
+    map<QString, MyLink> usedLinks; //iscrtani linkovi za myglwidget
 
 public:
     RobotModel rm;                          //model ucitanog robota
@@ -33,8 +33,8 @@ public:
     }
     static bool getFileParsed();
     static void setFileParsed(bool value);
-    map<QString, Link> getUsedLinks() const;
-    void setUsedLinks(const map<QString, Link> &value);
+    map<QString, MyLink> getUsedLinks() const;
+    void setUsedLinks(const map<QString, MyLink> &value);
 };
 
 #endif // URDFPARSER_H

@@ -60,6 +60,9 @@ RobotDemo::RobotDemo(World *world, dReal posX, dReal posY, dReal posZ, dReal siz
     jointPosition.z += l_upperLeg->getDepth()/2;
     dJointSetHingeAnchor(l_knee, jointPosition.x, jointPosition.y, jointPosition.z);
     dJointSetHingeAxis(l_knee, 1, 0, 0);
+    dJointSetHingeParam(l_knee, dParamFMax, 5);
+    dJointSetHingeParam(l_knee, dParamHiVel, 0.5);
+    dJointSetHingeParam(l_knee, dParamLoVel, 0.5);
     dJointSetHingeParam(l_knee, dParamLoStop, -PI/2);
     dJointSetHingeParam(l_knee, dParamHiStop, 0);
 
@@ -71,6 +74,9 @@ RobotDemo::RobotDemo(World *world, dReal posX, dReal posY, dReal posZ, dReal siz
     jointPosition.z += r_upperLeg->getDepth()/2;
     dJointSetHingeAnchor(r_knee, jointPosition.x, jointPosition.y, jointPosition.z);
     dJointSetHingeAxis(r_knee,  1, 0, 0);
+    dJointSetHingeParam(r_knee, dParamFMax, 5);
+    dJointSetHingeParam(r_knee, dParamHiVel, 0.5);
+    dJointSetHingeParam(r_knee, dParamLoVel, 0.5);
     dJointSetHingeParam(r_knee, dParamLoStop, -PI/2);
     dJointSetHingeParam(r_knee, dParamHiStop, 0);
 

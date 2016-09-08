@@ -14,7 +14,7 @@
 using namespace std;
 
 
-class Link
+class MyLink
 {
 private:
     QString name;
@@ -22,8 +22,8 @@ private:
     vector<Visual> visual;
     Collision collision;
 public:
-    Link();
-    Link(QString name, Inertial inertial, vector<Visual> visual, Collision collision);
+    MyLink();
+    MyLink(QString name, Inertial inertial, vector<Visual> visual, Collision collision);
 
 
     QString getName() const;

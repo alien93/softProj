@@ -71,7 +71,8 @@ SOURCES += main.cpp\
     simulator/myannwidget.cpp \
     ann/connection.cpp \
     simulator/anndemo.cpp \
-    ann/neatann.cpp
+    ann/neatann.cpp \
+    ann/experiment.cpp
 
 HEADERS  += mainwindow.h \
     urdfparser.h \
@@ -131,10 +132,22 @@ HEADERS  += mainwindow.h \
     ann/connection.h \
     simulator/timer.h \
     simulator/anndemo.h \
-    ann/neatann.h
+    ann/neatann.h \
+    ann/experiment.h
+
+
+
 
 FORMS    += mainwindow.ui
 
 LIBS     += -lglut -lGL -lGLU -L/usr/local/lib/ode/ -lode
 
 QMAKE_CXXFLAGS += -std=c++11 -dDOUBLE
+
+
+unix:!macx: LIBS += -L$$PWD/../../ -lNeat
+
+INCLUDEPATH += $$PWD/../../
+DEPENDPATH += $$PWD/../../
+
+unix:!macx: PRE_TARGETDEPS += $$PWD/../../libNeat.a

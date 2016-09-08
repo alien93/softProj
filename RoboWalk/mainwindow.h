@@ -13,6 +13,7 @@
 #include <QtGui>
 #include "simulator/anndemo.h"
 #include "ann/neatann.h"
+#include "model/link.h"
 
 namespace Ui {
 class MainWindow;

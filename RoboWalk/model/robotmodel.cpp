@@ -10,18 +10,18 @@ void RobotModel::setJointsVector(const vector<Joint> &value)
     jointsVector = value;
 }
 
-vector<Link> RobotModel::getLinksVector() const
+vector<MyLink> RobotModel::getLinksVector() const
 {
     return linksVector;
 }
 
-void RobotModel::setLinksVector(const vector<Link> &value)
+void RobotModel::setLinksVector(const vector<MyLink> &value)
 {
     linksVector = value;
 }
 
 RobotModel::RobotModel(){}
-RobotModel::RobotModel(QString name, map<QString, Joint> joints, map<QString, Link> links)
+RobotModel::RobotModel(QString name, map<QString, Joint> joints, map<QString, MyLink> links)
 {
     this->name = name;
     this->joints = joints;
@@ -35,11 +35,11 @@ void RobotModel::setJoints(const map<QString, Joint> &value)
 {
     joints = value;
 }
-map<QString, Link> RobotModel::getLinks() const
+map<QString, MyLink> RobotModel::getLinks() const
 {
     return links;
 }
-void RobotModel::setLinks(const map<QString, Link> &value)
+void RobotModel::setLinks(const map<QString, MyLink> &value)
 {
     links = value;
 }
@@ -56,7 +56,7 @@ void RobotModel::addJoint(Joint newJoint)
     joints[newJoint.getName()] = newJoint;
     jointsVector.push_back(newJoint);
 }
-void RobotModel::addLink(Link newLink)
+void RobotModel::addLink(MyLink newLink)
 {
     links[newLink.getName()] = newLink;
     linksVector.push_back(newLink);
@@ -65,7 +65,7 @@ Joint RobotModel::getJoint(QString name)
 {
     return joints[name];
 }
-Link RobotModel::getLink(QString name)
+MyLink RobotModel::getLink(QString name)
 {
     return links[name];
 }

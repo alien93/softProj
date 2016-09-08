@@ -82,7 +82,7 @@ void MainWindow::addButtons()
 {
     URDFparser* parser = URDFparser::getInstance();
     RobotModel rm = parser->rm;
-    map<QString, Link> linksMap = rm.getLinks();
+    map<QString, MyLink> linksMap = rm.getLinks();
     map<QString, Joint> jointsMap = rm.getJoints();
     vector<Joint> joints = rm.sortJoints(jointsMap);
     cb = new QComboBox(ui->frame);
@@ -148,12 +148,15 @@ void MainWindow::on_trainANN_clicked()
 //! Load ANN
 void MainWindow::on_pushButton_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(
+  /*  QString filename = QFileDialog::getOpenFileName(
                 this,
                 tr("ANN data"),
                 "",
                 "RWANN files (*.rwann)"
                 );
     neatAnn.parseAnnData(filename, {1, 1});
-    neatAnn.run();
+    neatAnn.run();*/
+
+    //Experiment* e = new Experiment();
+    //e->generateTestData();
 }

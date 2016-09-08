@@ -1,21 +1,21 @@
 #include "link.h"
 
-vector<Visual> Link::getVisual() const
+vector<Visual> MyLink::getVisual() const
 {
     return visual;
 }
 
-void Link::setVisual(const vector<Visual> &value)
+void MyLink::setVisual(const vector<Visual> &value)
 {
     visual = value;
 }
 
-Link::Link()
+MyLink::MyLink()
 {
 
 }
 
-Link::Link(QString name, Inertial inertial, vector<Visual> visual, Collision collision)
+MyLink::MyLink(QString name, Inertial inertial, vector<Visual> visual, Collision collision)
 {
     this->name = name;
     this->inertial = inertial;
@@ -23,39 +23,39 @@ Link::Link(QString name, Inertial inertial, vector<Visual> visual, Collision col
     this->collision = collision;
 }
 
-QString Link::getName() const
+QString MyLink::getName() const
 {
     return name;
 }
 
-void Link::setName(const QString &value)
+void MyLink::setName(const QString &value)
 {
     name = value;
 }
 
-Inertial Link::getInertial() const
+Inertial MyLink::getInertial() const
 {
     return inertial;
 }
 
-void Link::setInertial(const Inertial &value)
+void MyLink::setInertial(const Inertial &value)
 {
     inertial = value;
 }
 
 
 
-Collision Link::getCollision() const
+Collision MyLink::getCollision() const
 {
     return collision;
 }
 
-void Link::setCollision(const Collision &value)
+void MyLink::setCollision(const Collision &value)
 {
     collision = value;
 }
 
-QString Link::toString()
+QString MyLink::toString()
 {
     QString retVal = "**************************************\n LINK: \n name: " + name + "\n" +
                      "Inertial: \n\n Origin: \n" +

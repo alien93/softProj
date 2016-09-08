@@ -75,8 +75,8 @@ void MyGLWidget::resizeGL(int w, int h)
 //!Draws a robot
 void MyGLWidget::drawRobot()
 {
-    map<QString, Link> linksMap = parser->getInstance()->rm.getLinks();
-    vector<Link> links = parser->getInstance()->rm.getLinksVector();
+    map<QString, MyLink> linksMap = parser->getInstance()->rm.getLinks();
+    vector<MyLink> links = parser->getInstance()->rm.getLinksVector();
     map<QString, Joint> jointsMap = parser->getInstance()->rm.getJoints();
     // vector<Joint> joints = parser->getInstance()->rm.getJointsVector();
     vector<Joint> joints = parser->getInstance()->rm.sortJoints(jointsMap);
@@ -92,9 +92,9 @@ void MyGLWidget::drawRobot()
             Origin o = j.getOrigin();   //position of the child link relative to parent link
             //draw parent link
             //  glPushMatrix();
-            Link lp = linksMap.at(p.getLink());
-            map<QString, Link> usedLinks = parser->getInstance()->getUsedLinks();
-            map<QString, Link>::iterator iter = usedLinks.find(lp.getName());
+            MyLink lp = linksMap.at(p.getLink());
+            map<QString, MyLink> usedLinks = parser->getInstance()->getUsedLinks();
+            map<QString, MyLink>::iterator iter = usedLinks.find(lp.getName());
             if(usedLinks.count(lp.getName()))
             {
                 //the link already exists
@@ -128,7 +128,7 @@ void MyGLWidget::drawRobot()
 
 
             //draw child link
-            Link lc = linksMap.at(c.getLink());
+            MyLink lc = linksMap.at(c.getLink());
             elem2 = draw(lc);
 
 
@@ -144,17 +144,17 @@ void MyGLWidget::drawRobot()
                 dJointSetHingeParam(joint, dParamHiStop, j.getLimit().getUpper());
             }
         }
-        map<QString, Link> newMap = parser->getInstance()->getUsedLinks();
+        map<QString, MyLink> newMap = parser->getInstance()->getUsedLinks();
         newMap.clear();
         matrices.clear();
         parser->getInstance()->setUsedLinks(newMap);
     }
     else
         //single link, no joints
-        for(vector<Link>::iterator it=links.begin(); it!=links.end(); it++)
+        for(vector<MyLink>::iterator it=links.begin(); it!=links.end(); it++)
         {
             glPushMatrix();
-            Link lp = *it;
+            MyLink lp = *it;
             draw(lp);
             glPopMatrix();
         }
@@ -162,7 +162,7 @@ void MyGLWidget::drawRobot()
 
 
 //!Draws a link
-ObjectODE* MyGLWidget::draw(Link l)
+ObjectODE* MyGLWidget::draw(MyLink l)
 {
     vector<Visual> visuals = l.getVisual();
     if(visuals.size()>0)
@@ -341,7 +341,6 @@ void MyGLWidget::animateAnn(QElapsedTimer annElapsedTimer, ANN* ann, unsigned nu
         ann->feedForward(inputs);
 
         ann->getOutput(result);
-
 
         if(numOfOutputs == 2)
         {

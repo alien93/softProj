@@ -58,7 +58,7 @@ public:
     void initializeGL();
     void paintGL();
     void resizeGL(int w, int h);
-    ObjectODE *draw(Link l);
+    ObjectODE *draw(MyLink l);
     void adjustPosition();
     void reset();
 
