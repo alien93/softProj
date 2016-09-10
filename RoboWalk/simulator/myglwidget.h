@@ -53,6 +53,7 @@ private:
     float sceneDistance;
     map<QString,  GLfloat[16]> matrices;   //matrix for each parent node
     vector<Point3> initPositions;          //rightThigh, leftThigh, rightLowerLeg, leftLowerLeg, rightFoot, leftFoot
+    double rewards();
 
     //ODE
     World* w;
@@ -89,7 +90,7 @@ public:
 public Q_SLOTS:
     void animation();
     void animateAnn(QElapsedTimer annElapsedTimer, ANN *ann, unsigned numOfOutputs);
-    double animateAnn(Network* net, int thresh);
+    double animateAnn(Network* net, int thresh, vector<float> inputs, QElapsedTimer annElapsedTimer);
 };
 
 #endif // MYGLWIDGET_H

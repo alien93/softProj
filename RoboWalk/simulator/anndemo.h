@@ -21,12 +21,14 @@ private:
     vector<vector<double>> inputs;
     vector<vector<double>> outputs;
     void printResults(vector<double> results);
-    void initRobot(MyGLWidget *robotSimulation);
 public:
     AnnDemo();
+    void initRobot(MyGLWidget *robotSimulation);
     void parseTrainingData(QString filename);
     void createANN(MyAnnWidget* annSimulation);
     void trainANN(MyGLWidget* robotSimulation);
+    QElapsedTimer getAnnElapsedTimer() const;
+    void setAnnElapsedTimer(const QElapsedTimer &value);
 };
 
 #endif // ANNDEMO_H

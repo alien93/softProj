@@ -57,6 +57,16 @@ void AnnDemo::trainANN(MyGLWidget *robotSimulation)
 }
 
 
+QElapsedTimer AnnDemo::getAnnElapsedTimer() const
+{
+    return annElapsedTimer;
+}
+
+void AnnDemo::setAnnElapsedTimer(const QElapsedTimer &value)
+{
+    annElapsedTimer = value;
+}
+
 void AnnDemo::printResults(vector<double> results)
 {
     qDebug()<<"-----------------------------";

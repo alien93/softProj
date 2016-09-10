@@ -1,13 +1,14 @@
 #include "experiment.h"
 
-Experiment::Experiment(MyGLWidget robotSimulator)
+Experiment::Experiment(MyGLWidget* robotSimulator)
 {
     this->robotSimulator = robotSimulator;
+    this->annDemo = new AnnDemo();
 }
 
-vector<double> Experiment::generateTestData()
+const vector<float> Experiment::generateTestData()
 {
-    vector<double> retVal;
+    vector<float> retVal;
 
     random_device rd; // obtain a random number from hardware
     mt19937 eng(rd()); // seed the generator
@@ -16,8 +17,8 @@ vector<double> Experiment::generateTestData()
     uniform_real_distribution<> ankleDistribution(-1.57, 0.52);  //(from -90 to 30 degrees)
 
     qDebug()<<"Generating test data...";
-    for(int n=0; n<40; ++n)
-    {
+  //  for(int n=0; n<40; ++n)
+   // {
         retVal.push_back(1.0);
         retVal.push_back(hipDistribution(eng));
         retVal.push_back(hipDistribution(eng));
@@ -25,7 +26,7 @@ vector<double> Experiment::generateTestData()
         retVal.push_back(kneeDistribution(eng));
         retVal.push_back(ankleDistribution(eng));
         retVal.push_back(ankleDistribution(eng));
-    }
+   // }
     qDebug()<<"Generated";
 
     return retVal;
@@ -218,22 +219,24 @@ int Experiment::roboWalk_epoch(Population *pop, int generation, char *filename, 
 bool Experiment::roboWalk_evaluate(Organism *org)
 {
     Network *net;
-    int numnodes; //how many nodes should be visited during activation
-    int thresh; //how many vists will be allowed before giving up (loop detection)
+    int numnodes;   //how many nodes should be visited during activation
+    int thresh;     //how many vists will be allowed before giving up (loop detection)
 
 
     net = org->net;
     numnodes = ((org->gnome)->nodes).size();
     thresh = numnodes*2;    //max number of visits allowed per activation
 
-    org->fitness = robotSimulator->animateAnn(net, thresh);
+    elapsedTimer.restart();
+    annDemo->initRobot(robotSimulator);
+    org->fitness = robotSimulator->animateAnn(net, thresh, generateTestData(), elapsedTimer);
 
 #ifndef NO_SCREEN_OUT
     cout<<"Org "<<(org->gnome)->genome_id<<" fitness: "<<org->fitness<<endl;
 #endif
 
     //Decide if its a winner
-    if (org->fitness>=MAX_STEPS)
+    if (org->fitness>=THRESH_METERS)
     {
         org->winner=true;
         return true;
