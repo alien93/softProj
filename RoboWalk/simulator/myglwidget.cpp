@@ -389,6 +389,79 @@ void MyGLWidget::animateAnn(QElapsedTimer annElapsedTimer, ANN* ann, unsigned nu
     }
 }
 
+//returns fitness
+double MyGLWidget::animateAnn(Network *net, int thresh)
+{
+    vector<double> inputs;
+    vector<double> result;
+
+
+    while(!annElapsedTimer.hasExpired(5000))
+    {
+        inputs.clear();
+        result.clear();
+
+        if(round(robot->getPosition().y*10)/10 <= 0.25)      //robot's on the ground, reinitialise
+            robot->setPosition({0, 0.38, 0});
+
+        inputs.push_back(round(dJointGetHingeAngle(robot->getR_hip()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getL_hip()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getR_knee()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getL_knee()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getR_ankle()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getL_ankle()) * 10)/10);
+
+        ann->feedForward(inputs);
+
+        ann->getOutput(result);
+
+        if(numOfOutputs == 2)
+        {
+            if(annElapsedTimer.elapsed()%1000 == 0)
+            {
+                if(round(result[0])==1)
+                {
+                    moveRightLeg();
+
+                }
+                else if(round(result[1])==1)
+                {
+                    moveLeftLeg();
+
+                }
+            }
+        }
+        else if(numOfOutputs == 6)
+        {
+                if(round(result[0]) == 1)
+                    dJointAddHingeTorque(robot->getR_hip(), 50);
+                if(round(result[0]) == -1)
+                    dJointAddHingeTorque(robot->getR_hip(), -50);
+                if(round(result[1]) == 1)
+                    dJointAddHingeTorque(robot->getL_hip(), 50);
+                if(round(result[1]) == -1)
+                    dJointAddHingeTorque(robot->getL_hip(), -50);
+                if(round(result[2]) == 1)
+                    dJointAddHingeTorque(robot->getR_knee(), 20);
+                if(round(result[2]) == -1)
+                    dJointAddHingeTorque(robot->getR_knee(), -20);
+                if(round(result[3]) == 1)
+                    dJointAddHingeTorque(robot->getL_knee(), 20);
+                if(round(result[3]) == -1)
+                    dJointAddHingeTorque(robot->getL_knee(), -20);
+                if(round(result[4]) == 1)
+                    dJointAddHingeTorque(robot->getR_ankle(), 20);
+                if(round(result[4]) == -1)
+                    dJointAddHingeTorque(robot->getR_ankle(), -20);
+                if(round(result[5]) == 1)
+                    dJointAddHingeTorque(robot->getL_ankle(), 20);
+                if(round(result[5]) == -1)
+                    dJointAddHingeTorque(robot->getL_ankle(), -20);
+        }
+        repaint();
+    }
+}
+
 void MyGLWidget::moveRightLeg()
 {
 

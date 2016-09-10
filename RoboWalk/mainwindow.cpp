@@ -157,6 +157,7 @@ void MainWindow::on_pushButton_clicked()
     neatAnn.parseAnnData(filename, {1, 1});
     neatAnn.run();*/
 
-    //Experiment* e = new Experiment();
+    Experiment* e = new Experiment(ui->robotSimulation);
     //e->generateTestData();
+    e->roboWalk_test(100);
 }

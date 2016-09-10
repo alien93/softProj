@@ -14,6 +14,7 @@
 #include "simulator/anndemo.h"
 #include "ann/neatann.h"
 #include "model/link.h"
+#include "ann/experiment.h"
 
 namespace Ui {
 class MainWindow;

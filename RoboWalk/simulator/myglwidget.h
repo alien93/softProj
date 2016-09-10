@@ -16,8 +16,14 @@
 #include "timer.h"
 #include "urdfparser.h"
 #include <cmath>
+#include <neat/neat.h>
+#include <neat/network.h>
+
+
 
 using namespace std;
+
+using namespace NEAT;
 
 class MyGLWidget : public QGLWidget
 {
@@ -83,6 +89,7 @@ public:
 public Q_SLOTS:
     void animation();
     void animateAnn(QElapsedTimer annElapsedTimer, ANN *ann, unsigned numOfOutputs);
+    double animateAnn(Network* net, int thresh);
 };
 
 #endif // MYGLWIDGET_H
