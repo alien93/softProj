@@ -18,6 +18,7 @@
 #include <cmath>
 #include <neat/neat.h>
 #include <neat/network.h>
+#include <ann/neatann.h>
 
 
 
@@ -91,6 +92,7 @@ public Q_SLOTS:
     void animation();
     void animateAnn(QElapsedTimer annElapsedTimer, ANN *ann, unsigned numOfOutputs);
     double animateAnn(Network* net, int thresh, vector<float> inputs, QElapsedTimer annElapsedTimer);
+    void animateAnn(QString filename, QElapsedTimer annElapsedTimer);
 };
 
 #endif // MYGLWIDGET_H

@@ -102,6 +102,56 @@ void NeatAnn::run()
     printOutput();
 }
 
+vector<double> NeatAnn::runDemo()
+{
+    vector<double> retVal;
+    bool definedValues = true;
+    double sumOfOutputs = 0;
+
+    while(noOfNullNodes>0)      //while there are nodes with unset values (null values)
+    {
+        for(vector<Gene>::iterator it = genes.begin(); it!= genes.end(); it++)             //for each gene check if input values exist
+        {
+            Gene gene = *it;
+            definedValues = true;
+            sumOfOutputs = 0;
+
+            for(vector<Gene>::iterator it1 = genes.begin(); it1!= genes.end(); it1++)
+            {
+                Gene gene1 = *it1;
+                if(gene.outputNodeId == gene1.outputNodeId &&
+                   nodes.at(gene1.inputNodeId).isSet == true && nodes.at(gene.outputNodeId).isSet == false)
+                {
+                    sumOfOutputs+=nodes.at(gene1.inputNodeId).value * gene1.weight;
+                }
+                else if(gene.outputNodeId == gene1.outputNodeId && nodes.at(gene1.inputNodeId).isSet == false)
+                {
+                    definedValues = false;
+                    break;
+                }
+            }
+
+            if(definedValues)                   //all values for output nodes are defined, do the calculations
+            {
+                double result = fsigmoid(sumOfOutputs);
+                nodes.at(gene.outputNodeId).value = result;
+                nodes.at(gene.outputNodeId).isSet = true;
+                --noOfNullNodes;
+                break;
+            }
+        }
+    }
+    for(map<int, Node>::iterator it=nodes.begin(); it!=nodes.end(); it++)
+    {
+        Node node = it->second;
+        if(node.nodePlacement == NodePlacement::OUTPUT)
+        {
+            retVal.push_back(node.value);
+        }
+    }
+    return retVal;
+}
+
 double NeatAnn::fsigmoid(double x)
 {
     return 1/(1 + exp(-SLOPE*x));

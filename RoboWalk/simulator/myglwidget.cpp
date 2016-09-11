@@ -389,7 +389,7 @@ void MyGLWidget::animateAnn(QElapsedTimer annElapsedTimer, ANN* ann, unsigned nu
     }
 }
 
-//returns fitness
+//!returns fitness
 double MyGLWidget::animateAnn(Network *net, int thresh, vector<float> inputs, QElapsedTimer annElapsedTimer)
 {
     vector<double> result;
@@ -397,7 +397,7 @@ double MyGLWidget::animateAnn(Network *net, int thresh, vector<float> inputs, QE
     net->load_sensors(inputs);
     double points = 0;
 
-    while(!annElapsedTimer.hasExpired(5000))
+    while(!annElapsedTimer.hasExpired(10000))
     {
         inputs.clear();
         result.clear();
@@ -462,18 +462,84 @@ double MyGLWidget::animateAnn(Network *net, int thresh, vector<float> inputs, QE
 }
 
 
+void MyGLWidget::animateAnn(QString fileName, QElapsedTimer annElapsedTimer)
+{
+    NeatAnn* neatAnn = new NeatAnn();
+    vector<double> result;
+    vector<double> inputs;
+
+
+    while(!annElapsedTimer.hasExpired(60000))
+    {
+        inputs.clear();
+        result.clear();
+
+        inputs.push_back(round(dJointGetHingeAngle(robot->getR_hip()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getL_hip()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getR_knee()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getL_knee()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getR_ankle()) * 10)/10);
+        inputs.push_back(round(dJointGetHingeAngle(robot->getL_ankle()) * 10)/10);
+
+        neatAnn->parseAnnData(fileName, inputs);
+        result = neatAnn->runDemo();
+
+
+        if(round(result[0]) == 1)
+            dJointAddHingeTorque(robot->getR_hip(), 50);
+        if(round(result[0]) == -1)
+            dJointAddHingeTorque(robot->getR_hip(), -50);
+        if(round(result[1]) == 1)
+            dJointAddHingeTorque(robot->getL_hip(), 50);
+        if(round(result[1]) == -1)
+            dJointAddHingeTorque(robot->getL_hip(), -50);
+        if(round(result[2]) == 1)
+            dJointAddHingeTorque(robot->getR_knee(), 20);
+        if(round(result[2]) == -1)
+            dJointAddHingeTorque(robot->getR_knee(), -20);
+        if(round(result[3]) == 1)
+            dJointAddHingeTorque(robot->getL_knee(), 20);
+        if(round(result[3]) == -1)
+            dJointAddHingeTorque(robot->getL_knee(), -20);
+        if(round(result[4]) == 1)
+            dJointAddHingeTorque(robot->getR_ankle(), 20);
+        if(round(result[4]) == -1)
+            dJointAddHingeTorque(robot->getR_ankle(), -20);
+        if(round(result[5]) == 1)
+            dJointAddHingeTorque(robot->getL_ankle(), 20);
+        if(round(result[5]) == -1)
+            dJointAddHingeTorque(robot->getL_ankle(), -20);
+
+
+        if(round(robot->getPosition().y*10)/10 <= 0.1 ||   //robot's on the ground
+           round(robot->getPosition().y*10)/10 >= 0.5)      //robot's jumping
+        {
+            robot->setPosition({0, 0.38, 0});
+        }
+
+        repaint();
+    }
+}
+
 double MyGLWidget::rewards()
 {
     double reward = 0;
 
     if(round(robot->getL_foot()->getPosition().y*10)/10 != round(robot->getR_foot()->getPosition().y*10)/10) //feet are not on the same level
         reward += 0.1;
+    else if(round(robot->getL_foot()->getPosition().z*10)/10 != round(robot->getR_foot()->getPosition().z*10)/10)   //one foot is in front of the other
+        reward += 0.8;
 
     if(round(dJointGetHingeAngle(robot->getR_knee()) * 10)/10 != 0 || round(dJointGetHingeAngle(robot->getL_knee()) * 10)/10 != 0) //robot's using knees
         reward += 0.3;
+    else
+        reward -= 0.15;
 
     if(round(robot->getL_foot()->getPosition().y*10)/10 > 0 || round(robot->getR_foot()->getPosition().y*10)/10 > 0) //using feet
         reward += 0.5;
+    else
+        reward -= 0.25;
+
 
     return reward;
 }

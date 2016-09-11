@@ -148,16 +148,22 @@ void MainWindow::on_trainANN_clicked()
 //! Load ANN
 void MainWindow::on_pushButton_clicked()
 {
-  /*  QString filename = QFileDialog::getOpenFileName(
+    /*QString filename = QFileDialog::getOpenFileName(
                 this,
                 tr("ANN data"),
                 "",
                 "RWANN files (*.rwann)"
-                );
-    neatAnn.parseAnnData(filename, {1, 1});
-    neatAnn.run();*/
+                );*/
+    //neatAnn.parseAnnData(filename, {1, 1});   //for xor - will test output only
+    //neatAnn.run();                            //for xor
+
+    //annElapsedTimer.restart();
+    //ui->robotSimulation->animateAnn(filename, annElapsedTimer);
+
 
     Experiment* e = new Experiment(ui->robotSimulation);
-    //e->generateTestData();
     e->roboWalk_test(100);
+
+    //e->generateTestData();
+
 }

@@ -15,6 +15,7 @@
 #include "ann/neatann.h"
 #include "model/link.h"
 #include "ann/experiment.h"
+#include "neat/network.h"
 
 namespace Ui {
 class MainWindow;
@@ -47,6 +48,7 @@ private:
     Ui::MainWindow *ui;
     AnnDemo annDemo;
     NeatAnn neatAnn;
+    QElapsedTimer annElapsedTimer;
 };
 
 #endif // MAINWINDOW_H

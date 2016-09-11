@@ -22,7 +22,7 @@ using namespace std;
 using namespace NEAT;
 
 const int TEST_DATA_NUM = 40;    //number of generated test examples
-const double THRESH_METERS = 10;
+const double THRESH_METERS = 9;
 
 class Experiment
 {

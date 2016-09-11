@@ -16,18 +16,14 @@ const vector<float> Experiment::generateTestData()
     uniform_real_distribution<> kneeDistribution(-1.57, 0);     //(from -90 to 0 degrees)
     uniform_real_distribution<> ankleDistribution(-1.57, 0.52);  //(from -90 to 30 degrees)
 
-    qDebug()<<"Generating test data...";
-  //  for(int n=0; n<40; ++n)
-   // {
-        retVal.push_back(1.0);
-        retVal.push_back(hipDistribution(eng));
-        retVal.push_back(hipDistribution(eng));
-        retVal.push_back(kneeDistribution(eng));
-        retVal.push_back(kneeDistribution(eng));
-        retVal.push_back(ankleDistribution(eng));
-        retVal.push_back(ankleDistribution(eng));
-   // }
-    qDebug()<<"Generated";
+
+    retVal.push_back(1.0);
+    retVal.push_back(hipDistribution(eng));
+    retVal.push_back(hipDistribution(eng));
+    retVal.push_back(kneeDistribution(eng));
+    retVal.push_back(kneeDistribution(eng));
+    retVal.push_back(ankleDistribution(eng));
+    retVal.push_back(ankleDistribution(eng));
 
     return retVal;
 }
@@ -230,9 +226,10 @@ bool Experiment::roboWalk_evaluate(Organism *org)
     elapsedTimer.restart();
     annDemo->initRobot(robotSimulator);
     org->fitness = robotSimulator->animateAnn(net, thresh, generateTestData(), elapsedTimer);
+    org->error = THRESH_METERS - org->fitness;
 
 #ifndef NO_SCREEN_OUT
-    cout<<"Org "<<(org->gnome)->genome_id<<" fitness: "<<org->fitness<<endl;
+    cout<<"Org "<<(org->gnome)->genome_id<<","<<org->fitness<<endl;  //print fitness
 #endif
 
     //Decide if its a winner

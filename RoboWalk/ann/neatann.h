@@ -46,6 +46,7 @@ public:
     NeatAnn();
     void parseAnnData(QString filename, vector<double> inputs);
     void run();
+    vector<double> runDemo();
     void printOutput();
     double fsigmoid(double x);
     vector<Gene> getGenes() const;
