@@ -40,6 +40,8 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_loadANN_clicked();
+
 private:
     QComboBox* cb;
     QPushButton* button;

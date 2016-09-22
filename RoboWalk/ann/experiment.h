@@ -22,7 +22,7 @@ using namespace std;
 using namespace NEAT;
 
 const int TEST_DATA_NUM = 40;    //number of generated test examples
-const double THRESH_METERS = 9;
+const double THRESH_METERS = 20;
 
 class Experiment
 {
@@ -38,6 +38,7 @@ public:
     bool roboWalk_evaluate(Organism* org);
     int roboWalk_epoch(Population* pop, int generation, char *filename, int &winnernum, int &winnergenes, int &winnernodes);
     int roboWalk_runInput(Network* net, int maxSteps, int thresh);
+    void testNet(QString filename, QElapsedTimer annElapsedTimer);
     //void roboWalk_walk(int action, float *x, float )
 };
 

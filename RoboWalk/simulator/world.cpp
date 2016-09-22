@@ -71,6 +71,7 @@ void World::loop()
     dSpaceCollide(spaceID, 0, &nearCallback);
     rayIntersectionDepth = globalRayIntersectionDepth;
     dWorldQuickStep(worldID, STEP_ITERATIONS);
+    //dWorldStep(worldID, STEP_ITERATIONS);
     dJointGroupEmpty(jointGroupID);
 }
 

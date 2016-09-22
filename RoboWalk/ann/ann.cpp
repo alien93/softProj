@@ -88,7 +88,7 @@ void ANN::backPropagation(const vector<double> &targetValues)
 
     }
 
-    //update the weights
+    //update weights
 
     //for all layers (- the input layer)
     unsigned idxOutputLayer = layers.size() - 1;

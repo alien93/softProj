@@ -21,26 +21,15 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="5" column="4">
-     <widget class="QPushButton" name="trainANN">
-      <property name="text">
-       <string>Train ANN</string>
+    <item row="1" column="1">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
      </widget>
     </item>
-    <item row="4" column="4">
-     <widget class="QPushButton" name="createANN">
-      <property name="text">
-       <string>Create ANN</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="4">
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>Load ANN</string>
-      </property>
-     </widget>
+    <item row="0" column="0" rowspan="5">
+     <widget class="MyGLWidget" name="robotSimulation" native="true"/>
     </item>
     <item row="0" column="4">
      <widget class="MyAnnWidget" name="annSimulation" native="true">
@@ -56,6 +45,70 @@
         <height>200</height>
        </size>
       </property>
+     </widget>
+    </item>
+    <item row="3" column="4" alignment="Qt::AlignBottom">
+     <widget class="QGroupBox" name="groupBox">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>63</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>NEAT</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Generate ANN</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="loadANN">
+         <property name="text">
+          <string>Load ANN</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="4" column="4" alignment="Qt::AlignBottom">
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>63</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Fixed-topology</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="createANN">
+         <property name="text">
+          <string>Create ANN</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="trainANN">
+         <property name="text">
+          <string>Train ANN</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
     <item row="1" column="4">
@@ -87,16 +140,6 @@
       <layout class="QFormLayout" name="formLayout"/>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0" rowspan="6">
-     <widget class="MyGLWidget" name="robotSimulation" native="true"/>
-    </item>
     <item row="2" column="4">
      <spacer name="verticalSpacer">
       <property name="orientation">
@@ -118,7 +161,7 @@
      <x>0</x>
      <y>0</y>
      <width>652</width>
-     <height>23</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

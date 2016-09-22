@@ -58,7 +58,7 @@ Population *Experiment::roboWalk_test(int gens)
     memset (genes, 0, NEAT::num_runs * sizeof(int));
     memset (nodes, 0, NEAT::num_runs * sizeof(int));
 
-    ifstream iFile("/home/nina/Documents/demo/softProj/RoboWalk/ann/robowalkstartgenes",ios::in);
+    ifstream iFile("/home/nina/Desktop/demo/softProj/RoboWalk/ann/robowalkstartgenes",ios::in);
 
     cout<<"START ROBOWALK TEST"<<endl;
 
@@ -225,7 +225,9 @@ bool Experiment::roboWalk_evaluate(Organism *org)
 
     elapsedTimer.restart();
     annDemo->initRobot(robotSimulator);
-    org->fitness = robotSimulator->animateAnn(net, thresh, generateTestData(), elapsedTimer);
+    vector<float> inputs = {1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    org->fitness = robotSimulator->animateAnn(net, thresh, inputs, elapsedTimer);
+    //org->fitness = robotSimulator->animateAnn(net, thresh, generateTestData(), elapsedTimer);
     org->error = THRESH_METERS - org->fitness;
 
 #ifndef NO_SCREEN_OUT
@@ -244,3 +246,42 @@ bool Experiment::roboWalk_evaluate(Organism *org)
     }
 }
 
+
+void Experiment::testNet(QString filename, QElapsedTimer annElapsedTimer)
+{
+    char curword[20];
+    int id;
+
+    ifstream iFile(filename.toStdString(),ios::in);
+
+    cout<<"START ROBOWALK TEST"<<endl;
+
+    cout<<"Reading in the start genome"<<endl;
+    //Read in the start Genome
+    iFile>>curword;
+    iFile>>id;
+    cout<<"Reading in Genome id "<<id<<endl;
+    Genome* start_genome=new Genome(id,iFile);
+    iFile.close();
+
+    Population* pop=new Population(start_genome,1); //create only one genome
+    pop->verify();
+
+    Network *net;
+    int numnodes;   //how many nodes should be visited during activation
+    int thresh;     //how many vists will be allowed before giving up (loop detection)
+
+    Organism* org = pop->organisms.at(0);
+    net = org->net;
+    numnodes = ((org->gnome)->nodes).size();
+    thresh = numnodes*2;    //max number of visits allowed per activation
+
+    elapsedTimer.restart();
+    annDemo->initRobot(robotSimulator);
+    vector<float> inputs = {1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    org->fitness = robotSimulator->animateAnn(net, thresh, inputs, elapsedTimer);
+
+    robotSimulator->animateAnn(net, annElapsedTimer);
+
+
+}
