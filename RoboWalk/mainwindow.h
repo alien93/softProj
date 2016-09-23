@@ -42,6 +42,12 @@ private slots:
 
     void on_loadANN_clicked();
 
+    void on_hexagon_toggled(bool checked);
+
+    void on_fixed_toggled(bool checked);
+
+    void on_generated_toggled(bool checked);
+
 private:
     QComboBox* cb;
     QPushButton* button;
@@ -51,6 +57,7 @@ private:
     AnnDemo annDemo;
     NeatAnn neatAnn;
     QElapsedTimer annElapsedTimer;
+    int checkedButton;
 };
 
 #endif // MAINWINDOW_H

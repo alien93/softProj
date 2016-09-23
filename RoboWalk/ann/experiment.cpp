@@ -28,7 +28,7 @@ const vector<float> Experiment::generateTestData()
     return retVal;
 }
 
-Population *Experiment::roboWalk_test(int gens)
+Population *Experiment::roboWalk_test(int gens, int checkedButton)
 {
     NEAT::load_neat_params("/home/nina/Documents/demo/softProj/RoboWalk/ann/robowalkparams.ne", true);
 
@@ -96,7 +96,7 @@ Population *Experiment::roboWalk_test(int gens)
             sprintf (temp, "gen_%d", gen);
 
             //Check for success
-            if (roboWalk_epoch(pop,gen,temp,winnernum,winnergenes,winnernodes)) {
+            if (roboWalk_epoch(pop,gen,temp,winnernum,winnergenes,winnernodes, checkedButton)) {
                 //Collect Stats on end of experiment
                 evals[expcount]=NEAT::pop_size*(gen-1)+winnernum;
                 genes[expcount]=winnergenes;
@@ -147,7 +147,7 @@ Population *Experiment::roboWalk_test(int gens)
     return pop;
 }
 
-int Experiment::roboWalk_epoch(Population *pop, int generation, char *filename, int &winnernum, int &winnergenes, int &winnernodes)
+int Experiment::roboWalk_epoch(Population *pop, int generation, char *filename, int &winnernum, int &winnergenes, int &winnernodes, int checkedButton)
 {
     vector<Organism*>::iterator curorg;
     vector<Species*>::iterator curspecies;
@@ -157,7 +157,7 @@ int Experiment::roboWalk_epoch(Population *pop, int generation, char *filename, 
 
     //Evaluate each organism on a test
     for(curorg=(pop->organisms).begin();curorg!=(pop->organisms).end();++curorg) {
-        if (roboWalk_evaluate(*curorg)) {
+        if (roboWalk_evaluate(*curorg, checkedButton)) {
             win=true;
             winnernum=(*curorg)->gnome->genome_id;
             winnergenes=(*curorg)->gnome->extrons();
@@ -212,7 +212,7 @@ int Experiment::roboWalk_epoch(Population *pop, int generation, char *filename, 
 
 }
 
-bool Experiment::roboWalk_evaluate(Organism *org)
+bool Experiment::roboWalk_evaluate(Organism *org, int checkedButton)
 {
     Network *net;
     int numnodes;   //how many nodes should be visited during activation
@@ -226,7 +226,7 @@ bool Experiment::roboWalk_evaluate(Organism *org)
     elapsedTimer.restart();
     annDemo->initRobot(robotSimulator);
     vector<float> inputs = {1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    org->fitness = robotSimulator->animateAnn(net, thresh, inputs, elapsedTimer);
+    org->fitness = robotSimulator->animateAnn(net, thresh, inputs, elapsedTimer, checkedButton);
     //org->fitness = robotSimulator->animateAnn(net, thresh, generateTestData(), elapsedTimer);
     org->error = THRESH_METERS - org->fitness;
 
@@ -247,7 +247,7 @@ bool Experiment::roboWalk_evaluate(Organism *org)
 }
 
 
-void Experiment::testNet(QString filename, QElapsedTimer annElapsedTimer)
+void Experiment::testNet(QString filename, QElapsedTimer annElapsedTimer, int checkedButton)
 {
     char curword[20];
     int id;
@@ -279,9 +279,9 @@ void Experiment::testNet(QString filename, QElapsedTimer annElapsedTimer)
     elapsedTimer.restart();
     annDemo->initRobot(robotSimulator);
     vector<float> inputs = {1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    org->fitness = robotSimulator->animateAnn(net, thresh, inputs, elapsedTimer);
+    //org->fitness = robotSimulator->animateAnn(net, thresh, inputs, elapsedTimer);
 
-    robotSimulator->animateAnn(net, annElapsedTimer);
+    robotSimulator->animateAnn(net, annElapsedTimer, checkedButton);
 
 
 }

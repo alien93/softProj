@@ -90,8 +90,8 @@ public:
 public Q_SLOTS:
     void animation();
     void animateAnn(QElapsedTimer annElapsedTimer, ANN *ann, unsigned numOfOutputs);
-    double animateAnn(Network* net, int thresh, vector<float> inputs, QElapsedTimer annElapsedTimer);
-    void animateAnn(Network* net, QElapsedTimer annElapsedTimer);
+    double animateAnn(Network* net, int thresh, vector<float> inputs, QElapsedTimer annElapsedTimer, int checkedButton);
+    void animateAnn(Network* net, QElapsedTimer annElapsedTimer, int checkedButton);
 };
 
 #endif // MYGLWIDGET_H

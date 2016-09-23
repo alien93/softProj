@@ -5,7 +5,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    checkedButton = 1;
 }
 
 MainWindow::~MainWindow()
@@ -145,19 +145,18 @@ void MainWindow::on_trainANN_clicked()
     annDemo.trainANN(ui->robotSimulation);
 }
 
-//! Load ANN
 void MainWindow::on_pushButton_clicked()
 {
     //neatAnn.parseAnnData(filename, {1, 1});   //for xor - will test output only
     //neatAnn.run();                            //for xor
 
     Experiment* e = new Experiment(ui->robotSimulation);
-    e->roboWalk_test(10000);
-
+    e->roboWalk_test(10000, checkedButton);
     //e->generateTestData();
 
 }
 
+//! Load ANN
 void MainWindow::on_loadANN_clicked()
 {
     QString filename = QFileDialog::getOpenFileName(
@@ -168,5 +167,35 @@ void MainWindow::on_loadANN_clicked()
                     );
     annElapsedTimer.restart();
     Experiment* e = new Experiment(ui->robotSimulation);
-    e->testNet(filename, annElapsedTimer);
+    e->testNet(filename, annElapsedTimer, checkedButton);
+}
+
+void MainWindow::on_hexagon_toggled(bool checked)
+{
+    if(ui->hexagon->isChecked())
+        checkedButton = 1;
+    else if(ui->fixed->isChecked())
+        checkedButton = 2;
+    else if(ui->generated->isChecked())
+        checkedButton = 3;
+}
+
+void MainWindow::on_fixed_toggled(bool checked)
+{
+    if(ui->hexagon->isChecked())
+        checkedButton = 1;
+    else if(ui->fixed->isChecked())
+        checkedButton = 2;
+    else if(ui->generated->isChecked())
+        checkedButton = 3;
+}
+
+void MainWindow::on_generated_toggled(bool checked)
+{
+    if(ui->hexagon->isChecked())
+        checkedButton = 1;
+    else if(ui->fixed->isChecked())
+        checkedButton = 2;
+    else if(ui->generated->isChecked())
+        checkedButton = 3;
 }

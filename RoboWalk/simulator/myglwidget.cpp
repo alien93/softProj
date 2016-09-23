@@ -20,7 +20,7 @@ void MyGLWidget::initializeGL()
 {
     glClearColor(0.0f, 0.0f, 0, 1.0f);
     glEnable(GL_DEPTH_TEST);
-    w = new World(-0.5);                         //initialise ode world
+    w = new World(-0.05);                         //initialise ode world
     ground = new DrawBox(w, false, 20, 0.01, 20, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0);  //setup ground
     Point3 position = {0, 0, 0};
     ground->setPosition(position);
@@ -390,20 +390,20 @@ void MyGLWidget::animateAnn(QElapsedTimer annElapsedTimer, ANN* ann, unsigned nu
 }
 
 //!returns fitness
-double MyGLWidget::animateAnn(Network *net, int thresh, vector<float> inputs, QElapsedTimer annElapsedTimer)
+double MyGLWidget::animateAnn(Network *net, int thresh, vector<float> inputs, QElapsedTimer annElapsedTimer, int checkedButton)
 {
     vector<double> result;
     vector<NNode*>::iterator out_iter;
     net->load_sensors(inputs);
     double points = 0;
     int iterations =  0;
-   // bool movedLeft = false;
-   // bool movedRight = true;
-   // double val = -1;
+    bool movedLeft = false;
+    bool movedRight = true;
+    double val = -1;
 
 
     robot->setPosition({0, 0.38, 0});   //reinitialise
-   // auto start_time = std::chrono::high_resolution_clock::now();
+    auto start_time = std::chrono::high_resolution_clock::now();
 
 
 
@@ -438,89 +438,73 @@ double MyGLWidget::animateAnn(Network *net, int thresh, vector<float> inputs, QE
         qDebug()<<"---------------------";*/
 
 
-        //auto current_time = std::chrono::high_resolution_clock::now();
-        //float timeLapse = std::chrono::duration_cast<std::chrono::duration<float>>(current_time - start_time).count();
+        auto current_time = std::chrono::high_resolution_clock::now();
+        float timeLapse = std::chrono::duration_cast<std::chrono::duration<float>>(current_time - start_time).count();
 
-
-      /*  if(round(timeLapse*10)/10 == floor(timeLapse) && val!=round(timeLapse*10)/10)
+        if(checkedButton == 1)
         {
-            val = round(timeLapse*10)/10;
-            if(round(result[0])==1)
+            if(round(timeLapse*10)/10 == floor(timeLapse) && val!=round(timeLapse*10)/10)
             {
-                moveRightLeg();
-                movedRight = true;
-                if(movedLeft)
+                val = round(timeLapse*10)/10;
+                if(round(result[0])==1)
                 {
-                    points+=1;
-                    movedLeft = false;
-                }
+                    moveRightLeg();
+                    movedRight = true;
+                    if(movedLeft)
+                    {
+                        points+=1;
+                        movedLeft = false;
+                    }
 
-            }
-            else
-            {
-                moveLeftLeg();
-                movedLeft = true;
-                if(movedRight)
+                }
+                else
                 {
-                    points+=1;
-                    movedRight = false;
+                    moveLeftLeg();
+                    movedLeft = true;
+                    if(movedRight)
+                    {
+                        points+=1;
+                        movedRight = false;
+                    }
+
                 }
-
             }
-        }*/
-
-      /*  dJointAddHingeTorque(robot->getR_hip(), result[0]*100);
-        dJointAddHingeTorque(robot->getL_hip(), result[1]*100);
-        dJointAddHingeTorque(robot->getR_ankle(), result[4]*100);
-        dJointAddHingeTorque(robot->getL_ankle(), result[5]*100);   */
-
-        if(round(result[0]) == 1)
-        {
-            dJointAddHingeTorque(robot->getR_hip(), 100);
         }
-        if(round(result[0]) == -1)
+        else if(checkedButton == 2)
         {
-            dJointAddHingeTorque(robot->getR_hip(), -100);
+            if(round(result[0]) == 1)
+                dJointAddHingeTorque(robot->getR_hip(), 50);
+            if(round(result[0]) == -1)
+                dJointAddHingeTorque(robot->getR_hip(), -50);
+            if(round(result[1]) == 1)
+                dJointAddHingeTorque(robot->getL_hip(), 50);
+            if(round(result[1]) == -1)
+                dJointAddHingeTorque(robot->getL_hip(), -50);
+            if(round(result[2]) == 1)
+                dJointAddHingeTorque(robot->getR_knee(), 20);
+            if(round(result[2]) == -1)
+                dJointAddHingeTorque(robot->getR_knee(), -20);
+            if(round(result[3]) == 1)
+                dJointAddHingeTorque(robot->getL_knee(), 20);
+            if(round(result[3]) == -1)
+                dJointAddHingeTorque(robot->getL_knee(), -20);
+            if(round(result[4]) == 1)
+                dJointAddHingeTorque(robot->getR_ankle(), 20);
+            if(round(result[4]) == -1)
+                dJointAddHingeTorque(robot->getR_ankle(), -20);
+            if(round(result[5]) == 1)
+                dJointAddHingeTorque(robot->getL_ankle(), 20);
+            if(round(result[5]) == -1)
+                dJointAddHingeTorque(robot->getL_ankle(), -20);
         }
-        if(round(result[1]) == 1)
+        else if(checkedButton == 3)
         {
-            dJointAddHingeTorque(robot->getL_hip(), 100);
-        }
-        if(round(result[1]) == -1)
-        {
-            dJointAddHingeTorque(robot->getL_hip(), -100);
-        }
-        if(round(result[2]) == 1)
-        {
-            dJointAddHingeTorque(robot->getR_knee(), 50);
-        }
-        if(round(result[2]) == -1)
-        {
-            dJointAddHingeTorque(robot->getR_knee(), -50);
-        }
-        if(round(result[3]) == 1)
-        {
-            dJointAddHingeTorque(robot->getL_knee(), 50);
-        }
-        if(round(result[3]) == -1)
-        {
-            dJointAddHingeTorque(robot->getL_knee(), -50);
-        }
-        if(round(result[4]) == 1)
-        {
-            dJointAddHingeTorque(robot->getR_ankle(), 30);
-        }
-        if(round(result[4]) == -1)
-        {
-            dJointAddHingeTorque(robot->getR_ankle(), -30);
-        }
-        if(round(result[5]) == 1)
-        {
-            dJointAddHingeTorque(robot->getL_ankle(), 30);
-        }
-        if(round(result[5]) == -1)
-        {
-            dJointAddHingeTorque(robot->getL_ankle(), -30);
+            dJointAddHingeTorque(robot->getR_hip(), result[0]*100);
+            dJointAddHingeTorque(robot->getL_hip(), result[1]*100);
+            dJointAddHingeTorque(robot->getR_knee(), result[2]*100);
+            dJointAddHingeTorque(robot->getL_hip(), result[3]*100);
+            dJointAddHingeTorque(robot->getR_ankle(), result[4]*100);
+            dJointAddHingeTorque(robot->getL_ankle(), result[5]*100);
         }
 
 
@@ -528,28 +512,28 @@ double MyGLWidget::animateAnn(Network *net, int thresh, vector<float> inputs, QE
         points += rewards();
 
         if(round(robot->getPosition().y*10)/10 <= 0.1 ||   //robot's on the ground
-           round(robot->getPosition().y*10)/10 >= 0.5)      //robot's jumping
+                round(robot->getPosition().y*10)/10 >= 0.5)      //robot's jumping
         {
-            return (robot->getL_foot()->getPosition().z + robot->getR_foot()->getPosition().z)*5;
+            return robot->getPosition().z;
         }
 
         repaint();
 
     }
 
-    //return robot->getPosition().z*10;// + points/10000;
-    return (robot->getL_foot()->getPosition().z + robot->getR_foot()->getPosition().z)*5 + points/1000;
-
+    return robot->getPosition().z*70/10 + (points/1000)*30/10;
 }
 
 
-void MyGLWidget::animateAnn(Network *net, QElapsedTimer annElapsedTimer)
+void MyGLWidget::animateAnn(Network *net, QElapsedTimer annElapsedTimer, int checkedButton)
 {
     vector<double> result;
     vector<double> inputs;
     vector<NNode*>::iterator out_iter;
-
-   auto start_time = std::chrono::high_resolution_clock::now();
+    bool movedLeft = false;
+    bool movedRight = true;
+    double val = -1;
+    auto start_time = std::chrono::high_resolution_clock::now();
 
     while(!annElapsedTimer.hasExpired(60000))
     {
@@ -575,73 +559,72 @@ void MyGLWidget::animateAnn(Network *net, QElapsedTimer annElapsedTimer)
         auto current_time = std::chrono::high_resolution_clock::now();
         float timeLapse = std::chrono::duration_cast<std::chrono::duration<float>>(current_time - start_time).count();
 
-       /* if(round(timeLapse*10)/10 == floor(timeLapse))
+        if(checkedButton == 1)
         {
-            if(round(result[0])==1)
+            if(round(timeLapse*10)/10 == floor(timeLapse) && val!=round(timeLapse*10)/10)
             {
-                moveRightLeg();
-                qDebug()<<"MOVING RIGHT";
+                val = round(timeLapse*10)/10;
+                if(round(result[0])==1)
+                {
+                    moveRightLeg();
+                    movedRight = true;
+                    if(movedLeft)
+                    {
+                        movedLeft = false;
+                    }
 
+                }
+                else
+                {
+                    moveLeftLeg();
+                    movedLeft = true;
+                    if(movedRight)
+                    {
+                        movedRight = false;
+                    }
+
+                }
             }
-            else
-            {
-                moveLeftLeg();
-                qDebug()<<"MOVING LEFT";
-
-            }
-        }*/
-        if(round(result[0]) == 1)
-        {
-            dJointAddHingeTorque(robot->getR_hip(), 100);
         }
-        if(round(result[0]) == -1)
+        else if(checkedButton == 2)
         {
-            dJointAddHingeTorque(robot->getR_hip(), -100);
+            if(round(result[0]) == 1)
+                dJointAddHingeTorque(robot->getR_hip(), 50);
+            if(round(result[0]) == -1)
+                dJointAddHingeTorque(robot->getR_hip(), -50);
+            if(round(result[1]) == 1)
+                dJointAddHingeTorque(robot->getL_hip(), 50);
+            if(round(result[1]) == -1)
+                dJointAddHingeTorque(robot->getL_hip(), -50);
+            if(round(result[2]) == 1)
+                dJointAddHingeTorque(robot->getR_knee(), 20);
+            if(round(result[2]) == -1)
+                dJointAddHingeTorque(robot->getR_knee(), -20);
+            if(round(result[3]) == 1)
+                dJointAddHingeTorque(robot->getL_knee(), 20);
+            if(round(result[3]) == -1)
+                dJointAddHingeTorque(robot->getL_knee(), -20);
+            if(round(result[4]) == 1)
+                dJointAddHingeTorque(robot->getR_ankle(), 20);
+            if(round(result[4]) == -1)
+                dJointAddHingeTorque(robot->getR_ankle(), -20);
+            if(round(result[5]) == 1)
+                dJointAddHingeTorque(robot->getL_ankle(), 20);
+            if(round(result[5]) == -1)
+                dJointAddHingeTorque(robot->getL_ankle(), -20);
         }
-        if(round(result[1]) == 1)
+        else if(checkedButton == 3)
         {
-            dJointAddHingeTorque(robot->getL_hip(), 100);
+            dJointAddHingeTorque(robot->getR_hip(), result[0]*100);
+            dJointAddHingeTorque(robot->getL_hip(), result[1]*100);
+            dJointAddHingeTorque(robot->getR_knee(), result[2]*100);
+            dJointAddHingeTorque(robot->getL_knee(), result[3]*100);
+            dJointAddHingeTorque(robot->getR_ankle(), result[4]*100);
+            dJointAddHingeTorque(robot->getL_ankle(), result[5]*100);
         }
-        if(round(result[1]) == -1)
-        {
-            dJointAddHingeTorque(robot->getL_hip(), -100);
-        }
-        if(round(result[2]) == 1)
-        {
-            dJointAddHingeTorque(robot->getR_knee(), 50);
-        }
-        if(round(result[2]) == -1)
-        {
-            dJointAddHingeTorque(robot->getR_knee(), -50);
-        }
-        if(round(result[3]) == 1)
-        {
-            dJointAddHingeTorque(robot->getL_knee(), 50);
-        }
-        if(round(result[3]) == -1)
-        {
-            dJointAddHingeTorque(robot->getL_knee(), -50);
-        }
-        if(round(result[4]) == 1)
-        {
-            dJointAddHingeTorque(robot->getR_ankle(), 30);
-        }
-        if(round(result[4]) == -1)
-        {
-            dJointAddHingeTorque(robot->getR_ankle(), -30);
-        }
-        if(round(result[5]) == 1)
-        {
-            dJointAddHingeTorque(robot->getL_ankle(), 30);
-        }
-        if(round(result[5]) == -1)
-        {
-            dJointAddHingeTorque(robot->getL_ankle(), -30);
-        }
-
 
         if(round(robot->getPosition().y*10)/10 <= 0.1 ||   //robot's on the ground
-           round(robot->getPosition().y*10)/10 >= 0.5)      //robot's jumping
+                round(robot->getPosition().y*10)/10 >= 0.5)      //robot's jumping
         {
             robot->setPosition({0, 0.38, 0});
         }
@@ -654,54 +637,45 @@ double MyGLWidget::rewards()
 {
     double reward = 0;
 
-    /*if(round(robot->getL_foot()->getPosition().y*10)/10 != round(robot->getR_foot()->getPosition().y*10)/10) //feet are not on the same level
-        reward += 0.8;
-    else if(round(robot->getL_foot()->getPosition().z*10)/10 != round(robot->getR_foot()->getPosition().z*10)/10)   //one foot is in front of the other
-        reward += 0.7;
-    else
-        reward -=0.35;
+    if(round(robot->getL_foot()->getPosition().y*10)/10 != round(robot->getR_foot()->getPosition().y*10)/10) //feet are not on the same level
+        reward += 0.1;
 
     if(round(dJointGetHingeAngle(robot->getR_knee()) * 10)/10 != 0 || round(dJointGetHingeAngle(robot->getL_knee()) * 10)/10 != 0) //robot's using knees
         reward += 0.3;
-    else
-        reward-=0.15;
-
 
     if(round(robot->getL_foot()->getPosition().y*10)/10 > 0 || round(robot->getR_foot()->getPosition().y*10)/10 > 0) //using feet
-        reward += 0.3;
-    else
-        reward -= 0.15;*/
-    if(round(robot->getL_foot()->getPosition().y*10)/10 != round(robot->getR_foot()->getPosition().y*10)/10) //feet are not on the same level
-            reward += 0.1;
-        else if(round(robot->getL_foot()->getPosition().z*10)/10 != round(robot->getR_foot()->getPosition().z*10)/10)   //one foot is in front of the other
-            reward += 0.8;
-
-        if(round(dJointGetHingeAngle(robot->getR_knee()) * 10)/10 != 0 || round(dJointGetHingeAngle(robot->getL_knee()) * 10)/10 != 0) //robot's using knees
-            reward += 0.3;
-        else
-            reward -= 0.15;
-
-        if(round(robot->getL_foot()->getPosition().y*10)/10 > 0 || round(robot->getR_foot()->getPosition().y*10)/10 > 0) //using feet
-            reward += 0.5;
-        else
-            reward -= 0.25;
-
-
+        reward += 0.5;
 
     return reward;
 }
 
 void MyGLWidget::moveRightLeg()
 {
-
-    robot->getR_lowerLeg()->setPosition({robot->getR_lowerLeg()->getPosition().x, robot->getR_lowerLeg()->getPosition().y, robot->getR_lowerLeg()->getPosition().z + 0.09});
-    robot->getR_foot()->setPosition({robot->getR_foot()->getPosition().x, robot->getR_foot()->getPosition().y, robot->getR_foot()->getPosition().z + 0.1});
+    if(robot->getR_foot()->getPosition().z == robot->getL_foot()->getPosition().z)
+    {
+        robot->getR_lowerLeg()->setPosition({robot->getR_lowerLeg()->getPosition().x, robot->getR_lowerLeg()->getPosition().y, robot->getR_lowerLeg()->getPosition().z + 0.180});
+        robot->getR_foot()->setPosition({robot->getR_foot()->getPosition().x, robot->getR_foot()->getPosition().y, robot->getR_foot()->getPosition().z + 0.185});
+    }
+    else
+    {
+        robot->getR_lowerLeg()->setPosition({robot->getR_lowerLeg()->getPosition().x, robot->getR_lowerLeg()->getPosition().y, robot->getR_lowerLeg()->getPosition().z + 0.36});
+        robot->getR_foot()->setPosition({robot->getR_foot()->getPosition().x, robot->getR_foot()->getPosition().y, robot->getR_foot()->getPosition().z + 0.37});
+    }
 }
 
 void MyGLWidget::moveLeftLeg()
 {
-    robot->getL_lowerLeg()->setPosition({robot->getL_lowerLeg()->getPosition().x, robot->getL_lowerLeg()->getPosition().y, robot->getL_lowerLeg()->getPosition().z + 0.09});
-    robot->getL_foot()->setPosition({robot->getL_foot()->getPosition().x, robot->getL_foot()->getPosition().y, robot->getL_foot()->getPosition().z + 0.1});
+    if(robot->getR_foot()->getPosition().z == robot->getL_foot()->getPosition().z)
+    {
+        robot->getL_lowerLeg()->setPosition({robot->getL_lowerLeg()->getPosition().x, robot->getL_lowerLeg()->getPosition().y, robot->getL_lowerLeg()->getPosition().z + 0.180});
+        robot->getL_foot()->setPosition({robot->getL_foot()->getPosition().x, robot->getL_foot()->getPosition().y, robot->getL_foot()->getPosition().z + 0.185});
+    }
+    else
+    {
+        robot->getL_lowerLeg()->setPosition({robot->getL_lowerLeg()->getPosition().x, robot->getL_lowerLeg()->getPosition().y, robot->getL_lowerLeg()->getPosition().z + 0.36});
+        robot->getL_foot()->setPosition({robot->getL_foot()->getPosition().x, robot->getL_foot()->getPosition().y, robot->getL_foot()->getPosition().z + 0.37});
+    }
+
 }
 
 void MyGLWidget::reset()
@@ -776,6 +750,3 @@ double MyGLWidget::convertRadToDegrees(double value)
     retVal = value * 180 / M_PI;
     return retVal;
 }
-
-
-
